@@ -1,0 +1,107 @@
+---
+sidebar: sidebar 
+permalink: install-setup/cable-hardware.html 
+keywords: aide, ai, data engine, ai data engine dcn, data compute node, afx, afx 1k, cable controllers, Cisco Nexus 9332D-GX2B, Cisco Nexus 9364D-GX2A, switches, switch, cable hardware, cable storage shelves, cable data compute nodes, cable network, cable cluster, cable host network 
+summary: AIDE ケーブルをネットワークに接続し、Data Compute Node にケーブルを接続する方法を学びます。 
+---
+= AI Data EngineのData Compute Nodeをケーブル接続する
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Data Compute Nodeをホスト ネットワークとクラスター ネットワーク スイッチに接続して、AIワークロード処理とAFX 1Kストレージ システムとの統合を可能にします。この手順では、ホスト ネットワーク アクセスとクラスター通信の両方に100GbE接続を使用し、AFXシステムの電源を切ることなく、ノードが既存のクラスター インフラストラクチャを活用できるようにします。
+
+.タスク概要
+これらの手順は一般的な構成を示しています。具体的なケーブル接続は、ストレージ システム用に注文したコンポーネントによって異なります。包括的な構成の詳細とスロットの優先順位については、link:https://hwu.netapp.com["NetApp Hardware Universe"^]を参照してください。
+
+
+NOTE: データ コンピューティング ノードをケーブル接続するときに、AFX 1K ストレージ システムの電源をオフにする必要はありません。すでに電源がオンになっていて構成されている既存の AFX 1K ストレージ システムにデータ コンピューティング ノードを追加できます。
+
+.開始する前に
+* 既存の AFX 1K ストレージ システムがインストールされています。AFX 1K ストレージ システムのインストールについては、link:https://docs.netapp.com/us-en/ontap-afx/install-setup/install-setup-workflow.html["AFX 1Kストレージ システムをインストールする"^]を参照してください。
+* 必要なネットワーク スイッチがインストールされ、構成されています。システムをネットワーク スイッチに接続する方法については、ネットワーク管理者にお問い合わせください。
+* link:../install-setup/cable-overview.html["Data Compute Node のケーブル配線要件"^]をレビューしました。
+
+
+
+
+== ステップ1：Data Compute Nodeをホストネットワークに接続する
+
+Data Compute Node のポートをホスト ネットワークに接続できます。
+
+.手順
+. 次の Data Compute Node のポート e4b をイーサネット データ ネットワーク スイッチ A に接続します：
++
+** Data Compute Node 1、ポート e4b
+** Data Compute Node 2、ポート e4b
++
+*100GbE ケーブル*
+
++
+image::../media/oie_cable100_gbe_qsfp28.png[100 Gb Ethernet ケーブル]
+
++
+image::../media/drw_aide_network_cabling_a_ieops_2647.svg[イーサネット ネットワークへのケーブル接続]
+
+
+
+. 次の Data Compute Node のポート e5b をイーサネット データ ネットワーク スイッチ B に接続します：
++
+** Data Compute Node 1、ポート e5b
+** Data Compute Node 2、ポートe5b
++
+*100GbE ケーブル*
+
++
+image::../media/oie_cable100_gbe_qsfp28.png[100 Gb Ethernet ケーブル]
+
++
+image::../media/drw_aide_network_cabling_b_ieops-2648.svg[イーサネット ネットワークへのケーブル接続]
+
+
+
+
+
+
+
+== ステップ2：Data Compute Nodeクラスタ接続をケーブル接続する
+
+Data Compute Node の場合、クラスター接続には e4a/e5a ポートが使用されます。
+
+.手順
+. 次の Data Compute Node のポート e4a をクラスタ ネットワーク スイッチ A の非 ISL ポートに接続します：
++
+** Data Compute Node 1、ポートe4a
+** Data Compute Node 2、ポート e4a
++
+*100GbE ケーブル*
+
++
+image::../media/oie_cable100_gbe_qsfp28.png[100 Gb Ethernet ケーブル]
+
++
+image::../media/drw_aide_switched_cluster_cabling_a_ieops-2649.svg[イーサネット ネットワークへのケーブル接続]
+
+
+
+. 次のデータ コンピューティング ノードのポート e5a をクラスタ ネットワーク スイッチ B の非 ISL ポートに接続します：
++
+** Data Compute Node 1、ポート e5a
+** Data Compute Node 2、ポート e5a
++
+*100GbE ケーブル*
+
++
+image::../media/oie_cable100_gbe_qsfp28.png[100 Gb Ethernet ケーブル]
+
++
+image::../media/drw_aide_switched_cluster_cabling_b_ieops-2650.svg[イーサネット ネットワークへのケーブル接続]
+
+
+
+
+
+.次の手順
+ハードウェアのケーブル接続が終わったら、link:power-on-hardware.html["Data Compute Node の電源をオンにする"]。

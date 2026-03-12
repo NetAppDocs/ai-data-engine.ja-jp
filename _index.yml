@@ -1,0 +1,76 @@
+---
+indexpage:
+  title: AI Data Engineドキュメント
+  summary: AI Data Engineドキュメントには、メタデータのカタログ化、ワークスペース管理、データコレクション、AI/MLワークフローとの統合など、AIDEシステムのインストール、構成、管理に関する包括的な情報が記載されています。
+  keywords: aide, ai data engine, ontap, metadata engine, workspaces, data collections,
+    vector database, guardrails, dcn, data compute nodes
+  lead: NetApp AI Data Engine（AIDE）は、AI主導のデータ処理、管理、ガバナンスを加速し、簡素化するために設計されたエンタープライズクラスのプラットフォームです。AIDEは、非構造化データを機械学習および生成AIワークロード向けの構造化されたAI対応データセットに変換します。
+  tiles:
+  - title: はじめに
+    links:
+    - title: AI Data Engineの詳細
+      url: "/get-started/learn-about.html"
+    - title: AIDEアーキテクチャ
+      url: "/get-started/aide-architecture.html"
+    - title: 新機能
+      url: "/release-notes/whats-new.html"
+    - title: 既知の制限事項
+      url: "/release-notes/known-limitations.html"
+    - title: AIDE クイック スタート
+      url: "/get-started/quick-start.html"
+    - title: AI Data EngineのFAQ
+      url: "/faq-aide.html"
+  - title: インストールとセットアップ
+    links:
+    - title: データコンピュートノードのインストールワークフロー
+      url: "/install-setup/install-workflow.html"
+    - title: インストールの要件
+      url: "/install-setup/install-setup-requirements.html"
+    - title: ケーブルハードウェア
+      url: "/install-setup/cable-hardware.html"
+    - title: システムの電源をオンにする
+      url: "/install-setup/power-on-hardware.html"
+    - title: AIDEクラスタを設定
+      url: "/install-setup/cluster-setup-afx.html"
+    - title: OIDC 認証の設定
+      url: "/install-setup/configure-oidc.html"
+  - title: ワークスペースとデータアクセス
+    links:
+    - title: AI Data Engineのデータを準備する
+      url: "/workspaces/prepare-data-for-aide.html"
+    - title: ワークスペースを作成する
+      url: "/workspaces/create-workspace.html"
+    - title: ユーザーをワークスペースに割り当てる
+      url: "/workspaces/assign-users-to-workspace.html"
+    - title: ワークスペースを管理する
+      url: "/administer/manage-workspace.html"
+  - title: 管理と監視
+    links:
+    - title: ダッシュボードとクラスタのステータスを表示
+      url: "/administer/view-dashboard.html"
+    - title: イベントと監査ログを表示する
+      url: "/administer/view-events-log.html"
+    - title: AIDEライセンスのインストール
+      url: "/install-setup/install-license-task.html"
+    - title: AI Data Engine softwareを更新
+      url: "/administer/update-aide-firmware-software.html"
+    - title: データコンピュートノードを追加する
+      url: "/administer/dcn-add-node.html"
+    - title: データコンピュートノードを交換する
+      url: "/administer/aide-node-replace.html"
+  - title: 役割とコンポーネントを理解する
+    links:
+    - title: 役割別のAIDEコンポーネント
+      url: "/get-started/aide-components.html"
+    - title: ストレージ管理者のタスク
+      url: "/get-started/aide-components-storage-admin.html"
+    - title: データエンジニアとデータサイエンティストのタスク
+      url: "/get-started/aide-components-data-users.html"
+  - title: データコレクションとガードレールを使用する
+    links:
+    - title: データからRAGへのクイックスタート
+      url: "/vectorization/zero-to-rag.html"
+    - title: データコレクションを作成して公開する
+      url: "/vectorization/create-data-collections.html"
+    - title: ガードレールポリシーを定義する
+      url: "/guardrails/define-data-policies.html"

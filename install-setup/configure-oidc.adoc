@@ -1,0 +1,115 @@
+---
+permalink: install-setup/configure-oidc.html 
+sidebar: sidebar 
+keywords: openid connect, oidc, oauth 2.0, authentication, aide, system manager, entra id, adfs 
+summary: ONTAP クラスタ管理者は、ONTAP System Manager を使用して、AI Data Engine（AIDE）クラスタの OpenID Connect（OIDC）認証を設定できます。これにより、外部 ID プロバイダー（IdP）を介した安全で集中化されたログインが実現します。 
+---
+= ONTAP の AIDE に OpenID Connect を設定する
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP クラスタ管理者は、ONTAP System Manager を使用して、AI Data Engine（AIDE）クラスタの OpenID Connect（OIDC）認証を設定できます。これにより、外部 ID プロバイダー（IdP）を介した安全で集中化されたログインが実現します。
+
+
+CAUTION: AI Data Engine Consoleにアクセスするには、OIDCを設定する必要があります。設定すると、すべての認証はOIDCを経由します。OIDCが設定されていない場合、管理者だけでなくデータエンジニアやデータサイエンティストもコンソールを使用できなくなります。この場合、System Managerへのサインインはローカル認証に戻ります。
+
+AIDEアクセスのOIDC設定については、以下の点に注意してください：
+
+* 既存の OIDC 構成を変更することはできません。変更が必要な場合は、まず構成を削除し、希望する設定で新しい構成を作成します。
+* OIDCを無効化または削除すると、System ManagerはローカルのONTAPユーザ認証に戻ります。
+
+
+
+
+== OIDCの概要
+
+OpenID Connect（OIDC）は、OAuth 2.0 フレームワーク上に構築された認証プロトコルです。これは、主に認可に使用される OAuth 2.0 を拡張し、アイデンティティ レイヤーを追加します。OIDC では、認証イベントとユーザーの ID に関するクレームを含む JSON Web Token（JWT）である ID トークンの概念が導入されています。
+
+AFX と AIDE でサポートされている外部 ID プロバイダー（IdP）を選択して設定する必要があります。IdP はユーザを認証し、AFX が System Manager を通じて AIDE Console へのアクセスを許可するために使用できるトークンを発行します。
+
+
+
+== サードパーティの ID プロバイダを設定する
+
+OIDC を使用して認証するには、まず外部 IdP を構成する必要があります。ONTAP の OIDC 実装では、トークン内のロール要求を使用して RBAC を適用します。IdP を設定するときは、ID トークンとアクセス トークンでロール要求を返すように構成されていることを確認してください。ONTAP は OIDC 認証用に 2 つの IdPs をサポートしています（Entra ID および Active Directory フェデレーション サービス（AD FS））。
+
+
+
+=== Entra ID
+
+Entra IDは以下の概要手順を使用して設定できます：
+
+. Entra ID 設定ページで新しいアプリ登録を作成します。
+. リダイレクトURI（Web）の値を `\https://$CLUSTER_MGMT_IP/oidc/callback`に設定します。適切なクラスタ管理IPアドレスまたはFQDNに置き換えてください。
+. 「アプリ ロール」で必要なロールを作成し、ユーザに割り当てます。
+. Token Configuration でトークン要求を更新して、id-token と access-token のロールを返します。
+
+
+ https://learn.microsoft.com/en-us/power-pages/security/authentication/openid-settings["Entra IDでOpenID Connectプロバイダを設定する"^]詳細については、こちらを参照してください。
+
+
+
+=== Active Directoryフェデレーション サービス
+
+AD FS は次の概要手順を使用して設定できます。
+
+. 新しい Application Group を作成し、* Server application accessing a web API * を選択します。
+. リダイレクトURI（Web）の値を `\https://$CLUSTER_MGMT_IP/oidc/callback`に設定します。適切なクラスタ管理IPアドレスまたはFQDNに置き換えてください。
+. トークン内のロールを返すようにクレームを設定します。
+
+
+ https://learn.microsoft.com/en-us/azure/active-directory-b2c/identity-provider-adfs?pivots=b2c-user-flow["AD FS を OpenID Connect ID プロバイダとして追加する"^]詳細については、こちらを参照してください。
+
+
+
+== System ManagerでOIDCを設定する
+
+IdPを設定したら、System ManagerでOIDC認証を設定して、AIDE Consoleへの安全なアクセスを可能にします。
+
+.開始する前に
+* System Manager への管理者アクセス権が必要です。
+* OIDC ID プロバイダを設定し、アクセスできるようにする必要があります。
+
+
+.手順
+. System Manager で、* Cluster * を選択し、次に * Settings * を選択して、OpenID Connect カードを見つけます。
+. OIDC がすでに構成されている場合は、構成を編集または無効にすることができます。OIDC が設定されていない場合は、image:icon_gear_white_bg.png["歯車アイコン"]を選択してセットアッププロセスを開始します。
+. OpenID Connect の設定で、次のフィールドに値を入力します。
++
+** プロバイダ
+** Issuer
+** JSON Web キーセット URI
+** 認可エンドポイント
+** トークンエンドポイント
+** セッション終了エンドポイント
+** アクセストークン発行者（オプション）
+
+
+. ［クライアント構成］で、次のフィールドに値を入力します：
++
+** クライアント ID
+** Remote user claim
+** 更新間隔
+
+
+. 「接続の詳細」で、次のフィールドに値を入力します：
++
+** クラスタ IP アドレスまたは FQDN
+** 送信プロキシ（オプション）
+
+
+. 外部ロールマッピングで、既存のロールマッピングを選択するか、ONTAP `admin`ユーザの新しいロールを定義します。
+. *今すぐ有効にする*を選択し、*保存*を選択します。System Managerが更新され、新しい認証設定が適用されます。
+. IdP クレデンシャルを使用してログインします。認証が成功すると、System Manager に戻ります。
+
+
+
+
+== 関連情報
+
+* https://openid.net/["OpenID Foundation"^]
+* https://docs.netapp.com/us-en/ontap/authentication/overview-oauth2.html["ONTAP OAuth 2.0の実装"^]
+

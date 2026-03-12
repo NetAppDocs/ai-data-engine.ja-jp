@@ -1,0 +1,33 @@
+---
+sidebar: sidebar 
+permalink: get-started/quick-start.html 
+keywords: ai, data engine, get started, getting started, quick start, install, set up 
+summary: AI Data Engineシステムを使い始めるには、ハードウェアをインストールし、クラスターをセットアップし、データ アクセスをセットアップし、AI ワークロードで使用されるワークスペースのストレージをプロビジョニングします。 
+---
+= AI Data Engineのクイックスタート
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+AI Data Engineシステムを起動して実行するには、ハードウェア コンポーネントをインストールし、クラスターをセットアップし、ホストからストレージ システムへのデータ アクセスをセットアップし、ストレージをプロビジョニングする必要があります。
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-1.png["1"] AIDEは新しいAFXクラスターまたは既存のAFXクラスターとともにインストールされますか？
+[role="quick-margin-para"]
+AIDE と AFX を同時にインストールするか、AIDE を既存の AFX クラスタと統合するかを決定する必要があります。
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-2.png["2"]ハードウェアのインストールとセットアップ
+[role="quick-margin-para"]
+link:../install-setup/aide-hardware-requirements.html["インストールとセットアップ"]AIDE クラスタのコンピューティングノード。設置環境に応じて、 https://docs.netapp.com/us-en/ontap-afx/install-setup/install-setup-workflow.html["インストール"^] AFX ハードウェアも確認してください。
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-3.png["3つ"] クラスタをセットアップする
+[role="quick-margin-para"]
+ONTAP System Managerを使用すると、link:../install-setup/cluster-setup-afx.html["AFX クラスターを使用した AIDE のセットアップ"]の迅速で簡単なプロセスをガイドします。
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-4.png["4"]ワークスペースとデータアクセスを設定する
+[role="quick-margin-para"]
+link:../workspaces/create-workspace.html["AI Data Engine データにアクセスできるワークスペースとそのワークスペースのユーザーを設定します"]。
+
+.次の手順
+ONTAP System Managerを使用してAI Data Engineを管理し、データ エンジニアとデータ サイエンティストがワークスペースと構成を開始できるようになりました。

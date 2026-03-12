@@ -1,0 +1,24 @@
+---
+section: administer
+title: 管理と監視
+entries:
+- title: クラスタプロセスを監視する
+  entries:
+  - title: ダッシュボードとクラスタのステータスを表示
+    url: "/administer/view-dashboard.html"
+  - title: Insightsを表示
+    url: "/administer/view-insights.html"
+  - title: イベント、ジョブ、監査ログを表示する
+    url: "/administer/view-events-log.html"
+- title: ワークスペースを管理する
+  url: "/administer/manage-workspace.html"
+- title: AIDEシステムのアップグレードとメンテナンス
+  entries:
+  - title: AIDEシステムのアップデートと互換性
+    url: "/administer/upgrades-aide-summary.html"
+  - title: AI Data Engine softwareを更新
+    url: "/administer/update-aide-firmware-software.html"
+  - title: AIDEクラスタにノードを追加する
+    url: "/administer/dcn-add-node.html"
+  - title: AIDEノードを交換する
+    url: "/administer/aide-node-replace.html"

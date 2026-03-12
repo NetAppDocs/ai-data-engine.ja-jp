@@ -1,0 +1,56 @@
+---
+sidebar: sidebar 
+permalink: install-setup/aide-hardware-requirements.html 
+keywords: ai data engine, aide, hardware, requirements, afx, dcn, data compute node 
+summary: AI Data Engineのインストール要件（AFXストレージ システムとデータ コンピューティング ノードを含む）を確認します。 
+---
+= AI Data Engineのインストール要件
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+AI Data Engineのインストール要件を確認します。AIDEには、AFXストレージ システム、少なくとも3つのデータ コンピューティング ノード、ネットワーク スイッチ、およびケーブルが必要です。
+
+
+
+== ハードウェア要件
+
+AI Data Engineには、AFXストレージシステムと少なくとも3つのデータコンピューティングノードが必要です。AFXシステムはストレージインフラを提供し、データコンピューティングノードは、データ管理、キュレーション、AI機能を実現するAIDEソフトウェアコンポーネントをホストします。
+
+* *AFXストレージシステム*：AFXコントローラ、ディスク シェルフ、ネットワーク スイッチが含まれます。AFXストレージシステムはAIDE導入に必要です。
+* *Data Compute Node*：少なくとも3つのData Compute Nodeが必要です。Data Compute Nodeは、NetAppが提供するハードウェアノードで、Metadata Engine、Data Sync、Data Curator、Data GuardrailsなどのAIDEソフトウェアをホストします。
++
+** 各 Data Compute Node には、接続に使用できる I/O スロット 4 と 5 があります。スロット 3 は GPU 用に予約されています。スロット 1 と 2 には何も装着されていないか、アクセスできません。
+** ポート e4a と e5a はクラスター接続に使用されます。
+** ポート e4b と e5b はホスト ネットワーク接続に使用されます。
+
+
+
+
+
+
+== ネットワーク スイッチの要件
+
+AI Data Engineでは、データ計算ノードのホスト ネットワーク接続とノード間通信を有効にするために、ネットワーク スイッチが必要です。
+
+* ホスト ネットワーク接続用のクライアント スイッチ（Cisco Nexus 9332D-GX2B または Cisco Nexus 9364D-GX2A）
+* ノード間通信用のクラスタ スイッチ（Cisco Nexus 9332D-GX2B または Cisco Nexus 9364D-GX2A）
+* ネットワーク管理用のオプションの管理スイッチ
+
+
+
+
+== ケーブル要件
+
+Data Compute Node をネットワーク スイッチおよび管理ネットワークに接続するには、次のケーブルが必要です。
+
+* ノードをクライアントおよびクラスタ スイッチに接続するための400GbEから100GbE（4x100GbE）へのブレークアウト ケーブル
+
+
+
+
+== マルチクラスタサポート
+
+AIDE を AFX で展開した後、SnapMirror とクラスター ピアリングを使用して、他の ONTAP 9.18.1 以降のクラスタに接続し、データを管理できます。

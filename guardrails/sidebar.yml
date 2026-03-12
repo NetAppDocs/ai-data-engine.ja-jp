@@ -1,0 +1,6 @@
+---
+section: guardrails
+title: ガードレールを実装する
+entries:
+- title: AIDE でガードレールポリシーを定義する
+  url: "/guardrails/define-data-policies.html"

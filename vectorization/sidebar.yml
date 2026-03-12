@@ -1,0 +1,12 @@
+---
+section: vectorization
+title: ベクトル化とデータコレクションの管理
+entries:
+- title: データからRAGへのクイックスタート
+  url: "/vectorization/zero-to-rag.html"
+- title: ワークスペースのメタデータを確認する
+  url: "/vectorization/explore-workspace-metadata.html"
+- title: データコレクションを作成する
+  url: "/vectorization/create-data-collections.html"
+- title: データコレクションを表示
+  url: "/vectorization/view-data-collections.html"

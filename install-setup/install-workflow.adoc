@@ -1,0 +1,34 @@
+---
+sidebar: sidebar 
+permalink: install-setup/install-workflow.html 
+keywords: aide, ai, data engine, ai data engine, dcn, data compute node, afx, afx 1k, install, setup, workflow, 
+summary: データコンピューティングノードのインストールとセットアップを開始し、ONTAP環境に導入します。 
+---
+= AI Data Engineのデータコンピューティングノードのインストールとセットアップのワークフロー
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+データコンピューティングノード（DCN）をインストールして構成するには、ハードウェア要件を確認し、サイトを準備し、ハードウェアコンポーネントをインストールしてケーブルで接続し、システムの電源を入れ、ONTAPクラスタをセットアップします。
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-1.png["1"]link:install-setup-requirements.html["ハードウェアのインストール要件を確認する"]
+[role="quick-margin-para"]
+既存のAFX 1Kストレージシステムがインストールされていることを確認し、AIDEのデータコンピューティングノードをインストールするためのハードウェア要件を確認します。AFX 1Kストレージシステムのインストールについては、link:https://docs.netapp.com/us-en/ontap-afx/install-setup/install-setup-workflow.html["AFX 1Kストレージシステムをインストールする"^]を参照してください。
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-2.png["2"]link:prepare-hardware.html["データコンピューティングノードのインストールの準備"]
+[role="quick-margin-para"]
+データコンピューティングノードをインストールする準備をするには、サイトを準備し、環境と電気の要件を確認し、十分なキャビネットスペースがあることを確認する必要があります。次に、機器を開梱し、その内容物を梱包明細書と照合し、ハードウェアを登録してサポート特典にアクセスします。
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-3.png["3つ"]link:deploy-hardware.html["データコンピューティングノード用のハードウェアをインストールする"]
+[role="quick-margin-para"]
+データコンピューティングノード用のレールキットをインストールします。キャビネット内のデータコンピューティングノードを固定します。最後に、ケーブル配線を整理するために、システムの背面にケーブル管理デバイスを取り付けます。
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-4.png["4"]link:cable-hardware.html["データ計算ノードをケーブルで接続する"]
+[role="quick-margin-para"]
+ハードウェアをケーブル接続するには、まずデータコンピューティングノードをデータおよびクラスターネットワークに接続し、次にデータコンピューティングノードをクラスタースイッチに接続します。
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-5.png["五"]link:power-on-hardware.html["データコンピューティングノードの電源をオンにする"]
+[role="quick-margin-para"]
+ラック ハードウェアをインストールし、データ コンピューティング ノードをケーブル接続した後、まだ電源がオンになっていない場合は、DCN と AFX ストレージ システムのコントローラー ノードの電源をオンにする必要があります。

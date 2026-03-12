@@ -1,0 +1,62 @@
+---
+sidebar: sidebar 
+permalink: vectorization/explore-workspace-metadata.html 
+keywords: aide, explore metadata, workspace, metadata catalog, ai data engine, data engineer, data scientist, search 
+summary: データエンジニアやデータサイエンティストとして、AI Data Engine Consoleを使用してワークスペースのメタデータを探索し、関連するファイルとオブジェクトを検出し、データ収集の候補サブセットを準備します。 
+---
+= AI Data Engine Consoleでワークスペースのメタデータを探索する
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+データ エンジニアまたはデータ サイエンティストとして、AI Data Engine（AIDE）での最初のタスクは、ワークスペースで利用可能なデータを理解することです。AIDE Consoleを使用してメタデータ カタログを照会し、関連するファイルを検索し、データ コレクションに変換するデータのサブセットを識別します。
+
+.開始する前に
+* AI Data Engine Consoleで_データエンジニア_または_データサイエンティスト_権限と、少なくとも1つのワークスペースへのアクセスが必要です。
+* ストレージ管理者には次の権限があります：
++
+** ONTAP System Managerで1つ以上のワークスペースを作成しました。
+** 関連するワークスペースへのアクセス権をユーザーまたはグループに割り当てました。
+
+
+* ワークスペースのメタデータ抽出が完了し、ワークスペースは `Ready`状態です。
+* 分類子が有効になっているため、メタデータには分類タグ（PII インジケーターなど）が含まれます。
+
+
+
+
+== データエンジニアまたはデータサイエンティストとして AI Data Engine Console に Sign in します
+
+.手順
+. ブラウザで、AIDE Console URL に移動します：
++
+`\https://<cluster_management_ip>/console`
+
+. 組織の OIDC プロバイダーを通じて認証します。
+. 自分の役割がデータ エンジニアまたはデータ サイエンティストとして認識されていることを確認します（たとえば、利用可能なワークスペースやデータ収集アクションなど）。詳細については、link:../get-started/aide-components-data-users.html["AIDE ロールのドキュメント"]を参照して、データ エンジニアとデータ サイエンティストが AIDE コンポーネントをどのように使用するかを確認してください。
+
+
+.結果
+AIDE Consoleにログインしており、アクセスを許可されたワークスペースのみが表示されます。
+
+
+
+== アクセス可能なワークスペースを表示する
+
+.手順
+. AIDE Consoleで、*Data Curator > ワークスペース*に移動します。
+. アクセスできるワークスペースのリストを確認します。
+. ワークスペースを選択して詳細を開きます。
+
+
+.結果
+これで、ストレージ管理者がプロジェクトで利用できるようにしたデータ資産のワークスペース スコープ ビューが表示されます。
+
+
+
+== 次の手順
+
+* link:create-data-collections.html["ワークスペースから RAG のデータ コレクションを作成する"]
+

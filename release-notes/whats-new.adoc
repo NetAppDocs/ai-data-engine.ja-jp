@@ -1,0 +1,88 @@
+---
+permalink: release-notes/whats-new.html 
+sidebar: sidebar 
+keywords: release notes, new features, AI Data Engine, AIDE, metadata engine, ONTAP 9.18.1 
+summary: AI Data Engine（AIDE）で利用可能な新機能について学習します。 
+---
+= AI Data Engineの新機能
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+AI Data Engine（AIDE）9.18.1は、NetAppのAIデータ管理のためのプラットフォームの初回リリースです。このリリースでは、組織がAIワークロードの非構造化データをカタログ化して整理できるようにするMetadata Engineと管理ワークフローが導入され、高度なガバナンスとベクトル化機能の基盤が提供されます。高度なガバナンス（ガードレール）とベクトル化は、適切なAI Data Engineライセンスを持つお客様が利用できます。
+
+
+
+== AIDE 9.18.1初期リリースの新機能
+
+AIDE 9.18.1 では、次の基本機能が導入されています。
+
+.link:../get-started/aide-architecture.html#metadata-engine["Metadata EngineによるAIデータカタログ化"]
+最初のリリースには、ONTAP クラスタ全体のファイルとオブジェクトをカタログ化する Metadata Engine が含まれています。
+
+主な機能は次のとおりです：
+
+* ピア クラスター上のローカルおよびリモート ONTAP ボリュームからのメタデータ（コア属性、拡張属性、オブジェクトタグ）の自動抽出。
+* 企業データのグローバルビューを必要とするアプリケーション向けの集中クエリおよびフィルタリング REST API。
+* スケーラブルな Metadata Engine ストレージ。
+* ワークスペースの作成中にトリガーされる自動メタデータ抽出。
+
+
+.link:../workspaces/create-workspace.html["ワークスペース管理"]
+ワークスペースは、AI プロジェクトのデータソース（ボリューム）の論理的なグループ化を提供します。
+
+最初のリリースでは以下がサポートされます：
+
+* ローカルおよびリモートのONTAPボリュームにまたがるワークスペースの作成（クラスターピアリングを使用）。
+* ワークスペースへのアクセス制御の割り当て、マルチユーザーとマルチテナント環境のサポート。
+* ワークスペースの作成時にメタデータを自動的に抽出し、カタログに入力します。
+
+
+.link:../get-started/aide-architecture.html#data-sync["自動データ更新のための Data Sync"]
+Data Sync により、ソース データが変更されても、手動による介入なしにメタデータ カタログとデータ コレクションが最新の状態に保たれます。
+
+主な機能は次のとおりです：
+
+* ポリシーベースの SnapMirror レプリケーションを使用した、リモートまたはローカルの ONTAP クラスタからのデータの自動同期。
+* 変更されたデータのみを伝播し、オーバーヘッドを削減する増分更新。
+* ワークスペースごとに設定可能な更新間隔。
+* 同期ステータスとアクティビティのワークスペースレベルの監視。
+
+
+.link:../install-setup/cluster-setup-afx.html["クラスタのセットアップと管理"]
+最初のリリースには次のワークフローが含まれています：
+
+* クラスターのセットアップ中にデータコンピューティングノード（DCN）を検出して追加します。
+* Metadata Engine専用のメタデータストレージVMの作成。
+* クラスター全体のメタデータアクセス用の Data Engine サービスインターフェースの設定。
+* 他の ONTAP クラスタとピアリングして、データ資産全体にメタデータカタログを拡張します。
+
+
+.link:../install-setup/configure-oidc.html["OpenID Connect（OIDC）認証"]
+* OIDC/OAuthベースの認証により、Microsoft Entra IDおよびActive Directory Federation Services（ADFS）を使用したONTAP System ManagerおよびData Engine Consoleへの安全なアクセスを実現。
+* ワークスペースとメタデータ管理のためのロールベースのアクセス制御。
+
+
+.link:../vectorization/zero-to-rag.html["高度なデータキュレーションとガバナンス機能"]
+適切なAI Data Engineライセンスをお持ちのお客様は、以下の機能をご利用いただけます：
+
+* *ベクトル化とRAG*：AIDEワークスペースのメタデータを使用した、AI Data Engine Consoleでのデータコレクション、埋め込み、検索エンドポイントの作成。
+* *ガードレールベースのガバナンス*：AI Data Engine Consoleでのガードレール ポリシーの定義と、ONTAP System Managerでのワークスペースへのポリシーの関連付け。
+
+
+
+
+=== サポートされているハードウェアとプラットフォーム
+
+AI Data Engine 9.18.1は、以下を組み合わせたONTAP AIデータ プラットフォーム クラスターで動作します：
+
+* AFX 1K ストレージ ノード
+* NetApp データコンピューティングノード
+
+
+.関連情報
+* link:known-limitations.html["AI Data Engineの既知の制限"]
+* link:../get-started/learn-about.html["AI Data Engineのアーキテクチャとコンポーネントについて学ぶ"]
+

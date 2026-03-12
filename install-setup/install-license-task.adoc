@@ -1,0 +1,66 @@
+---
+permalink: install-setup/install-license-task.html 
+sidebar: sidebar 
+keywords: ai data engine, install license, add license, software entitlement, keys, nlf, nlf file 
+summary: NetApp ライセンスをインストールして、AI Data Engine（AIDE）の全機能にアクセスする必要があります。ONTAP クラスタ管理者は、ONTAP System Manager を使用してライセンス管理を実行できます。 
+---
+= AFXシステムにAIDEライセンスをインストールする
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+NetApp ライセンスをインストールして、AI Data Engine（AIDE）の全機能にアクセスする必要があります。ONTAP クラスタ管理者は、ONTAP System Manager を使用してライセンス管理を実行できます。
+
+
+
+== AI Data Engineのライセンスの準備
+
+ライセンスは、1 つ以上のソフトウェア権限の記録です。すべての AFX ライセンスは、NetApp ライセンスファイル（NLF）として提供されます。これは、複数の機能を有効にする単一のファイルです。AIDE をサポートするために AFX ストレージシステムにライセンスをインストールする前に、考慮すべき点がいくつかあります。
+
+
+
+=== ライセンスの種類
+
+AFX ストレージ システムを通じて AIDE の使用を開始するために必要なライセンスは主に 2 種類あります。
+
+.ONTAP Oneライセンス
+Metadata Engine Basicライセンスは通常、ONTAP Oneライセンスの一部として工場出荷時にインストールされます。これにより、AIDE操作の基本的な基盤を提供するMetadata Engine機能へのアクセスが可能になります。ONTAPシステムを管理するために必要なすべてのコア機能も含まれています。
+
+.AI Data Engine
+AIDEのフル機能を有効にするために必要なプレミアムサービスにアクセスするには、AI Data Engineライセンスを購入してインストールする必要があります。このライセンスにより、データコンピューティングノードのロックが解除され、ベクトル化、ガバナンスガードレール、推論、統合UIエクスペリエンスなどのAI機能が有効になります。ライセンスには、GPUの数と有効期限が含まれます。
+
+
+
+=== ライセンスのインストール要件
+
+AIDE ライセンスを購入し、関連する NLF ファイルをローカル システムにダウンロードする必要があります。その後、System Manager を通じてファイルを AFX ストレージ システムにアップロードできます。また、以下のものも確認してください：
+
+* ONTAP System Managerにサインインするための管理者の資格情報
+* ONTAP 9.18.1以降を実行しているAFXクラスター
+
+
+
+
+== AFXシステムにライセンスをインストールする
+
+AFX ストレージ システムに必要な追加の AIDE 機能を有効にするために、AIDE ライセンスをインストールできます。
+
+.手順
+. System Manager で、* Cluster * を選択し、* Settings * を選択します。
+. *ライセンス*の横にあるimage:icon_arrow.gif["右向きの青い矢印"]を選択します。
+. *機能*タブを選択すると、利用可能なONTAP機能が表示されます。
+. ライセンスをインストールするには、*インストールされたライセンス*タブを選択します。
+. image:icon_add_blue_bg.png["プラス記号と白い文字で「add」という単語が続く青い長方形"]を選択します。
+. ローカル ライセンス ファイルを選択し、*追加* を選択します。
+
+
+
+
+== 関連情報
+
+* https://docs.netapp.com/us-en/ontap/system-admin/manage-licenses-concept.html["ONTAPライセンスの概要"^]
+* https://kb.netapp.com/nss/Licensing/How_to_download_NLF_licenses_from_the_NetApp_Support_Site["NetApp Support SiteからNLFライセンスをダウンロードする方法"^]
+* https://docs.netapp.com/us-en/ontap-cli/system-license-add.html["ONTAP CLI：system license add"^]
+

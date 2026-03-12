@@ -1,0 +1,58 @@
+---
+sidebar: sidebar 
+permalink: workspaces/prepare-data-for-aide.html 
+keywords: aide, workspaces, create data container, ai data engine 
+summary: クラスタを作成したら、AI Data Engineで使用する予定のデータが含まれているデータ コンテナを作成できます。 
+---
+= AI Data Engineのデータを準備する
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+クラスタを作成したら、AI Data Engine（AIDE）で使用する予定のデータが含まれているデータ コンテナを確立します。このデータ コンテナは、ONTAPボリューム（ローカルボリュームまたはONTAP 9を実行しているピアリングされたONTAPクラスタのボリューム）である必要があります。
+
+ONTAPクラスタデータをAIDEに手動でアップロードするのではなく、対象のクラスタとSVMをAIDEクラスタとピアリングし、AIDEメタデータ カタログで使用するNFSボリュームを決定する必要があります。データ コンテナを作成したら、ワークスペースを作成し、そのワークスペースにデータ コンテナを関連付けることができます。そのワークスペースのユーザーは、AIワークロードのワークスペース関連のデータ コレクションとリソースにアクセスして操作できるようになります。
+
+.タスク概要
+AI Data Engineで使用するデータを含む各SVMをピアリングする必要があります。クラスタのみをピアリングするだけでは不十分です。これにより、AI Data Engineが意図したとおりにデータにアクセスし、オンボードし、インデックスを作成できるようになります。
+
+SnapMirrorデスティネーションとして機能するAIDEクラスター内のSVMをピアリングする必要があります。
+
+ONTAPクラスタとAIDEクラスタの間にSnapMirror関係を作成する必要はありません。これらの関係は、ワークスペースの作成時に自動的に作成されます。
+
+.開始する前に
+* クラスタと SVM をピアリングし、データ コンテナを選択するには、_ストレージ管理者_ 権限が必要です。
+* AI Data Engineで使用するデータを含むONTAPクラスタとSVMを特定しました。
+* データ ソース ボリュームが次の要件を満たしていることを確認しました：
++
+** ボリュームはオンラインでアクセス可能です。
+** NFSプロトコルが有効になっています。AI Data EngineのデータコンテナとしてサポートされるのはNFS対応ボリュームのみです。SMBおよびCIFSボリュームはサポートされていません。
+** ボリュームはFlexCacheボリュームではありません。
+** データ ソースは読み取り/書き込みボリュームです。データ保護ボリュームはサポートされていません。
+
+
+
+
+.手順
+. https://docs.netapp.com/us-en/ontap-afx/protect-data/create-peer-relationship.html["各ONTAPクラスタとSVMをピア接続"^]AI Data Engineで使用したいデータが含まれている
+. link:../install-setup/cluster-setup-afx.html["AI Data Engineで使用するボリュームを選択してください"]。
++
+各ボリュームについて、次の情報をメモします：
+
++
+** ボリューム名
+** UUID
+** SVM名とUUID
+** クラスタ名とUUID
+
+
+
+
+.次の手順
+link:create-workspace.html["ワークスペースを作成する"]作成したデータ コンテナをワークスペースに関連付けます。
+
+.関連情報
+* https://docs.netapp.com/us-en/ontap-afx/manage-data/prepare-manage-data.html#data-migration-options["データ移行オプション"^]
+

@@ -1,0 +1,25 @@
+---
+sidebar: sidebar 
+permalink: administer/view-insights.html 
+keywords: aide, aide system, insights, view insights 
+summary: ONTAP System Managerのインサイト機能を使用すると、NetAppのベストプラクティスに沿った推奨される構成更新を表示できます。これらの変更により、AIDEクラスタのセキュリティとパフォーマンス、およびその他の領域を最適化できます。 
+---
+= AIDE システムを最適化するための分析情報を表示
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ストレージ管理者は、ONTAP System Managerの_Insights_機能を使用して、NetAppのベストプラクティスに沿った推奨される構成更新を表示できます。これらの変更により、AIDEクラスタのセキュリティとパフォーマンスを最適化できます。
+
+.タスク概要
+各分析情報はページ上で個別のタイルまたはカードとして表示され、実装するか無視するかを選択できます。特定のテクノロジーについて詳しく知るには、関連するドキュメント リンクを選択することもできます。
+
+.手順
+. System Manager で、* 分析 * を選択し、次に * Insights * を選択します。
+. 利用可能な推奨事項を確認します。
+
+
+.次の手順
+推奨されるアクションのいずれかを実行して、構成のベスト プラクティスを実装します。

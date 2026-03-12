@@ -1,0 +1,54 @@
+---
+sidebar: sidebar 
+permalink: vectorization/zero-to-rag.html 
+keywords: ai, data engine, aide, quick start, rag, retrieval augmented generation, data collection, workspace, data scientist, data engineer, storage admin 
+summary: 新しく導入されたAI Data Engine（AIDE）システムを、ワークスペース、データ コレクション、ガードレールを使用して機能する検索拡張生成（RAG）エンドポイントに統合します。 
+searchtitle: AI Data EngineのData-to-RAGクイック スタート 
+---
+= AI Data EngineのData-to-RAGクイック スタート
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+新しく導入されたAI Data Engine（AIDE）システムを、このワークフローを使用して機能する検索拡張生成（RAG）エンドポイントに接続します。ストレージ管理者、データエンジニア、データサイエンティストがONTAP System ManagerとAIDE Consoleを使用してどのように連携しているかを理解します。
+
+.開始する前に
+* データコンピューティングノード（DCN）をインストールしてONTAPクラスタに追加しました。
+* AI Data Engine software をベクトル化とガードレール用にインストールし、ライセンスを取得しました。
+* link:../install-setup/configure-oidc.html["OpenID Connect（OIDC）"]を設定し、管理者、データ エンジニア、データ サイエンティストの役割をマッピングしました。
+
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-1.png["1"]データの範囲とガバナンスを定義する
+[role="quick-margin-list"]
+ストレージ管理者またはセキュリティ管理者として、AIDE Console と ONTAP System Manager で環境を準備する必要があります：
+
+* link:../workspaces/create-workspace.html["1つ以上のワークスペースを作成する"]ローカルおよびリモートのデータ ソースから。
+* AIDE コンソールのlink:../guardrails/define-data-policies.html["分類子とガードレールポリシーを設定する"]。
+* link:../workspaces/assign-users-to-workspace.html["データエンジニアとデータサイエンティストにワークスペースへのアクセスを割り当てる"]。
+
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-2.png["2"] ワークスペースのメタデータを確認する
+[role="quick-margin-list"]
+データエンジニアやデータサイエンティストとして、AIDE Consoleを使用してワークスペースのメタデータを探索する場合：
+
+* link:explore-workspace-metadata.html["ワークスペースのメタデータを確認する"]利用可能なコンテンツを理解します。
+* RAG に供給するデータの論理サブセットを 1 つ以上定義します（たとえば、サポート記事、製品マニュアル、匿名化された医療データなど）。
+
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-3.png["3つ"] データ収集を作成して公開する
+[role="quick-margin-list"]
+データ エンジニアまたはデータ サイエンティストとして、選択したサブセットを RAG 対応のコレクションに変換したいと考えています：
+
+* 選択したフィルターを使用してワークスペースからlink:create-data-collections.html["データ収集を作成する"]。
+* link:create-data-collections.html#publish-a-data-collection["データ収集を公開する"]インデックス作成を監視し、 `Ready`状態になるまで待ちます。
+* 選択したコレクションの取得エンドポイント URI をコピーし、データ サイエンティストまたはアプリケーション開発者に提供します。
+* link:view-data-collections.html["データ収集ステータスとベクターフットプリントを表示する"]必要に応じて。
+
+
+.次の手順
+* link:../guardrails/define-data-policies.html["AI Data Engineでデータ資産とガードレールのポリシーを定義する"]
+* link:explore-workspace-metadata.html["AI Data Engine Consoleでワークスペースのメタデータを探索する"]
+* link:create-data-collections.html["AI Data Engine Consoleでデータコレクションを作成する"]
+

@@ -1,0 +1,157 @@
+---
+sidebar: sidebar 
+permalink: install-setup/cable-overview.html 
+keywords: aide, ai data engine, cable, overview, cabling, hardware, switches, cluster network, host network, data compute nodes 
+summary: I/O スロットの使用、ケーブルの種類、ホストおよびクラスタ ネットワークの接続要件など、Data Compute Node のケーブル構成について説明します。 
+---
+= AI Data Engineのデータ計算ノードのケーブル配線要件
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Data Compute Node は、ホスト ネットワークおよびクラスター ネットワーク接続を通じて AFX 1K ストレージ システムと統合されます。展開の I/O スロット構成、ケーブル タイプ、および接続要件を確認します。
+
+
+
+== ケーブル構成
+
+Data Compute Nodeは、AFX 1Kコントローラー ノードと同じクラスター スイッチに接続し、AIおよび機械学習のワークロードに最適化されたコンピューティング リソースでストレージ システムを拡張します。
+
+初期のAI Data Engine（AIDE）構成では、少なくとも3つのData Compute Nodeがサポートされます。包括的な構成の詳細とスロットの優先順位については、link:https://hwu.netapp.com["NetApp Hardware Universe"^]を参照してください。
+
+image::../media/drw_aide-dcn_back_slots_labeled_ieops-2646.svg[Data Compute Node のスロット番号]
+
+[cols="1,4"]
+|===
+
+
+ a| 
+image::../media/icon_round_1.png[コールアウト番号1]
+ a| 
+Data Compute Node上の未使用のスロット。
+
+
+
+ a| 
+image::../media/icon_round_2.png[コールアウト番号2]
+ a| 
+Data Compute Node上の未使用のスロット。
+
+
+
+ a| 
+image::../media/icon_round_3.png[コールアウト番号3]
+ a| 
+Data Compute Node 上の GPU スロット。
+
+
+
+ a| 
+image::../media/icon_round_4.png[コールアウト番号4]
+ a| 
+Data Compute Node 上の I/O スロット。
+
+
+
+ a| 
+image::../media/icon_round_5.png[コールアウト番号5]
+ a| 
+Data Compute Node 上の I/O スロット。
+
+|===
+
+
+== I/O スロット構成
+
+Data Compute Node は、標準のサーバー構成とは異なる特定のスロット番号付けスキームを使用します。適切なケーブル配線を行うには、スロットのレイアウトを理解することが重要です。
+
+* *スロット 3*：GPU 用に予約済み（I/O ケーブルではアクセスできません）
+* *スロット 4 と 5*：ネットワーク接続に使用される I/O スロット
++
+** ポート a：クラスタ ネットワーク接続
+** ポートb：ホスト ネットワーク接続
+
+
+* *スロット 1 と 2*：未使用でアクセス不可
+
+
+
+
+== ネットワーク接続
+
+データ コンピューティング ノードを AFX 1K ストレージ システムと統合するには、2 種類のネットワーク接続が必要です。
+
+* *ホスト ネットワーク接続*
++
+ホスト ネットワーク接続は、クライアント データへのアクセスを提供し、Data Compute Nodeがワークロードを処理できるようにします。各Data Compute Nodeは、個別のホスト ネットワーク スイッチへの冗長接続にポート e4b と e5b を使用します。
+
++
+ポートの割り当て：
+
++
+** e4b：ホスト ネットワーク スイッチ A に接続
+** e5b：ホスト ネットワーク スイッチ B に接続
+
+
+* *クラスタ ネットワーク接続*
++
+クラスター ネットワーク接続により、ストレージ クラスター内の Data Compute Node と AFX 1K コントローラー ノード間の通信が可能になります。各 Data Compute Node は、個別のクラスター ネットワーク スイッチへの冗長接続にポート e4a と e5a を使用します。
+
++
+ポートの割り当て：
+
++
+** e4a：クラスタ ネットワーク スイッチ A に接続
+** e5a: クラスター ネットワーク スイッチBに接続
+
+
+
+
+
+
+== サポートされているハードウェア コンポーネント
+
+データ コンピューティング ノードには、AFX 1K ストレージ システムとの適切な接続とパフォーマンスを確保するために、特定のケーブルとネットワーク スイッチが必要です。
+
+[cols="2,3,6"]
+|===
+| *Data Compute Node* | *サポートされているスイッチ* | *対応ケーブル* 
+
+
+ a| 
+Data Compute Node（最低3つ必要）
+ a| 
+* Cisco Nexus 9332D-GX2B（400GbE）
+* Cisco Nexus 9364D-GX2A（400GbE）
+
+ a| 
+* Data Compute Node への接続用の 4x100GbE QSFP56 ケーブルへの 400GbE QSFP-DD ブレークアウト：
++
+** Data Compute Node クラスタ ネットワーク ポートへの 100GbE（e4a、e5a）
+** 100GbE から Data Compute Node ホスト ネットワーク ポート（e4b、e5b）
+
+
+* 管理接続用のRJ-45ケーブル
+
+
+|===
+
+NOTE: ブレークアウトケーブルは、各400GbEスイッチ ポートから4つの100GbE接続を提供します。400GbE端をスイッチに接続し、100GbE端をData Compute NodeのI/Oポートに接続します。
+
+
+
+== ケーブルの向き
+
+ケーブルをData Compute Nodeに接続する場合、ケーブルの向きを正しくすることで信頼性の高い接続が保証されます。
+
+インストール手順の配線図には、コネクタをポートに挿入するときに、ケーブル コネクタのプルタブの正しい方向（上または下）を示す矢印アイコンが表示されます。コネクタを挿入すると、カチッと音がして所定の位置に収まるはずです。カチッという音がしない場合は、取り外して裏返し、もう一度試してください。
+
+image:../media/drw_cable_pull_tab_direction_ieops-1699.svg["ケーブル プル タブの方向"]
+
+
+CAUTION: コネクタ部品をカチッとはめるときは、繊細な部品を慎重に扱ってください。
+
+.次の手順
+ケーブル構成を確認した後、link:cable-hardware.html["ハードウェアのケーブル接続"] Data Compute Node用。

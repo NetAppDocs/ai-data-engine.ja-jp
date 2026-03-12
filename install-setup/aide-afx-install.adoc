@@ -1,0 +1,19 @@
+---
+sidebar: sidebar 
+permalink: install-setup/aide-afx-install.html 
+keywords: ai data engine, afx, afx 1k, install, hardware, storage system, data compute node, aide 
+summary: AI Data Engineを導入する最初のステップとして、AFXストレージシステムをインストールします。AFXシステムは、AIDE導入に必要なストレージインフラストラクチャ基盤を提供します。 
+---
+= AI Data Engine用のAFXストレージシステムをインストールする
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+AI Data Engineを導入する最初のステップとして、AFXストレージシステムをインストールします。AFXストレージシステムは、ストレージインフラストラクチャの基盤を提供し、データコンピューティングノードをインストールする前に必要です。
+
+link:https://docs.netapp.com/us-en/ontap-afx/install-setup/install-setup-workflow.html["AFX 1K インストールドキュメント"^]に従って、AFX ストレージ システムをインストールします。
+
+.次の手順
+AFXストレージシステムのインストールが完了したら、link:install-workflow.html["データ計算ノードをインストールする"]。

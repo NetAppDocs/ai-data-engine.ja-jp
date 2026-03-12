@@ -1,0 +1,52 @@
+---
+section: get-started
+title: はじめに
+entries:
+- title: AI Data Engineシステムについて
+  entries:
+  - title: AIDEの詳細
+    url: "/get-started/learn-about.html"
+  - title: AIDEアーキテクチャ
+    url: "/get-started/aide-architecture.html"
+  - title: 役割別のAIDEコンポーネントと責任
+    entries:
+    - title: AIDEコンポーネントと役割
+      url: "/get-started/aide-components.html"
+    - title: AIDEインターフェイス
+      url: "/get-started/aide-interfaces.html"
+    - title: ストレージ管理者とコンポーネント
+      url: "/get-started/aide-components-storage-admin.html"
+    - title: データエンジニアとデータサイエンティスト、およびコンポーネント
+      url: "/get-started/aide-components-data-users.html"
+- title: クイック スタート
+  url: "/get-started/quick-start.html"
+- title: AIDEをインストール
+  entries:
+  - title: インストールの要件
+    url: "/install-setup/aide-hardware-requirements.html"
+  - title: AFXストレージシステムをインストールする
+    url: "/install-setup/aide-afx-install.html"
+  - title: データコンピューティングノードをインストールする
+    entries:
+    - title: インストールワークフロー
+      url: "/install-setup/install-workflow.html"
+    - title: ハードウェア要件を確認する
+      url: "/install-setup/install-setup-requirements.html"
+    - title: インストールの準備
+      url: "/install-setup/prepare-hardware.html"
+    - title: データ計算ノードをインストールする
+      url: "/install-setup/deploy-hardware.html"
+    - title: ケーブル配線要件を確認する
+      url: "/install-setup/cable-overview.html"
+    - title: ケーブルハードウェア
+      url: "/install-setup/cable-hardware.html"
+    - title: システムの電源をオンにする
+      url: "/install-setup/power-on-hardware.html"
+- title: AIDEシステムをセットアップする
+  entries:
+  - title: AFX クラスターを使用した AIDE のセットアップ
+    url: "/install-setup/cluster-setup-afx.html"
+  - title: AIDEライセンスをインストールする
+    url: "/install-setup/install-license-task.html"
+  - title: OIDC 認証の設定
+    url: "/install-setup/configure-oidc.html"
