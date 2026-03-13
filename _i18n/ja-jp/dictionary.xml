@@ -475,7 +475,6 @@
   <block id="7521c606bbb262d4406920ae0f227482" category="list-text">インデックス作成および検索機能を備えた大規模なメタデータ レコードをサポートします。</block>
   <block id="a261e17515b5e7c6f4ac45586180ccf5" category="list-text">ワークスペースとデータ収集の抽象化と統合して、アクセス制御とガバナンスを適用します。</block>
   <block id="eb1d2c1ae9218b81f27583f8febe5b0b" category="paragraph">Data Syncは、ソース データが変更された場合でも、メタデータ カタログとデータ コレクションが最新の状態に保たれ、基礎となるデータ ソースと一貫性が保たれることを保証する自動化されたバックグラウンド サービスです。</block>
-  <block id="c72559d5f5f29792246a89c44d4048c5" category="paragraph">データ同期機能は、ベースの ONTAP One ライセンスには含まれておらず、別途 AIDE ライセンスが必要です。</block>
   <block id="48c7a7721f4589379290f5fbbe788089" category="list-text">ポリシーベースのSnapMirrorレプリケーションを使用して、リモートまたはローカルのONTAPクラスタからデータを同期します。リモート クラスタからのデータは、AIDE処理のためにローカルのAFXクラスタにコピーされます。</block>
   <block id="1789309552c1c2cc5573fd091e47b530" category="list-text">検出された変更に基づいて増分的に更新し、変更されたデータのみを伝播します。</block>
   <block id="296d6abc76dc8666f2ce23a492687f4a" category="list-text">データ資産全体にわたって、安全で増分的なデータの移動と同期を提供します。</block>
@@ -779,7 +778,6 @@
   <block id="dfbf664a24b20a5e81f43e898d684617" category="list-text">Data Compute Node 1、ポート e5b</block>
   <block id="03c9404232757fb6fbd63f1bf30833dd" category="list-text">Data Compute Node 2、ポートe5b</block>
   <block id="51ac89f3a68bd0a01d770e0a9023a233" category="section-title">ステップ2：Data Compute Nodeクラスタ接続をケーブル接続する</block>
-  <block id="23f4b4c052d032f52982aff86abb9547" category="paragraph">Data Compute Node の場合、クラスター接続には e4a/e5a ポートが使用されます。</block>
   <block id="bc615f90adaaf6e394a43df14dc83aac" category="list-text">次の Data Compute Node のポート e4a をクラスタ ネットワーク スイッチ A の非 ISL ポートに接続します：</block>
   <block id="a0b2e66a85b1aedce80b6da4e0310ffd" category="list-text">Data Compute Node 1、ポートe4a</block>
   <block id="796d3174b2e10790956b6531fd09718d" category="list-text">Data Compute Node 2、ポート e4a</block>
@@ -1013,13 +1011,11 @@
   <block id="6889512d643df7fa8ccfb7e52dd1181c" category="paragraph-title"><block ref="58f667aaf05f87159670e12bd9bc076b" category="inline-image-macro-rx" type="image"></block><block ref="90572de4b12061d10d3adbe91dd02ace" category="inline-link-macro-rx"></block></block>
   <block id="2ef02acbcac74a2bf527975726a47ddc" category="inline-link-macro">データコンピューティングノードのインストールの準備</block>
   <block id="65b761c9b7abbbeca0b5bf69bc82d7a8" category="paragraph-title"><block ref="54f425ce8d89f4ed6b8a546561af5d60" category="inline-image-macro-rx" type="image"></block><block ref="57d90d9a41d093761f4dd9f6db8351e9" category="inline-link-macro-rx"></block></block>
-  <block id="293f8966fffd4aff38846275cf9996a2" category="paragraph">データコンピューティングノードをインストールする準備をするには、サイトを準備し、環境と電気の要件を確認し、十分なキャビネットスペースがあることを確認する必要があります。次に、機器を開梱し、その内容物を梱包明細書と照合し、ハードウェアを登録してサポート特典にアクセスします。</block>
   <block id="3b6f8293a009822bdcb6d06936fb8f1d" category="inline-link-macro">データコンピューティングノード用のハードウェアをインストールする</block>
   <block id="6b0fec8ea5ac59cda339bc131da013d3" category="paragraph-title"><block ref="05b2444faffd66d76e88602ea7dd353f" category="inline-image-macro-rx" type="image"></block><block ref="61494597b1d831d6ff8b369c273f632c" category="inline-link-macro-rx"></block></block>
   <block id="651f9bd4704a3dfd217713e594910973" category="paragraph">データコンピューティングノード用のレールキットをインストールします。キャビネット内のデータコンピューティングノードを固定します。最後に、ケーブル配線を整理するために、システムの背面にケーブル管理デバイスを取り付けます。</block>
   <block id="78b7263c608b815cd3f413fb28c13ea8" category="inline-link-macro">データ計算ノードをケーブルで接続する</block>
   <block id="5e57f75c71b8c2be941043075bf090a2" category="paragraph-title"><block ref="beadfa85a2fdca06b91edc1131c603e6" category="inline-image-macro-rx" type="image"></block><block ref="725152e2ddcdb5a0cb5d010a5492d444" category="inline-link-macro-rx"></block></block>
-  <block id="cdb1dfe0058aa622edc896df103bd253" category="paragraph">ハードウェアをケーブル接続するには、まずデータコンピューティングノードをデータおよびクラスターネットワークに接続し、次にデータコンピューティングノードをクラスタースイッチに接続します。</block>
   <block id="e5d9de39f7ca1ba2637e5640af3ae8aa" category="inline-image-macro">五</block>
   <block id="7670baab52af36366616f708588174ea" category="inline-link-macro">データコンピューティングノードの電源をオンにする</block>
   <block id="7593e41e7184593322f581da7379d8c8" category="paragraph-title"><block ref="99e8b2f00e172bfcff96afdce69907bc" category="inline-image-macro-rx" type="image"></block><block ref="62013dd88cfe19fc6e87ef7f52ccf53f" category="inline-link-macro-rx"></block></block>
@@ -1517,4 +1513,10 @@
   <block id="1d845d7fec926dc97ef9c9d1ae75fb4d" category="list-text">棚の電源がオンになっており、各棚に固有の棚 ID が割り当てられていることを確認します。AFX ストレージシステムのシェルフ ID の割り当てについては、<block ref="2cb3ccd2ea21233c926cc907e5546ee0" category="inline-link-macro-rx"></block>を参照してください。</block>
   <block id="72b11f47a4c462a17235bf830cef5f4d" category="paragraph">データコンピューティングノードをオンにしたら、<block ref="c209b4c41b8b8a46751e6876a5bec129" category="inline-link-macro-rx"></block>。</block>
   <block id="69333c3b16c70d734803d338560b5f4b" category="paragraph">データコンピューティングノードのインストール準備が完了したら、<block ref="8d80699d6ea91999991c5841195fdaf6" category="inline-link-macro-rx"></block>。</block>
+  <block id="9f1b1c09e19edba239dde10c234e2b7d" category="paragraph">データ同期機能は、基本の ONTAP One ライセンスに含まれており、AIDE のインストール時に利用可能になります。</block>
+  <block id="792b46ef5bfc70b9c772c4a7f3b55acc" category="admonition">AI Data Engineを展開するには、最低3つのデータコンピューティングノードが必要です。</block>
+  <block id="b001ec8ec4133b6f8e6b8db16e7850ff" category="paragraph">データコンピューティングノードの場合は、4x100GbEブレークアウトケーブルを使用して、クラスタ接続用のe4a/e5aポートを接続します。</block>
+  <block id="788899ea47f1311b79403513bff040e9" category="paragraph">*4x100GbEブレークアウトケーブル*</block>
+  <block id="8fbd8a2f645ce1628bb418252fd4e150" category="paragraph">データ処理ノードを設置する準備として、設置場所の準備、環境および電気に関する要件の確認、そして十分なキャビネットスペースの確保が必要です。次に、機器を開梱し、内容物を梱包明細書と照合し、ハードウェアを登録してサポート特典を受けられるようにしてください。AI Data Engineを展開するには、最低3つのデータコンピューティングノードが必要です。</block>
+  <block id="ba1f39989ab5fafce1803b42f3c54d45" category="paragraph">ハードウェアをケーブル接続するには、まずデータ処理ノードをデータネットワークに接続し、次にデータ処理ノードをクラスタスイッチに接続します。</block>
 </blocks>
