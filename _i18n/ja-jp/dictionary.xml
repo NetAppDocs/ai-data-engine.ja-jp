@@ -1,0 +1,895 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blocks>
+  <block id="f8c4fea7e7cf7f7ef0388b1a5482f73c" category="summary">AI Data Engine が環境全体でデータをコールドまたは古いデータとして分類するために使用する時間しきい値を設定します。</block>
+  <block id="307f340773d2ec521a24b7d47748d7a9" category="doc">AI Data Engine でコールドデータと古いデータのしきい値を設定する</block>
+  <block id="685b95cce8c6b31584d6cbc499744d76" category="paragraph">AI Data Engine は、お客様が定義した時間しきい値に基づいて、ファイルをコールドまたは古いファイルとして分類します。これらのしきい値は、ダッシュボードの概要に表示されるデータ、調査でコールドフィルターまたは古いフィルターを適用したときに表示されるファイル、およびポリシーの対象となるファイルに影響します。組織のデータ分類および保持に関する慣行に合致するしきい値を設定し、監視すべき重要なデータを特定するのに役立ててください。</block>
+  <block id="61fe78e998733806cbb9289d9a334133" category="section-title">コールドデータおよびステールデータとは何ですか？</block>
+  <block id="b5e9abb7d0603dc93a1c7f770d525201" category="list-text">コールドデータ</block>
+  <block id="ffd32e72e017c9e3f551aaa0f1f073c0" category="list-text">設定されたコールドデータしきい値内にアクセスされていないファイル。コールドデータは、組織が保持ポリシーやビジネスポリシーに基づいて最適化できるストレージを特定するために使用できる重要な指標です。</block>
+  <block id="58f9985309ad441d05540492b96a7afd" category="list-text">古いデータ</block>
+  <block id="02ab08a8615eca8247a792a9e857afa8" category="list-text">設定された期限切れデータしきい値内にアクセスまたは変更されていないファイル。古いデータとは、時折アクセスされるものの、最近変更されていないファイルのことであり、組織はポリシーに従ってこれらのファイルを監視または管理することができます。</block>
+  <block id="82df3679be1205e2d375ad745e4b1726" category="admonition">デフォルトのしきい値は、出発点として提供される製品のデフォルト値です。これらは、法的、コンプライアンス、または業界標準の保存期間を表すものではありません。組織固有のポリシーと要件を反映したしきい値を設定してください。</block>
+  <block id="10cde949b73468c8fce425af672f3b72" category="paragraph">いずれかのしきい値の変更は、次のスキャンサイクルが完了した後に有効になります。</block>
+  <block id="895804863a97a03a3e03470d02478133" category="section-title">コールドデータしきい値を設定する</block>
+  <block id="135b308ed83c53f1516b7c754566d1c4" category="list-title">開始する前に</block>
+  <block id="44afa8c12ba5016087097eac7b7ece41" category="list-text">_AI Data Engine 管理者_のロールが必要です。</block>
+  <block id="f3a29486bed19a90f2da6d007818b427" category="list-title">手順</block>
+  <block id="d724be4a2aa2baccee94826f1af0c6ac" category="list-text">AI Data Engine UIで*設定*を選択します。</block>
+  <block id="376ec8b3e51e6597fb939c31a3fe0e59" category="list-text">*設定*を選択します。</block>
+  <block id="14f363037c6a0b83c2c86a312d5db12a" category="list-text">*コールドデータ定義*の*編集*を選択します。</block>
+  <block id="39f725773719f7e03fa6969dd0b4d925" category="list-text">ファイルプロパティを「最終アクセス日時」または「最終更新日時」に設定します。</block>
+  <block id="7eead87b8cc9c7fcfb53634c53faf69d" category="list-text">時間しきい値を設定します。デフォルトは1年です。</block>
+  <block id="10492389e94efdebbb66f7b0cd8a1324" category="list-text">*保存*を選択します。</block>
+  <block id="0803d30fefe8c23b3667222268afa94b" category="section-title">古いデータのしきい値を設定する</block>
+  <block id="af4ec082fbd0c524e89b1c1edfde19a4" category="list-text">*Stale data definition* の *Edit* を選択します。</block>
+  <block id="e927212088bb79337374c3f698de2179" category="list-text">時間しきい値を設定します。デフォルトは3年です。</block>
+  <block id="30f60d67f457bb040dffde52197a54da" category="section-title">関連情報</block>
+  <block id="da04d3e23ca53cd49a0abe6e25b1632b" category="inline-link-macro">AI Data Engine ダッシュボードについて学ぶ</block>
+  <block id="72a44204a778b5f38d69fa2db6cd3e9d" category="list-text"><block ref="72a44204a778b5f38d69fa2db6cd3e9d" category="inline-link-macro-rx"></block></block>
+  <block id="f47313cb11c7179c014c38c757ea3524" category="inline-link-macro">ストレージ最適化ワークフローを探索する</block>
+  <block id="12e1c9d43b7fa4b8afa0d962af8d6f6a" category="list-text"><block ref="12e1c9d43b7fa4b8afa0d962af8d6f6a" category="inline-link-macro-rx"></block></block>
+  <block id="015653ee347fd187160fa2a4e0cc0018" category="inline-link-macro">ユーザーとロールを管理する</block>
+  <block id="e4a085ef6af4b1e82ee2f0d60ce0893a" category="list-text"><block ref="e4a085ef6af4b1e82ee2f0d60ce0893a" category="inline-link-macro-rx"></block></block>
+  <block id="d3ee3c86b87e2394d5115800bd00579c" category="summary">各ユーザーに管理者または閲覧者のロールを割り当てることで、アクセスを制御します。2つのロールとその権限について説明します。</block>
+  <block id="9f4346dd22f2a2d61f9ceb9a382e7def" category="doc">AI Data Engine でユーザーとロールを管理する</block>
+  <block id="6e922598602274a9fa1bfc4867a30553" category="paragraph">管理者または閲覧者のロールを割り当てることで、各ユーザーが AI Data Engine で閲覧および操作できる内容を制御します。チームが AI Data Engine の使用を開始する前に、各ユーザーに必要なアクセスレベルに合ったロールを割り当てます。</block>
+  <block id="e2a36e2d6394d346a30e4bc9ed6037a5" category="paragraph">役割は、NetApp Console の組織設定から割り当てます。AI Data Engine は2つのロールをサポートしています。</block>
+  <block id="5f30ddc6ba978a38568dd0166ca854f8" category="section-title">利用可能なロール</block>
+  <block id="2626c6ebd52cec6b4931c3a9ef69c567" category="section-title">AI Data Engine管理者</block>
+  <block id="938afc897dbf7f9f917594f75c742375" category="paragraph">AI Data Engine管理者ロールは、すべてのAI Data Engine機能へのフルアクセスを提供します。NetAppでは、デプロイメントごとにこのロールを割り当てるユーザーを2～3人以内にすることを推奨します。</block>
+  <block id="71e4642cc01f7e5c4bf1d9b2e6eb6c1a" category="section-title">AI Data Engine ビューア</block>
+  <block id="e96d3cd421b701e01b78e94b49c5bad2" category="paragraph">AI Data Engine のビューアーロールでは、AI Data Engine へのアクセスが制限されます。閲覧者は、情報の表示、レポートのエクスポート、ファイルのタグ付け、監視専用ポリシーの作成はできますが、設定を変更したり、アーカイブ、コピー、削除などのファイル操作を実行したりすることはできません。</block>
+  <block id="f015140812f0bc60ae7d3bffbfe93e84" category="section-title">役割ごとの権限</block>
+  <block id="fa97f6975c9b94a252d204cd22159ff4" category="cell">機能</block>
+  <block id="93cba07454f06a4a960172bbd6e2a435" category="cell">はい</block>
+  <block id="336d5ebc5436534e61d16e63ddfca327" category="cell">-</block>
+  <block id="a88a417ad9c2be56b616cd48d8e21f83" category="cell">データリソースを管理する</block>
+  <block id="3c4e32d95f12c00d16a76057a7af18f6" category="cell">システム設定</block>
+  <block id="3967d8036668c2f89130ca845de9d4a4" category="cell">ダッシュボードを表示する</block>
+  <block id="f5c67558060302f363b758762a776d1b" category="cell">検索メタデータ（調査）</block>
+  <block id="0993273353cc9f49309ecd350c0dd2bb" category="cell">レポートのエクスポート</block>
+  <block id="a7cf128c8cf9d2177ce397028ee0f199" category="cell">監視専用ポリシーを作成する</block>
+  <block id="6faf562d55c6575c8fee54b7ee423082" category="cell">アクションを含むポリシーを作成する</block>
+  <block id="a292a883937f7bfd9a8ed960542159e0" category="cell">アクション：タグ</block>
+  <block id="0b29f28b6f97e633b987fa1519ec84f5" category="cell">操作：アーカイブ、コピー、削除</block>
+  <block id="31d10a37fb8885408a38171daea61807" category="cell">ビジネスタグを管理する</block>
+  <block id="8b53b00f5352fcc616e0371c614127ff" category="section-title">ユーザーに役割を割り当てる</block>
+  <block id="2e4a4d8d918b5db6fd6dccf54e4310b9" category="paragraph">役割は AI Data Engine 自体ではなく、NetApp Console で割り当てます。</block>
+  <block id="0d87fb6d34ff9ec127d1fb7fe40d2873" category="list-text">NetApp Console から、*メンバー*に移動します。</block>
+  <block id="365d382b2d9ecca9b0d40171c69b38ff" category="list-text">次のいずれかを実行します。</block>
+  <block id="4013279dd0be7a6765daac734d254b85" category="list-text">新しいユーザーを追加するには、*ユーザーを追加*を選択し、ユーザーのメールアドレスを入力してください。</block>
+  <block id="d3bd0996721400f8f6c60a50c1e195fb" category="list-text">既存のユーザーを更新するには、リストからユーザーを選択してください。</block>
+  <block id="2a206a44a0a994c82b461831f93b69c4" category="list-text">組織、フォルダー、またはプロジェクトを選択し、次に「データサービス」カテゴリを選択します。</block>
+  <block id="8e4308c1d564d9b777d03434bab61b0a" category="list-text">*AI data engine administrator*または*AI data engine viewer*の役割を割り当てます。</block>
+  <block id="345e93a96b6e66cb9274dbad975c0db2" category="list-text">変更を保存します。</block>
+  <block id="8edc5b73c3c2a64166547be39158f048" category="paragraph">ユーザーはメールで招待を受け取り、招待を承認するとAI Data Engineにアクセスできるようになります。</block>
+  <block id="4fce3801c71d07e76b130137410b84e6" category="inline-link-macro">データに対してアクションを実行する</block>
+  <block id="83f4e51e2352c106bc442855cebb5115" category="list-text"><block ref="83f4e51e2352c106bc442855cebb5115" category="inline-link-macro-rx"></block></block>
+  <block id="437f900a689b3effaba13525bf426e50" category="inline-link-macro">ポリシーを作成します。</block>
+  <block id="a6ba65d5603bedd3e970c59f52c864db" category="list-text"><block ref="a6ba65d5603bedd3e970c59f52c864db" category="inline-link-macro-rx"></block></block>
+  <block id="9fcf5c684f11b7bbbd6635da90d62ee7" category="summary">データソースのオンボーディングウィザードを完了してストレージシステムをAI Data Engineに接続し、スキャンを有効化してメタデータの収集を開始します。</block>
+  <block id="c7b2e3a558f93c05a2ce9d80b8c8c8e0" category="doc">データソースをAI Data Engineに接続する</block>
+  <block id="1bd7981e3d7c792404f8fdfaa6c1c50c" category="paragraph">AI Data Engine はストレージシステムをスキャンして、メタデータを収集・分析します。データソースを追加するには、オンボーディングウィザードを完了してください。ウィザードは、接続の詳細、スキャン範囲、およびソースタイプの設定を収集します。システムを追加したら、スキャンを有効にしてメタデータの収集を開始してください。</block>
+  <block id="81ce10edb3d458fc62131464f0c20994" category="list-text">AI Data Engine でデータソースに接続して構成するには、_AI Data Engine 管理者_ 権限が必要です。</block>
+  <block id="c5fbee6586294d81141f8dd158707985" category="inline-link-macro">オンプレミス ONTAP クラスターの検出</block>
+  <block id="2e3c75f22a9ebeae23565b189a21c411" category="list-text">ストレージ システムを AI Data Engine に追加する前に、Console Agent を使用して NetApp Console で検出します。これは、オンプレミスの ONTAP クラスター、Cloud Volumes ONTAP、Amazon FSx for NetApp ONTAP、Google Cloud NetApp Volumes、Azure NetApp Files など、サポートされているすべてのストレージ タイプに適用されます。オンプレミスの ONTAP クラスターについては、NetApp Console ドキュメントの<block ref="e85b78baa8f4e35e46a2387467739692" category="inline-link-macro-rx"></block>を参照してください。直接検出では、AI Data Engine などのデータ サービスは有効になりません。</block>
+  <block id="9f91522d43e1c5f4a996c9a8384dc391" category="inline-link-macro">AI Data Engine の要件</block>
+  <block id="1742041af0b9f3a717b5cf211479fdf3" category="list-text">AI Data Engine がデータソースに接続するために必要なネットワーク接続が開いていることを確認してください。<block ref="54a8e181914f652a26e1c9bb92d0a23f" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="f721e2f5905762b503bdc11996948f52" category="section-title">データソースを追加する</block>
+  <block id="1036f7c00460b9a45a9e5412bd73af32" category="list-text">「スキャン済みシステム」タブで、「システムの追加」を選択します。</block>
+  <block id="6802dbdc8935d97c254889cc48e9da6f" category="list-text">ソースの種類を選択してください：</block>
+  <block id="f99f3d1bb0801fc90897db0098fc2b36" category="cell">ソース タイプ</block>
+  <block id="b5a7adde1af5c87d7fd797b6245c2a39" category="cell">説明</block>
+  <block id="7906bd4892f76d110c19711b10d6974f" category="cell">*ファイル共有グループ*</block>
+  <block id="7df6468497d58e41a37e6f7f67ce8061" category="cell">クラウドまたはオンプレミスのNFSまたはSMB/CIFSファイル共有を名前付きグループとして追加します。</block>
+  <block id="7a8d3dc7f0e719542e9e706dbca4f3ec" category="cell">*データベース*</block>
+  <block id="96c6bed08ddd7b750ad14c5944284278" category="cell">選択したスキーマをスキャンするデータベース サーバを追加します。</block>
+  <block id="cc8eee99371af0beb4dcd80f722b6a62" category="cell">*StorageGRID*</block>
+  <block id="aa9f5a1aee11febeadd1b489d3f65550" category="cell">S3プロトコルを使用してNetApp StorageGRIDのデータをスキャンします。</block>
+  <block id="163998c3867b69d394de852cc2153a1c" category="list-text">ソースタイプの接続情報を入力してください：</block>
+  <block id="6f06467ad05e46080f77c6d42084a566" category="cell">必須項目</block>
+  <block id="e073a5abe29c11bef13a47c04d7cae9c" category="cell">共有グループの名前、続いて共有ホストとパスの詳細を指定します。</block>
+  <block id="136c6f0aa925fb0bfd7463700ddf1674" category="cell">データベースの種類、ホスト、ポート、認証クレデンシャル。</block>
+  <block id="c2551511c0e16fab930f47dceceb01a4" category="cell">システム名、S3エンドポイントURL、S3アクセスキーおよびシークレットキー。</block>
+  <block id="9fc6176ce15bcce9331a1e20d5b5f6c8" category="list-text">選択内容を確認し、*確認*を選択してデータソースを追加してください。</block>
+  <block id="bafd4c151b05d8865cbb162dbec61687" category="section-title">スキャンを有効にする</block>
+  <block id="397e7ff470834102f1db8c0e1d7f00c6" category="paragraph">データソースを設定しても、スキャンは自動的に開始されません。各システムごとにスキャンを有効にする必要があります。</block>
+  <block id="5c36c141c7bd019c9ed19a66aa3d7d5f" category="list-text">「スキャン済みシステム」タブで、スキャンするシステムを探します。</block>
+  <block id="75f33db49e0e6285bb693013ad8eff4f" category="list-text">「スキャンを有効にする」を選択します。</block>
+  <block id="8eea62084ca7e541d918e823422bd82e" category="paragraph-title">結果</block>
+  <block id="a184e20ed5e6a5b8da09e0b40c163e0c" category="inline-link-macro">データソースの管理</block>
+  <block id="e2a06367a28bf2533a5c602b27e1216b" category="inline-link-macro">スキャン状態を監視する</block>
+  <block id="af9bbf23b5e3a1331dfcb40555ee9bd1" category="paragraph">「スキャン済みシステム」タブのシステムステータスが更新され、スキャンが実行中であることが示されます。スキャンの進行状況を監視し、AI Data Engine がデータリソースのインデックスを作成していることを確認するには、<block ref="9bb912d6e599634eb2e0e0bb63292cd7" category="inline-link-macro-rx"></block> および <block ref="8e1e532fb417ff9d34e2ce12ba4bb87b" category="inline-link-macro-rx"></block> を参照してください。</block>
+  <block id="9bb912d6e599634eb2e0e0bb63292cd7" category="list-text"><block ref="9bb912d6e599634eb2e0e0bb63292cd7" category="inline-link-macro-rx"></block></block>
+  <block id="54a8e181914f652a26e1c9bb92d0a23f" category="list-text"><block ref="54a8e181914f652a26e1c9bb92d0a23f" category="inline-link-macro-rx"></block></block>
+  <block id="0a85e5de3bf2e7da2454dd1ebb06df4c" category="inline-link-macro">ダッシュボードからストレージの使用状況を評価する</block>
+  <block id="e4e3dec594fae827f2c546b2c4243be2" category="list-text"><block ref="e4e3dec594fae827f2c546b2c4243be2" category="inline-link-macro-rx"></block></block>
+  <block id="8e1e532fb417ff9d34e2ce12ba4bb87b" category="list-text"><block ref="8e1e532fb417ff9d34e2ce12ba4bb87b" category="inline-link-macro-rx"></block></block>
+  <block id="71bed252a0d725056daf3e51c5fbeb5b" category="summary">スキャン状況を監視し、接続されているデータソースを管理します。これには、スキャンの一時停止、認証クレデンシャルの編集、DPボリュームアクセスの有効化、システムの非アクティブ化などが含まれます。</block>
+  <block id="3d934a56ae9bd1e2d3693013e9b1ade0" category="doc">AI Data Engine でのデータソースの管理</block>
+  <block id="54c980376574e881b2271b2d860072c8" category="paragraph">データソースを接続すると、「スキャン済みシステム」タブからスキャン状況の監視や管理を行うことができます。これらの手順を使用して、スキャンを一時停止または再開したり、認証クレデンシャルを更新したり、データアクセス設定を調整したり、スキャンする必要がなくなったシステムを無効化したりできます。</block>
+  <block id="8caae32095ed52cd3c05e55becafb858" category="section-title">スキャン状況と詳細を表示する</block>
+  <block id="f9bad9406ac312c31d212aa25120ecf2" category="list-text">「スキャン済みシステム」タブで、確認したいシステムを見つけます。</block>
+  <block id="3676bd988230e578436a0e1c5ea94daf" category="list-text">詳細ビューを開くには、システム行を選択してください。</block>
+  <block id="6545e1699002538b5f0ee518b09298e4" category="paragraph">詳細表示には以下が表示されます：</block>
+  <block id="fa84b834db75064714082c0dd20223d0" category="list-text">現在のスキャン進行状況を含むステータス概要</block>
+  <block id="5751b8d5629d88c078d6299f86965140" category="list-text">データリソースのスキャン状態の内訳：実行中、完了、一時停止、エラー</block>
+  <block id="ab61d82ed3b9442ae09a2640f7f66122" category="list-text">スキャン権限モード（例：「書き込み権限なしでスキャンする」）</block>
+  <block id="942284f04c1abc207bb6a052c78839bb" category="paragraph">スキャンエラーが発生した場合は、エラーの詳細を展開して、影響を受けているボリュームまたは共有フォルダと、エラーの原因を確認してください。</block>
+  <block id="b1652f66588933fdd998c84f1fc371b5" category="section-title">スキャンを一時停止</block>
+  <block id="5d6211b0ed7d27d92b93a574d2c87b14" category="list-text">「スキャン済みシステム」タブで、一時停止するシステムを探します。</block>
+  <block id="549087ff6c78cd133e60eae091dcb474" category="list-text">*一時停止*を選択します。</block>
+  <block id="bf2a5339c0e847663ee371977a8739e6" category="section-title">スキャンを再開</block>
+  <block id="f39b13071aeb5402471aa32f93666962" category="list-text">「スキャン済みシステム」タブで、一時停止中のシステムを探します。</block>
+  <block id="f9d637e15d973238afdaad997d440a45" category="list-text">「再開」を選択します。</block>
+  <block id="03a27bda0a3fbf35292e887abf9530c0" category="section-title">すべてのデータリソースをスキャンします</block>
+  <block id="174876884410e05a752f3369d44a1be4" category="paragraph">システム上のすべてのデータリソースを即座にスキャンします。重要なデータ変更後にメタデータを更新するために使用します。</block>
+  <block id="d526d76ea93c408bf96f0d8f6492d4a2" category="list-text">システムの横にあるアクションメニューを選択します。</block>
+  <block id="eb6687d5f8c164fc44228bdf2efa6e92" category="list-text">「すべてのボリュームをスキャン」を選択します（共有とバケットのアクションメニューにも同等のオプションがあります）。</block>
+  <block id="de18a9c7b461766a9e15f645a9277626" category="section-title">失敗したスキャンを再試行する</block>
+  <block id="62f3db64bafc9a9f3332553e7caf974e" category="paragraph">失敗またはエラー状態にあるデータリソースを再キューイングします。再試行する前に、認証情報の問題、ネットワークエラー、権限の問題など、根本原因をまず解決してください。</block>
+  <block id="163c73c5c480913ef1fd9beaede8aa79" category="list-text">「スキャン済みシステム」タブで、スキャンに失敗したシステムを探します。</block>
+  <block id="3773ecec1d9bf175c40c3e00905fa3a8" category="list-text">「すべてのスキャンを再試行」を選択します。</block>
+  <block id="9e95c1bf1f55b0dd3fa35ac05987ff47" category="section-title">CIFS認証情報を編集する</block>
+  <block id="6b4f460b09df7f7d04473cce3f5c2091" category="paragraph">AI Data EngineがSMB/CIFS共有への認証に使用する認証情報を更新します。</block>
+  <block id="20c1653420c6e86abf3dc395a5235f15" category="list-text">「スキャンされたシステム」タブで、SMB/CIFSシステムを探します。</block>
+  <block id="1c8399981fc0cb7f53cf4e4c1b840982" category="list-text">「CIFS認証情報の編集」を選択します。</block>
+  <block id="1f41fef264384b90868d40a821202c24" category="list-text">更新したユーザー名とパスワードを入力し、*保存*を選択してください。</block>
+  <block id="414649aab6b69f900857f6d64b790c98" category="section-title">DPボリュームへのアクセスを有効または無効にする</block>
+  <block id="6efc4789000f4a114ada7d2f9cfeb19f" category="paragraph">データ保護（DP）ボリュームはNetApp SnapMirrorデスティネーションボリュームです。デフォルトでは、AI Data EngineはDPボリュームをスキャンしません。システムごとにDPボリュームへのアクセスを有効または無効にすることができます。</block>
+  <block id="f024fd7ca7740cd729663e0e315fb029" category="list-text">「スキャン済みシステム」タブで、該当のシステムを探します。</block>
+  <block id="a7a9e665c4b73f67405d0bcefd63e223" category="list-text">「DPボリュームへのアクセスを有効にする」または「DPボリュームへのアクセスを無効にする」を選択します。</block>
+  <block id="afed3d052e427b3d85d5eee2e3322141" category="section-title">特定の共有、バケット、またはボリュームのスキャンを有効または無効にする</block>
+  <block id="ecdf26f68c4c61e174bec07cbdde9a3f" category="paragraph">データソースに接続してスキャンした後、システム全体を再構成することなく、個々のボリュームまたは共有のスキャンを有効または無効にすることができます。初期設定後、スキャン範囲を微調整するために使用します。例えば、分析する必要のないデータを含むボリュームを除外したり、最初のスキャン時に選択されなかった、または利用できなかったボリュームを追加したりしたい場合があります。</block>
+  <block id="705ef84a0de672a6a79522e15cbd6ef2" category="list-text">「スキャン済みシステム」タブで、更新するシステムを探します。</block>
+  <block id="0d556b4ab9d1db6d4a1b749f3386759a" category="list-text">システム行の「詳細を表示」を選択します。</block>
+  <block id="c3af1519c6123af458cb90ec91542a4f" category="list-text">データリソース一覧から、変更したいボリューム、バケット、または共有を探します。</block>
+  <block id="14b27b75a1d120ea9e666d3db0941436" category="list-text">そのリソースのスキャンを有効または無効にするには、*スキャン*トグルを使用します。</block>
+  <block id="41935257476ba80c261ff080a271a7d3" category="section-title">システムのAI Data Engineを無効化する</block>
+  <block id="a20a23b2ca54961af6236cefa5ef356b" category="paragraph">システムを非アクティブ化すると、すべてのスキャンが停止し、アクティブなスキャン範囲から除外されます。システム構成は保持され、システム行の「スキャンを有効にする」を選択することで、いつでもシステムを再アクティブ化できます。</block>
+  <block id="b5ed7919704c41d347e419e3f07f7aee" category="list-text">「スキャン済みシステム」タブで、無効化するシステムを見つけます。</block>
+  <block id="41f7ed8100607003b6ffe45c6005c1ff" category="list-text">*AI Data Engineの無効化*を選択します。</block>
+  <block id="712644c5607df8e9083327eca1c82101" category="inline-link-macro">データソースを接続する</block>
+  <block id="2724dae3d4fe6872691d5034cb03bbd3" category="list-text"><block ref="2724dae3d4fe6872691d5034cb03bbd3" category="inline-link-macro-rx"></block></block>
+  <block id="d744fa90fe44a5904aea919dfca837ea" category="summary">スキャンが正常に機能していること、および調査結果が最新のデータを反映していることを確認してください。</block>
+  <block id="11a16707e401e546365bdd295c6a352c" category="doc">AI Data Engineでスキャンの健全性を監視する</block>
+  <block id="470523a2048e77f6dc9db3dec1e18161" category="paragraph">ダッシュボードや調査結果に基づいて行動を起こす前に、基となるデータが最新であることを確認してください。スキャンが正常に機能していること、および結果が最新のデータに基づいていることを確認してください。</block>
+  <block id="2a0b481e4f870b99102f077085800e16" category="section-title">スキャン状況とカバー範囲を確認する</block>
+  <block id="9d474a5a515fcc0d55b42b0cf37c092d" category="paragraph">すべてのストレージシステムが接続され、スキャンされていることを確認してください。</block>
+  <block id="9cc9537fabb2431661a21bfb76403c12" category="list-text">*スキャン対象システム*タブで、表示されるべきすべてのストレージシステムが一覧表示され、スキャンが有効になっていることを確認してください。</block>
+  <block id="84a5093fdc653e7495c6bbc2f37f5561" category="list-text">スキャンの進行状況やエラーを確認するには、システム行から「詳細を表示」を選択してください。詳細については、<block ref="0b2fcdd8d4d9682bfd2c6d6258375c8a" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="b5488e9b98687008f2ea983e9dffd258" category="section-title">調査結果が最新のデータを反映していることを検証する</block>
+  <block id="a0a61f82fe136888cc21e0515930a76a" category="paragraph">ダッシュボードに大量のコールドデータや古いデータが表示されている場合は、それに基づいて意思決定を行う前に、数値が最新のものであることを確認してください。</block>
+  <block id="38f706e282df2c74bca3ccf3f3d0fb9b" category="list-text">問題の原因となった各ストレージシステムの最終スキャン時刻を確認してください。最近スキャンを行っていないシステムは、コールドデータや古いデータを過少または過剰に報告する可能性があります。</block>
+  <block id="4212d3ae3d1d779b3e6d2793eb980dd6" category="list-text">そのシステムのスキャンが完了していることを確認してください。部分的なスキャン（一時停止、進行中、またはエラー発生）とは、一部のデータがまだ評価されていないことを意味します。</block>
+  <block id="adc853eb6e5b5878e13573f1fa83cfcb" category="list-text">スキャン範囲が不完全な場合は、次のスキャンサイクルまで待つか、根本的なエラーを解決してください。</block>
+  <block id="3540fa5efa78b3ae6e9c7d52a1e7d21a" category="list-text"><block ref="3540fa5efa78b3ae6e9c7d52a1e7d21a" category="inline-link-macro-rx"></block></block>
+  <block id="949195768b714c50c6fc8c9385a74cc5" category="inline-link-macro">データを調査する</block>
+  <block id="a7b69c2f48ed01caa5360edd3b7e1922" category="list-text"><block ref="a7b69c2f48ed01caa5360edd3b7e1922" category="inline-link-macro-rx"></block></block>
+  <block id="3feb21bfc5c576b8b0ba88831f152f9e" category="summary">AI Data Engineを導入する前に、インフラストラクチャとネットワークの要件を確認してください。</block>
+  <block id="f0d98a4bfed3e44ea9936088be5b51be" category="paragraph">AI Data Engine を導入する前に、ご使用の環境におけるネットワーク、VMのサイジング、およびオペレーティングシステムの要件を確認してください。</block>
+  <block id="9251700e586dc1a410f2e755a8643751" category="section-title">ネットワーク要件</block>
+  <block id="6cd7be1b5f82b01b11188317c9ab762d" category="paragraph">以下のネットワーク接続が開いている必要があります：</block>
+  <block id="c2cc7082a89c1ad6631a2f66af5f00c0" category="cell">接続</block>
+  <block id="60aaf44d4b562252c04db7f98497e9aa" category="cell">ポート</block>
+  <block id="888a77f5ac0748b6c8001822417df8b6" category="cell">Protocol</block>
+  <block id="02674a4ef33e11c879283629996c8ff8" category="cell">送受信方向</block>
+  <block id="261addf78c7b2c961032b3dd08ba0b1f" category="cell">目的</block>
+  <block id="74ebb19c002aeb0737bde4301280551b" category="cell">コンソールエージェントから NetApp コンソールへ</block>
+  <block id="13f3cf8c531952d72e5847c4183e6910" category="cell">443</block>
+  <block id="b136ef5f6a01d816991fe3cf7a6ac763" category="cell">TCP</block>
+  <block id="4c32be4a0b4f48cdd593aef35fd69e44" category="cell">アウトバウンド</block>
+  <block id="79c4d4839679effbb0de35f32d5b0348" category="cell">HTTPS：NetApp Consoleへの接続</block>
+  <block id="ae7fb447812f3f8ffd319804eaaf9c57" category="cell">コンソールエージェントからONTAPへ</block>
+  <block id="48d083b082abdc6a89158d0e6ae2d159" category="cell">HTTPS：ONTAPクラスターの検出</block>
+  <block id="3cda5bf04bdb0f0bc3387861b3f93fde" category="cell">コンソールエージェントからAI Data Engineへ</block>
+  <block id="bfd0e75d565a2e7a467f23c7d6ed5272" category="cell">80、443、8080、9000</block>
+  <block id="abd4328c725637aabedbd02d3b7ffd40" category="cell">双方向</block>
+  <block id="6c2a2f48b6d12c7baaa10e3a9ae2f62f" category="cell">コンソールエージェントとAI Data Engine間の通信</block>
+  <block id="931d680d6a5460c1d2622564222f587f" category="cell">AI Data EngineからONTAP （NFS）へ</block>
+  <block id="7a7f881d4d3190005bfe3277c48286d2" category="cell">111つまたは2049つ</block>
+  <block id="8962b8350728e2f6eb9cbbb07ca70d86" category="cell">TCP/UDP</block>
+  <block id="aa488fb4d7657cdf6ee20912242f78c9" category="cell">保管場所へ</block>
+  <block id="c286f6ab35109c987f8d1c719c99357d" category="cell">NFSデータソースへのアクセス</block>
+  <block id="593471079242cfe64460e1a9f77827e9" category="cell">AI Data Engine から ONTAP （SMB/CIFS）</block>
+  <block id="bb9d171c99ee8c2dd5ace360b8c91105" category="cell">139つまたは445つ</block>
+  <block id="ef43abd9c133e1911593104b252ec139" category="cell">SMB/CIFSデータソースへのアクセス</block>
+  <block id="8adeec70074c625307a8b338e365abb6" category="cell">AI Data EngineからActive Directoryへ</block>
+  <block id="ce4eb690b25a002b5241b04f64c1e5a3" category="cell">389、636、3268、3269</block>
+  <block id="aaf48608e56973323dc5fd5ed96df4e0" category="cell">LDAP (389)、LDAPS (636)、およびグローバルカタログ (3268、3269) はユーザ認証およびSMB/CIFSスキャンに使用します。ポート389はTCPとUDPの両方を使用します。その他のポートはすべてTCPのみを使用します。</block>
+  <block id="2db1dab3ddb9f419528a22df20d91148" category="cell">AI Data EngineからNetAppサービス / コンテナレジストリへ</block>
+  <block id="b7ac7d300206d5941ec66379a70e21c9" category="cell">HTTPS：アーティファクトのダウンロードとコンテナイメージのプル（AWS S3およびECR）</block>
+  <block id="c8f224037ea295aeec347c94779d9932" category="section-title">アウトバウンドインターネットアクセス</block>
+  <block id="fe5ca1427b7b25600877465e2b007712" category="paragraph">オンラインインストールの場合、以下のエンドポイントにAI Data Engineホストからアクセスできる必要があります：</block>
+  <block id="2a6ba72e93aa7fa676d07973ed2716bb" category="cell">エンドポイント</block>
+  <block id="5d113f2038d289f391614c39043629e8" category="cell">Scope</block>
+  <block id="97a10868af176d2bb0b0e075c08558b7" category="cell"><block ref="8ace43f907c71d8be7768e59cf9e21dc" prefix="" category="inline-code"></block></block>
+  <block id="6061d3eb59dc8de0365754ba1b7fa241" category="cell">NetApp Console通信</block>
+  <block id="130c5b3473c57faa76e2a1c54e26f88e" category="cell">両方</block>
+  <block id="cbb66f5f0c7ca4b7d24f549b094bdc89" category="cell"><block ref="300f031c227ed1b4448a8bb51abec2bb" prefix="" category="inline-code"></block></block>
+  <block id="f819285916732af4c9441637a0f0e6f3" category="cell">集中型ユーザ認証</block>
+  <block id="43cb0bffdd9d5ded05a3424ff4e965da" category="cell"><block ref="fdb51f8a262ef532926feb44b010cb72" prefix="" category="inline-code"></block></block>
+  <block id="80a6f28c09d348797265c4baa8b846a2" category="cell">認証サービス</block>
+  <block id="d7f881d10d719addec3155de4baf22eb" category="cell"><block ref="51fe8074caa966b7d305454c11b1d09d" prefix="" category="inline-code"></block></block>
+  <block id="4dc4e4dd4f2622ff339cec2e9b258777" category="cell">NetAppコンテナレジストリ（AIDEコンテナイメージ）</block>
+  <block id="b300e728158ca5abf567ee6842739ef7" category="cell"><block ref="8d1a277a7868d38ae6878e8c44088c86" prefix="" category="inline-code"></block></block>
+  <block id="6ff6699f108d036de7d8b3307cbba639" category="cell">NetAppコンテナレジストリ（デュアルスタック／仮想プライベートクラウド（VPC）エンドポイントアクセス）</block>
+  <block id="728781c2f7cdb1f4c5cae712d25a3521" category="cell"><block ref="910449e9fd785da87d5f385fac95cee8" prefix="" category="inline-code"></block></block>
+  <block id="27eab3a38e9c960cd387dd0fcb59b25e" category="cell">AWS ECR API（認証およびイメージマニフェストの取得）</block>
+  <block id="b3bd75f12ce9b0acd43d20cbcdc48fcb" category="cell"><block ref="7ca098361cdcac8376224541f6a154c1" prefix="" category="inline-code"></block></block>
+  <block id="465fa38be0e889a6f4f5eea4bfe44907" category="cell">AWS S3（ECRコンテナイメージレイヤーストレージ）</block>
+  <block id="42f24633638dc7dcd28fb8f99b7b7345" category="cell"><block ref="d1d564ee4aa9ec56fade21c33a8fa4ed" prefix="" category="inline-code"></block></block>
+  <block id="5f307da0cc037fccf5156a0b4ee1113d" category="cell"><block ref="ff032e02260ff014601b07ec7a62ebb1" prefix="" category="inline-code"></block></block>
+  <block id="5443ee8394dc795513c17308df8c608c" category="cell">AWS S3（インストーラーラッパースクリプト、Helmチャート、コンポーネントバージョンカタログ）</block>
+  <block id="7ded7b42d1eca3a189946f71087a85aa" category="cell"><block ref="da2b821a15b81caba3d4b0ea9a59ff1e" prefix="" category="inline-code"></block></block>
+  <block id="aa0b7e03e09f090a4bf285bf5ccb013f" category="cell"><block ref="392fdd4737637bf98a0b2e0d58c55d8b" prefix="" category="inline-code"></block></block>
+  <block id="a8d7819f8fcc49a13bd5e04efc4bb73d" category="cell">AWS STS（レジストリおよびS3アクセス用の一時的な認証情報交換）</block>
+  <block id="e01bbe0a773568d8b2d943c725bc4a98" category="cell"><block ref="ecaf91bb6d35ab95086ca1e072f979e8" prefix="" category="inline-code"></block></block>
+  <block id="3ed1acda8d7511c7f0e269b4d06365c2" category="cell">ソフトウェアイメージ、マニフェスト、テンプレート、ログおよびメトリクスのストリーミング</block>
+  <block id="113661af05a54ad30f2cf875f2085a8c" category="cell"><block ref="8c4749a6c91d5b5be3fa16d5adfdfcd0" prefix="" category="inline-code"></block></block>
+  <block id="c6c113e5074b85b3ee7783cc7a256ee6" category="cell">CloudFront CDN（ソフトウェア配信用）</block>
+  <block id="154a7dea0b63eaedaeebe172e4e534dd" category="cell"><block ref="6a2ac7d8f0e16e23be3e2fab90d9833f" prefix="" category="inline-code"></block></block>
+  <block id="dd1e8a369ffb5c425f5295170150f923" category="cell">Ubuntuの前提条件パッケージ</block>
+  <block id="a41cf9dbadca9500ac38067b535c8cf0" category="cell">Lite版のみ（Ubuntu）</block>
+  <block id="a507356b394570536b9953261b512550" category="cell"><block ref="8a37b484d48f7ab19209f20f88161503" prefix="" category="inline-code"></block></block>
+  <block id="638435f38da637d50db5ecf629602caa" category="cell">Ubuntuパッケージアーカイブ</block>
+  <block id="0b20abf458365869110b9a53c5f48b0f" category="cell"><block ref="d85007fc604c0187d8c7f0a0905426d5" prefix="" category="inline-code"></block></block>
+  <block id="73e4a059e9e92b2539973611852c265b" category="cell">Ubuntuセキュリティパッケージアーカイブ</block>
+  <block id="eb1b835842ecab36376189c338d3e249" category="cell"><block ref="9efd15cdc3b59f15ddb128b87d2bc31a" prefix="" category="inline-code"></block></block>
+  <block id="afcd81bacefaa3b77cbbea478e2ee10f" category="cell">k3sランタイムのダウンロード（インストーラーによる開始）</block>
+  <block id="6f5c0b49665b73d6c115ce1c02b0a641" category="cell">ライトのみ</block>
+  <block id="84e4ea8324474b00a6eda8b69e242e21" category="cell"><block ref="a8563316869b25370e1b9ac9741eff2d" prefix="" category="inline-code"></block></block>
+  <block id="13dfeaaa930b5f416523dd975c27cf87" category="cell">Helmのダウンロード（インストーラーによる開始）</block>
+  <block id="474410b6ac258b996077d7027389646f" category="inline-link-macro">ネットワーク アクセス要件（NetApp Console）</block>
+  <block id="c7da5317ad58b7d0506fb53736221000" category="paragraph">AI Data Engine は、集中認証およびコンソールサービスのために NetApp Console にも依存しています。Console およびコンソールエージェントの接続に必要なエンドポイントについては、<block ref="6f746cd707dc96e510abd18d2b8a9632" category="inline-link-macro-rx"></block> を参照してください。</block>
+  <block id="2c20fbdcf9b7401db8516a896c4e0033" category="paragraph">デプロイを開始する前に、AI Data Engine ホストからこれらのエンドポイントへの DNS 解決が機能していることを確認してください。</block>
+  <block id="a3ac66e285684389dd120cdd1d91a5a6" category="section-title">AIDE Lite の要件</block>
+  <block id="5227f9d83b477a63e6c0e89a04230d28" category="section-title">VMサイジング</block>
+  <block id="e40651cfbb74f24098d1e77f279d26fc" category="inline-xref">柔軟なサイズガイドライン</block>
+  <block id="5239445f5c0400ffad13f96e85ca912d" category="paragraph">これらのサイズは、3～4日間の初期スキャン期間に最適化された推奨基本構成であり、厳密な制限ではありません。<block ref="fdfdda200a4cf41e7b7263540f25f221" category="inline-xref-macro-rx"></block>を参照して、これらの数値を左右する要因と、それらを超えてスケールする方法をご確認ください。</block>
+  <block id="6f6cb72d544962fa333e2e34ce64f719" category="cell">サイズ</block>
+  <block id="5d56dbd20d9ee1ab8a722ff12e331953" category="cell">vCPU</block>
+  <block id="e53619c1fe611a51eeeb8d148ba6e532" category="cell">RAM</block>
+  <block id="380dbc8d9d2c8a17f6ebb0b2c62d3e85" category="cell">ディスク</block>
+  <block id="83b43ea2a270ae284e57558dfbd904a4" category="cell">Storage IOPS</block>
+  <block id="d942498bbf676ede690f93fe6f4eba33" category="cell">ストレージスループット</block>
+  <block id="eec89088ee408b80387155272b113256" category="cell">Network</block>
+  <block id="a00581fb76f430c52622665705a127d6" category="cell">おおよそのファイル</block>
+  <block id="2660064e68655415da2628c2ae2f7592" category="cell">小規模</block>
+  <block id="c74d97b01eae257e44aa9d5bade97baf" category="cell">16</block>
+  <block id="7fffe4f81cc10365684f8c3ef5dfc752" category="cell">64 GB</block>
+  <block id="47a5e6e39f64ff5d5dfb25da1aa3f3f2" category="cell">500 GB</block>
+  <block id="b7bc1c544eac128f494cbef4dde51844" category="cell">8,000</block>
+  <block id="253904cf11e154c1467da791e2916dff" category="cell">1,000MB/s</block>
+  <block id="542a51a19678b099661225e50ca14113" category="cell">1 GbE</block>
+  <block id="007104a26459cf001f34b5b588ae4d6b" category="cell">200 million</block>
+  <block id="87f8a6ab85c9ced3702b4ea641ad4bb5" category="cell">中</block>
+  <block id="6364d3f0f495b6ab9dcf8d3b5c6e0b01" category="cell">32</block>
+  <block id="da41e52384d87f5c6c3e5e945da60a14" category="cell">128 GB</block>
+  <block id="4399cdb8f35c7f54994fbd6ad16ae51d" category="cell">2 TB</block>
+  <block id="29ca150c07f43a7c676ecb487e3b8100" category="cell">12,000</block>
+  <block id="37b2db17d6593a3788376bf9bb6c1535" category="cell">1,500MB/s</block>
+  <block id="8452946a913c5da5d0753b575bc8e7b6" category="cell">10億</block>
+  <block id="3a69b34ce86dacb205936a8094f6c743" category="cell">大規模</block>
+  <block id="26657d5ff9020d2abefe558796b99584" category="cell">96</block>
+  <block id="a10c56d6d6012a90b60e77f2248ee70f" category="cell">192 GB</block>
+  <block id="ab4bf7c1be6270d2b6e2a29d2048d9ba" category="cell">6 TB</block>
+  <block id="5fd87da18bd5a2e29a0cc852c332a1ba" category="cell">16,000</block>
+  <block id="97fcefbae965abf290381c16b678b7ec" category="cell">2,000MB/s</block>
+  <block id="f813d4c41b3987dfffdcc0cea30c64cf" category="cell">10 GbE</block>
+  <block id="68c08a4d5037c95bc8fba88bfb68be34" category="cell">30億</block>
+  <block id="8d13605af92cc217c85c4ad45d6f7c6e" category="admonition">あらゆる規模の導入において、NVMe SSDまたはその他のソリッドステートストレージの使用を推奨します。この表のディスク値は、AIDEデータボリュームのストレージ専用です。OS、k3s ランタイム、および AIDE データがすべて単一のディスクを共有する場合は、選択したサイズのディスク値に約 65 GB を追加してください。たとえば、単一ディスク上の小規模な導入では、合計約 565 GB が必要です。</block>
+  <block id="f8a25fbf01ad745086d3090cb86949e9" category="inline-xref">小型、中型、大型の構成</block>
+  <block id="2c63324398e340bc0cfa20633d950a5d" category="paragraph"><block ref="63c192fbfe28a904fef2370327d0b606" category="inline-xref-macro-rx"></block>これらは、3～4日間の初期スキャン期間における推奨される基準値であり、ソフトウェアによって強制される厳密な制限ではありません。</block>
+  <block id="5616873f83786e41d208235efcb21dfa" category="list-text">サイズ推奨の根拠は何ですか？</block>
+  <block id="b3175af68c1f955a338904f52f52c31b" category="list-text">*ファイルとディレクトリの合計数*：カタログ化するオブジェクトの総数は、コンピューティングとストレージの要件を決定する主要因です。オブジェクト数が増えるほど、メモリ、CPU、ストレージの必要量も比例して増加します。</block>
+  <block id="477c48bec7aa8153b71c2fa6775007ea" category="list-text">*ディレクトリ構造*：リソースの使用量は、ディレクトリのネストの深さや、ファイルが共有やボリュームにどのように分散されているかによって異なります。深くネストされた構造や高度に断片化された構造は、よりフラットな階層構造で同じファイル数の場合よりも多くのリソースを必要とする可能性があります。</block>
+  <block id="ae5bdffd41c2fa1109349cdb30a487d8" category="list-text">*必要なスキャン処理能力*：初期カタログの完了速度は、CPUとメモリ割り当てに直接関係します。推奨サイズを下回るプロビジョニングを行うと、スループットが低下し、初期スキャンウィンドウが長くなります。</block>
+  <block id="5255e30ce3becd1a8dad5261847352e9" category="list-text">*ストレージ パフォーマンス*：ハイパフォーマンス ストレージを強く推奨します。メタデータのインデックス作成とイベント処理には、展開規模に比例した持続的な IOPS とスループットが必要です。</block>
+  <block id="21d3030790ee8dd6aedf4b3d3bd85241" category="list-text">サイズが小さすぎるとどうなりますか？</block>
+  <block id="976dca6e7f73b47bd2e65fc64fda0297" category="paragraph">推奨サイズを下回るプロビジョニングを行っても、インストールが妨げられたり、サービス障害が発生したりすることはありません。システムは引き続き稼働しており、スキャンも継続していますが、以下の点にご注意ください：</block>
+  <block id="3392722f1bd8a79d8ce9aa1291375d35" category="list-text">*初期カタログ期間の延長*：計算処理能力の低下により、1日あたりのスキャン対象オブジェクト数が減少します。例えば、30億個のオブジェクトを対象とするデプロイメントでも、より小さなサイズでプロビジョニングされた場合、目標の3～4日よりも大幅に時間がかかる可能性があります。</block>
+  <block id="04f33df6364dce086ab124fb023f1189" category="list-text">*継続的な取り込みスループットの低下*：継続的な負荷がかかると、新しいファイルイベントと増分スキャン更新の処理速度が低下します。</block>
+  <block id="0e2dd61bf6532387db4ae20e0fdd6b94" category="list-text">*ストレージ容量リスク*：オブジェクトの総数に対してストレージ容量が不足すると、メタデータインデックスが容量のしきい値に近づく可能性があります。通常、この問題はシステム全体の再デプロイを行わずに、ストレージ容量を拡張することで解決できます。</block>
+  <block id="1a3127d574918312a4ab223c9e789fd8" category="list-text">容量を追加する必要がある場合のスケーリング</block>
+  <block id="843313627dc8ca4704eddce4be151a81" category="paragraph">AIDE Liteは単一のVMで動作するため、スケーリングは垂直方向になります。</block>
+  <block id="6c662a2b269371b61f3191b2ada2b39e" category="list-text">ホストVM上のvCPU、メモリ、またはストレージを増やしてください。</block>
+  <block id="6a09047df4598fb150581654b18f4fec" category="list-text">クラスターの再構成や再インストールは不要です。</block>
+  <block id="d23bfd9ad7bd0c9a791c088e9bd2252f" category="inline-link-macro">AIDE Enterprise</block>
+  <block id="0da03b32810b54d59826c030fc38e4e3" category="admonition">AIDE Lite はハイパフォーマンスや水平方向のスケールアウトをサポートしていません。環境内のファイル数が常に30億を超える場合、または高可用性と耐障害性が必要な場合は、代わりに<block ref="d382e1cc179a193668ba420fcde06e3a" category="inline-link-macro-rx"></block>を導入してください。</block>
+  <block id="696c660ff8d9323e55146a6dbd4e4088" category="section-title">オペレーティング システム</block>
+  <block id="17bc10091293fdc562a6db69940ee924" category="cell">OS</block>
+  <block id="2e5d14f7919ff3c6138e7845aec4f915" category="cell">サポート対象のバージョン</block>
+  <block id="3d945423f8e9496c429a5d8c65b4604f" category="cell">Ubuntu</block>
+  <block id="91cf600280a31c34bee92cbbf232fbb4" category="cell">22.04 LTS、24.04 LTS（24.04 LTS推奨）</block>
+  <block id="eb13ea1edb52f2f7cdf4b15544892c06" category="cell">Red Hat Enterprise Linux（RHEL）</block>
+  <block id="2faf5144932acddbc582e2735ccfaf81" category="cell">8.x、9.x</block>
+  <block id="4a08abf9b8a46798cdcd3d6fa7855a47" category="section-title">追加の前提条件</block>
+  <block id="d9f20d148982fcb9954271f9773f9faa" category="list-text">インストーラーを実行するには、対象の仮想マシン上でroot権限またはsudo権限が必要です。</block>
+  <block id="d0841e0c68b47eabc71d450da0eb4198" category="list-text">最低1GbEのネットワーク接続（大規模展開の場合は10GbE）。</block>
+  <block id="be09bfe2a7cb95c01696de8958129e58" category="list-text">ターゲットホストには、bash 4.0以降、curl、およびtarがインストールされている必要があります。</block>
+  <block id="e659b40d2126ceff49df127acc731bb5" category="list-text">インストーラーは自動的にダウンロードしてブートストラップします<block ref="8adf56ad116be901bc1c46fc138f5e35" prefix=" " category="inline-code"></block>、<block ref="e7d07ed8aa8dd8cafce4a527a523d6c5" prefix=" " category="inline-code"></block>、<block ref="0f12ee5c9f1dd90158580f1c292b0d37" prefix=" " category="inline-code"></block>、および<block ref="d8757fb4e9ea07606d23a1ef5a4b8d4e" prefix=" " category="inline-code"></block>。対象となる仮想マシンにこれらのツールを事前にインストールする必要はありません。</block>
+  <block id="bdbae2c2c4e32ec6c1ad43c90a2e0cb1" category="list-text">インストーラーの起動前に、ホスト上でポート6443（TCP）、10250（TCP）、および8472（UDP）が空いている必要があります。ホストファイアウォール（<block ref="7ba21652408bcade58b8719451511f2a" prefix="(" category="inline-code"></block>RHEL上または<block ref="43a8c9840722971d7bc00f689aaba839" prefix=" " category="inline-code"></block>Ubuntu上）がアクティブな場合は、インストーラーを実行する前に、これらのポートとk3sポッドCIDR（<block ref="4cc0d71210465fa62867c07617a07f7c" prefix="(" category="inline-code"></block>）およびサービスCIDR（<block ref="1791b22edf57421226fdd571bb029cc8" prefix="(" category="inline-code"></block>）を許可してください。必要なコマンドについては、お使いのOSのファイアウォールに関するドキュメントを参照してください。</block>
+  <block id="d695202087632e6b4642eb352ae1d72e" category="list-text">SELinuxをEnforcingモードで実行しているRHELシステムでは、インストーラーが必要なSELinuxポリシーパッケージを自動的に構成します。SELinuxの手動設定は不要です。</block>
+  <block id="d7df956ed8a6009f2697e7ea59f768d5" category="section-title">AIDE Enterprise の要件</block>
+  <block id="4fa7f8915ea18c5e59f278f803e53f3c" category="list-text">インストーラーを実行するマシン上で、クラスター管理者権限を持つkubectlへのアクセス権が必要です。</block>
+  <block id="6cae2059ae7f40a8509d44cf4088d007" category="list-text">インストールコマンドを実行するマシンには、Sudo（またはroot）権限が必要です。</block>
+  <block id="1af43e39f476169c4e7048fa30b0d2c7" category="list-text">対象クラスターにRKE2 v1.34以降（v1.36.x推奨）がインストールされています。</block>
+  <block id="76fb8e768567e341c1a0798fe4e633d9" category="list-text">インストーラー ホストは、<block ref="50bc6b145cdb10db9c46326848e35a5f" prefix=" " category="inline-code"></block>を介して<block ref="e7d07ed8aa8dd8cafce4a527a523d6c5" prefix=" " category="inline-code"></block>、<block ref="0f12ee5c9f1dd90158580f1c292b0d37" prefix=" " category="inline-code"></block>、および<block ref="d8757fb4e9ea07606d23a1ef5a4b8d4e" prefix=" " category="inline-code"></block>を自動的にダウンロードしてブートストラップします。管理マシンにこれらのツールを事前にインストールしておく必要はありません。</block>
+  <block id="27c33c218c2b02ddcbe36e59b26e901d" category="list-text">構成されたStorageClass（デフォルト名<block ref="92bf138b666c1c986bd7a1a4dcae9436" prefix=" " category="inline-code"></block>）はクラスター上で利用可能で、AIDEのステートフルなバッキングサービスに使用されます。</block>
+  <block id="ce5ab936ac40869458236d23365a7973" category="list-text">少なくとも 1 つのエクスポートパスを持つ NFSサーバが利用可能で、AIDE 構成データボリュームと共有インデックス スナップショットに使用されます。</block>
+  <block id="488ff87aea5a8d31ced927df06aa9dc3" category="list-text">ターゲット Kubernetes 名前空間（デフォルト<block ref="87a4f89dbcdda862656068534d7005a9" prefix=" " category="inline-code"></block>）はすでにクラスター上に存在しており、インストーラーは作成しません。</block>
+  <block id="80193bec93acbe5d566695e92ff40775" category="admonition">NVMeまたはハイパフォーマンスSSDストレージは、すべてのEnterpriseノードの導入に推奨されます。</block>
+  <block id="3aaf805fc23f2d38628eb9e6dc9e212b" category="section-title">ノードサイズ設定</block>
+  <block id="a7241bce0d45d1d8412b2bdb9a2eec8e" category="paragraph">これらのサイズは、約3日間の初期スキャン期間に最適化された推奨ベースライン クラスタ構成であり、厳密な容量制限ではありません。AIDE Enterprise は、水平スケールアウトにより60億ファイルを超える環境をサポートします。詳細については、<block ref="11b0da32332d2d0d9386ce7e27a30ee4" category="inline-xref-macro-rx"></block>を参照してください。</block>
+  <block id="187c6ad3a74cc93ac6c2229d398e383e" category="cell">ノード</block>
+  <block id="1bfd2220d8fe0d16364a1fbbcb55ddc7" category="cell">ノードあたりのvCPU数</block>
+  <block id="b35eb28fbdaf65ec1327e79b53c92e28" category="cell">ノードあたりのRAM容量</block>
+  <block id="423216f082fec9a07efd841cf2b73c0a" category="cell">ノードあたりのディスク</block>
+  <block id="34d27416cf2043f878a1146074999ee9" category="cell">ノードあたりのストレージIOPS</block>
+  <block id="809af93b75fb9d00ddf2e6804ac26921" category="cell">ノードあたりのストレージスループット</block>
+  <block id="9d5bc42a1c7b5a6800df499cdffee6e5" category="cell">ノードごとのネットワーク</block>
+  <block id="eccbc87e4b5ce2fe28308fd9f2a7baf3" category="cell">3</block>
+  <block id="1afcf8ebd4c358721fd35f9b14bffaaf" category="cell">~1.3TB</block>
+  <block id="1679091c5a880faf6fb5e6087eb1b2dc" category="cell">6</block>
+  <block id="642e92efb79421734881b53e1e1b18b6" category="cell">48</block>
+  <block id="afed790d874c2e5b39e05619b86defab" category="cell">~2TB</block>
+  <block id="45c48cce2e2d7fbdea1afc51c7c6ad26" category="cell">9</block>
+  <block id="ea5d2f1c4608232e07d3aa3d998e5135" category="cell">64</block>
+  <block id="93bc489a942be947d2726505e1ca48b3" category="cell">256 GB</block>
+  <block id="c37f4c58f39bdadb53567758084c00fe" category="cell">~2.7TB</block>
+  <block id="f11053ee708ace18a04905ad93419736" category="cell">60億</block>
+  <block id="34feeb41c12a81b277887e38b0e1ee6c" category="paragraph"><block ref="bfc30cc05666392ab558bedcc9f91c20" category="inline-xref-macro-rx"></block>これらは、約3日間の初期スキャン期間における推奨されるベースラインクラスタ構成であり、ソフトウェアによって強制される厳密な容量上限ではありません。AIDE Enterprise は、クラスタ ノード全体での水平スケールアウトにより、30億ファイルを超える環境をサポートします。</block>
+  <block id="e7b02f4784ecd28afb8997ce3e05d184" category="list-text">*ファイルとディレクトリの合計数*：オブジェクトの合計数は、ストレージとコンピューティングの要件を決定する主要な要因です。大規模な環境では、処理負荷を分散し、パフォーマンスを維持するために、追加のクラスタノードが必要になります。</block>
+  <block id="25086dd45e0992ec487556de2c24cc04" category="list-text">*高可用性レプリケーション*： エンタープライズ展開では、耐障害性のために、デフォルトでノード間でのデータレプリケーションが有効になります。レプリケーションを行うと、同等のシングルノード構成と比較して、ストレージとメモリの総必要量が増加します。</block>
+  <block id="4a47b233159281b95c6ff76fd60442fa" category="list-text">*ノード数とワークロードの分散*：処理スループットとカタログの総容量は、クラスタ内のノード数に応じてスケールします。追加ノードは、インデックス作成のワークロードとストレージ容量の両方をクラスタ全体に分散します。</block>
+  <block id="fc768cfdf2ef096f800a1266bbff12b3" category="list-text">*必要なスキャン処理能力*：クラスタ全体のCPUとメモリの割り当てによって、1日のスキャン速度と初期カタログの完了速度が決まります。</block>
+  <block id="bca9080545e2ebb3d3f268550dacf9ca" category="list-text">*ノードごとのストレージ性能*：各ノードには高性能ストレージを強く推奨します。クラスタ全体の容量はノード数に比例して増加します。</block>
+  <block id="a6cb150774c57ec4d46f3f0687ffced7" category="paragraph">推奨サイズを下回るプロビジョニングを行っても、インストールが妨げられたり、重大な障害が発生したりすることはありません。具体的な影響としては、以下のようなものがあります。</block>
+  <block id="160c5350b70126814b2fba75f7af8cff" category="list-text">*初期カタログ期間の延長*：ノード数が少ない、またはノードあたりのリソースが少ないとスループットが低下し、初期カタログ期間が比例して延長されます。</block>
+  <block id="8c76ce7c020db553216deba2dc8f5401" category="list-text">*ピーク負荷時の処理遅延の増加*：クラスター全体のメモリ不足により、大量のデータを取り込む期間中に処理遅延が増加する可能性があります。進行中の処理は中断されませんが、持続的なスループットは低下します。</block>
+  <block id="182dadf1fe353e7cc124c0b9ccdfd5fa" category="list-text">*ストレージ容量リスク*：対象オブジェクト数に対してクラスタストレージが不足すると、メタデータインデックスが容量しきい値に近づく可能性があります。既存ノードのストレージを拡張する（無停止）か、専用のストレージ ノードを追加することで、この問題を解決できます。</block>
+  <block id="0cfd3ae232b1f5c6e4b55c8d7488d43f" category="paragraph">AIDE Enterpriseは、再デプロイなしで水平スケールアウトをサポートします：</block>
+  <block id="9eaa27fc36031cf7508a6c9afb5da59b" category="list-text">ワーカーノードを追加して、スキャン処理とイベント取り込みに利用できるCPUとメモリを増やします。</block>
+  <block id="2613221086922fe4c4c02f9bb4e826a6" category="list-text">専用ストレージ ノードを追加して、カタログの総容量を増やします。これは、事前定義された最大デプロイメント サイズを超えて環境をスケールアウトするための主要な方法です。</block>
+  <block id="66176e61e735a415fff25c70d428be82" category="list-text">クラスターにノードを追加することで、60億ファイルを超える規模にも対応できます。カスタムスケールにおけるノードのサイジングに関するガイダンスについては、NetAppの担当者にお問い合わせください。</block>
+  <block id="bc9887c630f44bf1747981259d20312d" category="admonition">既存のエンタープライズクラスタにノードを追加しても、進行中のスキャン操作には影響しませんが、変更はアクティビティの少ない時間帯に行うようにしてください。</block>
+  <block id="8676992f5e93250096176880b5305a01" category="inline-link-macro">AIDE導入概要</block>
+  <block id="d3556613131e318e5f2d2a7ee8d38a7c" category="list-text"><block ref="d3556613131e318e5f2d2a7ee8d38a7c" category="inline-link-macro-rx"></block></block>
+  <block id="07a3b4a364ef4ea2f66e179b22b2c081" category="inline-link-macro">AI Data Engine のデプロイ — Lite</block>
+  <block id="10bda37ec504bc21475c363f87d039b7" category="list-text"><block ref="10bda37ec504bc21475c363f87d039b7" category="inline-link-macro-rx"></block></block>
+  <block id="9780340266e04ab00f8baf827c278456" category="inline-link-macro">AI Data Engine のデプロイ — エンタープライズ</block>
+  <block id="b8ffd49b161a0bafa7ac79af99a078d4" category="list-text"><block ref="b8ffd49b161a0bafa7ac79af99a078d4" category="inline-link-macro-rx"></block></block>
+  <block id="bf432db974914045dbdb141a94746102" category="summary">デプロイメント ウィザードを使用して、NetApp Console から AIDE Lite をデプロイします。</block>
+  <block id="f7c39236be6bd435ec42b2fa2cf0b64d" category="doc">AI Data Engine Lite のデプロイ</block>
+  <block id="b1099081e00f8989d9694c85a0c5923a" category="paragraph">デプロイメントウィザードを使用して、NetApp Console から AIDE Lite をデプロイします。ウィザードは、インストール場所の選択、構成サイズの選択、および対象ホストでのインストールコマンドの実行手順を案内します。</block>
+  <block id="6c197e358af4189fc5967ff9d49f6db4" category="list-text">お客様はNetApp Consoleで_組織管理者_以上の権限を持っています。</block>
+  <block id="1f4a2d6200ad6e55158f5376f5cc28b6" category="list-text">インストールコマンドを実行するには、対象ホスト上でsudo（またはroot）権限が必要です。</block>
+  <block id="6d7bfbfb328e91017c8160aec407be19" category="inline-link-macro">AIDEの要件</block>
+  <block id="65eacaaf3bea1fd7a8594828320cd9f6" category="list-text">お客様の環境は、<block ref="0be0e04edd1e19a89ae931415ae02878" category="inline-link-macro-rx"></block>に記載されているすべての前提条件を満たしています。</block>
+  <block id="c38a91b64338659be48390e7b59b98be" category="inline-link">展開されています</block>
+  <block id="b2c5da1f5dc6f7356acb47cf3ba444d1" category="list-text">NetApp Console エージェント<block ref="b73290be3504f0507d7e45d060da298b" category="inline-link-rx"></block>は、AI Data Engine ホストから到達可能である必要があります。インストールコマンドを実行するには、Console Agent の IP アドレスが必要です。</block>
+  <block id="174790ce4804262cdbb778690ee4a907" category="list-text">NetApp Console で、*ガバナンス* &gt; *AI Data Engine* に移動します。</block>
+  <block id="48602d83d5d9910704adcce3b2ee67e6" category="paragraph">AI Data Engineのランディングページが表示されます。</block>
+  <block id="5bb86b97d5261c3f0e5705b4f80cac36" category="list-text">*AI Data Engine のデプロイ*を選択します。</block>
+  <block id="f365e3c1684ae4b1c44970f25e545b04" category="list-text">「Lite」展開オプションを選択し、「次へ」を選択します。</block>
+  <block id="a2c58206f4ee0d23ded834a18b1daf1f" category="list-text">ウィザードに表示されている、あらかじめ設定されたインストールコマンドをエディタにコピーします。</block>
+  <block id="96285c2d71bcec3ce19882c295253e45" category="list-text">構成サイズを選択してください：</block>
+  <block id="91a62ce5f728453d53ed8d0c2a936aec" category="list-text">*小型*：約2億ファイルまでの環境に推奨されます。</block>
+  <block id="8682893534f62c0d0aff25d6d8c85d96" category="list-text">*中（デフォルト）*：約10億ファイルまでの環境に推奨されます。</block>
+  <block id="8f83f7fa2261b412d2fa290f60ffe9e8" category="list-text">*ラージ*：約30億ファイルまでの環境に推奨されます。</block>
+  <block id="d46a5933f9f2e7d0d06362ecd5dfa041" category="inline-link-macro">柔軟なサイズガイドライン</block>
+  <block id="b7f0cfda97f42693a8f1e2398887a994" category="paragraph">これらのサイズは推奨される基準値であり、厳密な制限ではありません。お客様の環境がこれらの範囲外である場合は、<block ref="6b8e74170b14d312ab21928a851153d3" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="83ac9607e5958c0984c3f28f18cdc1a1" category="list-text">小規模構成または大規模構成の場合は、選択したサイズに合わせてインストールコマンドを調整してください：<block ref="8f650be051c9eec5eab6770e03ffce31" prefix=" " category="inline-code"></block></block>
+  <block id="ac18774dc2dba5258b649f18aa8155de" category="list-text">ターゲットホストで、必要な構成サイズの調整を加えたインストールコマンドを実行します。</block>
+  <block id="d1a3d9894253a2d72545899e3a59192e" category="admonition">インストールには約45分かかります。タイムアウトや再試行が発生する場合がありますが、これは正常な動作です。</block>
+  <block id="85e6b359225d41261774c22bf2bf080a" category="list-text">プロンプトが表示されたら、ホストのIPアドレスとユーザーIDを確認してインストールを続行してください。</block>
+  <block id="c9ef0d99fbf5ed26a85b92f55e6b6c6e" category="list-text">成功画面が表示されて「AI Data Engine deployed」と表示されるまで、進行状況画面を監視します。</block>
+  <block id="e9b6d2f0d9b694914f20877d3f88c18f" category="inline-link-macro">データソースを接続する</block>
+  <block id="db4300c03495773caef1471c598e802e" category="paragraph">AI Data Engine がデプロイされ、NetApp Console に接続されました。これで<block ref="8616a87379e9890bdf232e0c72419049" category="inline-link-macro-rx"></block>スキャンを開始できます。</block>
+  <block id="83eac39203f6a78bfab5f05109f06f07" category="summary">デプロイメントウィザードを使用して、NetApp Console から AIDE Enterprise をデプロイします。</block>
+  <block id="c2cf1d98d36dbefbfe09eae2488f7247" category="doc">AI Data Engine Enterprise のデプロイ</block>
+  <block id="330f7c265828f01dee99afee070313b1" category="paragraph">デプロイメントウィザードを使用して、NetApp Console から AIDE Enterprise をデプロイします。ウィザードは、インストール場所の選択、構成サイズの選択、およびRKE2クラスタに対するインストールコマンドの実行手順を案内します。</block>
+  <block id="1a86a03f19ece1eb1fdd892e27ea3956" category="list-text">お客様の RKE2 クラスターは、<block ref="0be0e04edd1e19a89ae931415ae02878" category="inline-link-macro-rx"></block> に記載されているエンタープライズ ノードの前提条件を満たしています。</block>
+  <block id="6689cb476023c6c1c9be0efa2539934e" category="list-text">インストールコマンドを実行するマシンには、sudo（またはroot）権限が必要です。</block>
+  <block id="87f9897a401f495b9a1facf1d7bd910d" category="list-text">エクスポートされたパスを持つNFSサーバが利用可能で、AIDE設定ボリューム用にクラスターからアクセス可能です。</block>
+  <block id="9dda54b0355e711b7bf378cb95fb1046" category="list-text">A NetApp Console エージェント<block ref="b73290be3504f0507d7e45d060da298b" category="inline-link-rx"></block>クラスターノードからアクセス可能である必要があります。インストールコマンドを実行するには、Console エージェントのIPアドレスが必要です。</block>
+  <block id="bb51b81f5223e5f0c8bc58ed7e50a5f4" category="list-text">kubectlは、インストールコマンドを実行するマシン上で使用可能であり、対象クラスターへのcluster-adminアクセス権が必要です。</block>
+  <block id="8da2dfbfcb5791d3d926eab6d4e00ae7" category="list-text">ターゲットのKubernetes名前空間（デフォルト<block ref="87a4f89dbcdda862656068534d7005a9" prefix=" " category="inline-code"></block>）は、インストールコマンドを実行する前に、クラスター上に既に存在している必要があります。</block>
+  <block id="6d673c33bc8499857dfcdafd62d54f4b" category="list-text">構成されたStorageClass（デフォルト名：<block ref="92bf138b666c1c986bd7a1a4dcae9436" prefix=" " category="inline-code"></block>）はクラスター上で利用可能で、AIDEのステートフルなバッキングサービスに使用されます。</block>
+  <block id="44e1a4e1589f76ddf1eeaa489bc4cc29" category="list-text">「Enterprise」展開オプションを選択し、「次へ」を選択します。</block>
+  <block id="9b58efe1f18455876debd5dc57e57729" category="list-text">*小*：約10億ファイルまでの環境に推奨されます。</block>
+  <block id="a756d5b5aaf4cf555459970b4520faf5" category="list-text">*中（デフォルト）*：約30億ファイルまでの環境に推奨されます。</block>
+  <block id="8774ee0c7f760cf14a59d6eb9c2c926d" category="list-text">*ラージ*：約60億ファイルまでの環境に推奨されます。</block>
+  <block id="97632a3bfddd2d43a6ad9e18867b01c4" category="paragraph">これらのサイズは推奨される基準値であり、厳密な制限ではありません。AIDE Enterprise は、水平方向のスケールアウトにより60億ファイルを超える環境をサポートします。詳細については、<block ref="89c154f2a0e84f293476bfb9d47ae425" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="394b930dc1b5023622cb49ed7c298b31" category="list-text">kubectlでRKE2クラスタにアクセスできるターゲットホストから、構成サイズを調整した上でインストールコマンドを実行してください。</block>
+  <block id="f9556a416fe39ca723fd3ecd6f571ded" category="admonition">インストールには約30分かかります。タイムアウトや再試行が発生する場合がありますが、これは正常な動作です。</block>
+  <block id="869ef2cf26ae6a981846da827aae59f0" category="paragraph">AI Data Engine Enterpriseが展開され、NetApp Consoleに接続されました。これで<block ref="8616a87379e9890bdf232e0c72419049" category="inline-link-macro-rx"></block>スキャンを開始できます。</block>
+  <block id="fb2aa9495542bd13d3605c929812c980" category="summary">AI Data Engine を AIDE Lite としてデプロイするか、Kubernetes ベースの高可用性が必要な環境では AIDE Enterprise としてデプロイしてください。</block>
+  <block id="2241eca142f39ffb460bb2bf4661c568" category="doc">AI Data Engine のデプロイメントについて</block>
+  <block id="7647c2aafe383ffd0d50b64929b2f530" category="paragraph">AI Data Engine を AIDE Lite（シングル VM インストール）としてデプロイします。環境が大規模な Kubernetes ベースの高可用性を必要とする場合は、代わりに AIDE Enterprise をデプロイできます。</block>
+  <block id="a76e498c33f6c726c7b3b1e63f3c9f86" category="section-title">AIDE Lite</block>
+  <block id="b8f59a240d3f4b57a1c6c7e4cc02d32d" category="paragraph">AIDE Liteは単一のLinux VMにインストールされます。インストーラーがk3sを自動的にプロビジョニングするため、Kubernetesの専門知識は必要ありません。</block>
+  <block id="6dc3f2c5a4a07cf906856038dc455b60" category="paragraph">AIDE Lite は Small、Medium、Large の 3 つのサイズで提供されており、それぞれ最大約 2 億、10 億、30 億のファイルに対応する環境向けに設計されています。VM のサイジングと OS の要件の詳細については、<block ref="0be0e04edd1e19a89ae931415ae02878" category="inline-link-macro-rx"></block>を参照してください。これらのサイズは推奨される基準値であり、厳密な制限ではありません。サイジングを決定する要因とさらなるスケールアウト方法については、<block ref="6b8e74170b14d312ab21928a851153d3" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="e56291a61f22a59964581e4b089d9646" category="paragraph">お客様の環境で高可用性、耐障害性、ローリングアップグレード、または AIDE Lite の最大サイズを超える水平スケーリングが必要な場合は、AIDE Enterprise をデプロイしてください。AIDE Enterprise は、お客様がプロビジョニングおよび管理する RKE2 クラスタ上に、マルチノード Kubernetes クラスタとしてデプロイされます。</block>
+  <block id="511a454fc3a3987519fe85b03965f6c8" category="paragraph">AIDE Enterprise版は、Small、Medium、Largeの3つのサイズがあり、それぞれ最大約10億、30億、60億のファイルに対応する環境向けに設計されています。ノードのサイジングとクラスタの要件の詳細については、<block ref="0be0e04edd1e19a89ae931415ae02878" category="inline-link-macro-rx"></block>を参照してください。これらのサイズは推奨される基準値であり、厳密な制限ではありません。60億ファイルを超える環境は、水平方向のスケールアウトによりサポートされます。詳細については、<block ref="89c154f2a0e84f293476bfb9d47ae425" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="0c5241f126b35cf2419c66ba39a5a298" category="section-title">展開プロセス</block>
+  <block id="46597a2025eee9696dd502828e25e3d5" category="paragraph">NetApp Console は AI Data Engine のインフラストラクチャをプロビジョニングしません。要件を満たす Linux マシンまたはクラスターを準備し、NetApp Console から事前に生成されたインストールコマンドをコピーして、対象ホスト上で実行します。このコマンドはランタイムをブートストラップし、AI Data Engine スタックを自動的にデプロイします。インストール中、インストーラーはインストールを続行する前に、対象ホストの IP アドレスとユーザー ID を確認するよう求めます。</block>
+  <block id="0d7f0465ec681cb9f6e5a8be3b1a0396" category="paragraph">AIDE Liteのインストールは、通常45分以内に完了します。AIDE Enterpriseのインストールは、通常30分以内に完了します。インストーラーには、コンポーネントの起動中に発生する一時的な問題に対処するためのタイムアウト機能と再試行機能が組み込まれています。</block>
+  <block id="c9ff479d3b0a5190f9c70e082837c411" category="section-title">展開モードリファレンス</block>
+  <block id="d41d8cd98f00b204e9800998ecf8427e" category="cell"></block>
+  <block id="a0e3089d312c100208595d685b4104d2" category="cell">展開モデル</block>
+  <block id="e944d7416ffeeaf9a68e8ef9da608c26" category="cell">単一のLinux VM</block>
+  <block id="1a92dd236bb30572af26007d261a2e83" category="cell">マルチノードKubernetesクラスター（顧客がプロビジョニングしたRKE2）</block>
+  <block id="4b650ef1239cf58ca9b3eb4dddac9322" category="cell">スキャンレート</block>
+  <block id="91a6bef895437e73680f6f013deb9588" category="cell">1日あたり5000万～10億ファイル（サイズによって異なる）</block>
+  <block id="78fd22e45655dd97ace1673f19b03c74" category="cell">1日あたり2億5000万～20億ファイル（サイズによって異なる）</block>
+  <block id="ccb52e04a2105113dc40fe0f8716aea1" category="cell">最大ファイル数（大容量）</block>
+  <block id="a499f695d0cd8cd297f733cd1289a331" category="cell">約30億</block>
+  <block id="d6a79615f28b6194d592e29ba6f5f964" category="cell">約60億</block>
+  <block id="0be0e04edd1e19a89ae931415ae02878" category="list-text"><block ref="0be0e04edd1e19a89ae931415ae02878" category="inline-link-macro-rx"></block></block>
+  <block id="c565a648dc1d9e80e46687a0fc1cdfe6" category="summary">AI Data Engine のコンポーネントと、それらが連携してストレージシステムからメタデータをカタログ化する仕組みについて説明します。</block>
+  <block id="abb2753fee0210c75705619ab94e6ceb" category="doc">AI Data Engineアーキテクチャ</block>
+  <block id="fccc76f1cda27ea29c381a63456dc242" category="paragraph">AI Data Engine（AIDE）は、Metadata Engine とポリシーフレームワークで構成されています。これらの機能は連携して、ストレージシステムからメタデータを抽出し、検索可能なインデックスにカタログ化し、特定の条件に一致するファイルを識別して操作するための保存済みクエリを定義できるようにします。</block>
+  <block id="05bbb43b3d923283e0b6ffafd088f41f" category="section-title">[コンポーネント]</block>
+  <block id="9a8bc3c76ae750342ae6d6959e6d4931" category="paragraph">AI Data Engine との主なやり取りは、ダッシュボード、調査、ポリシー、構成という4つの機能領域を通じて行われます。これらの機能領域は、以下の基盤となるコンポーネントによって支えられています。</block>
+  <block id="1dcad9443ae8987b7175c4cdf8acb9f9" category="section-title">Metadata Engine</block>
+  <block id="7539b92c776f337a385f300efb36fd59" category="paragraph">Metadata EngineはAI Data Engineのコア機能です。接続されているストレージシステムをスキャンしてファイルシステムのメタデータを抽出し、そのメタデータを検索可能なカタログに保存します。Metadata Engineはスキャンサイクルごとにカタログを更新し、ストレージシステム全体にわたる追加、変更、削除を検出します。</block>
+  <block id="5423702a1b6fd3820d9dbf88027fcfb9" category="section-title">NetApp Console エージェント</block>
+  <block id="857facec419107b5214ee8fa6aac760e" category="paragraph">AI Data Engineには、お客様の環境にデプロイされたNetApp Console Agentが必要です。Console Agentは汎用的なNetAppプラットフォームコンポーネントであり、オンプレミス環境とNetApp Console間の接続を維持します。サイトとAIDEサービス間の認証と通信を処理します。</block>
+  <block id="ae339237ba250f3e9622bc068691a4a4" category="inline-link-macro">NetApp Console Agentのドキュメント</block>
+  <block id="b4536b8eef87e734777da5e22580bed8" category="admonition">コンソールエージェントは AI Data Engine 専用ではありません。他の NetApp サービス用にコンソールエージェントをすでにデプロイしている場合は、同じエージェントを使用できます。コンソールエージェントのデプロイ手順については、<block ref="2f66cea022adc2ad8169604b656a336f" category="inline-link-macro-rx"></block> を参照してください。</block>
+  <block id="6762973af9b127d271f0d2b2aea0bc96" category="section-title">展開モデル</block>
+  <block id="7e55a28dcce8cb14e4d27ea41261d95e" category="paragraph">AI Data Engineは2つのデプロイメントモデルをサポートしています：</block>
+  <block id="ac4f9e11413c44efe69404bc36ec291c" category="list-text">小規模環境に適した、単一VM構成のデプロイメント。カタログ化するファイル数に応じて、Small、Medium、Largeの3つの構成が用意されています。</block>
+  <block id="d8624879f2df7108b28170d3c8d0cf6a" category="list-text">高可用性が求められる大規模環境向けの、Kubernetesベースのマルチノードクラスタ構成。</block>
+  <block id="932b129d9e40853fb53d785a7bbb7acd" category="paragraph">AIDE エンタープライズ版は、最大約10億個のファイルと1日あたり2億5,000万個のファイルをサポートする3ノード構成から、最大約60億個のファイルと1日あたり20億個のファイルをサポートする9ノード構成までスケールアウトできます。ノードのサイジングの詳細については、<block ref="374da513b9cc4d9fde319e2e3de4220b" category="inline-link-macro-rx"></block>を参照してください。ノードを追加することで、容量を60億ファイル以上に拡張できます。スケールアウトの詳細については、<block ref="678b19a1fca5ae4e7fd0a6867698af36" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="1558fd62a25c3c5839314d3d05591cff" category="inline-link-macro">導入オプションの詳細はこちら</block>
+  <block id="7522e35bcf6b4e765785f2c02ab88732" category="paragraph"><block ref="c85626c591e7dabf2ef44243c8154bd8" category="inline-link-macro-rx"></block>。</block>
+  <block id="51e229527022b23ef548bfc016bfb0ac" category="section-title">データフロー</block>
+  <block id="d48e37a5e6e17429470acd5447f7d7a2" category="list-text">AI Data Engineはオンプレミス環境にデプロイされます。</block>
+  <block id="6466ed6a7617c9156b9142fd84ca463e" category="list-text">AIIDEがカタログ化するストレージシステムを*構成 &gt; システム*で追加します。サポートされているシステムには、NetApp ONTAP、StorageGRID、データベースシステム、およびNFS、SMB/CIFS、またはS3プロトコルを公開するNASまたはオブジェクトストレージシステムが含まれます。</block>
+  <block id="4335b6439217fbe3a78bc483bbb8e2db" category="list-text">Metadata EngineはNFSおよびSMB/CIFSプロトコルを使用して共有フォルダをマウントし、ファイルシステムをスキャンしてファイルメタデータを抽出します。</block>
+  <block id="ec7c0cda0b856c7b0ef27518243b5770" category="list-text">メタデータはカタログに索引付けされています。</block>
+  <block id="e08465e99912650826365007e8296ccf" category="list-text">ダッシュボードには、カタログからストレージに関するインサイトが表示されます。</block>
+  <block id="614bf6aec561c6163de8df0a75ec10e0" category="list-text">調査機能を使用すると、メタデータフィルターを使用してカタログを直接検索できます。</block>
+  <block id="f76213c17fe77d7795d2575f82e6a911" category="list-text">検索条件をポリシーとして保存し、それを再実行することで、一致するファイルを特定して処理することができます。</block>
+  <block id="af377abffc86ee018a19a7a84fa2e12c" category="admonition">Metadata Engineは、設定されているすべてのボリュームのスキャンが完了すると、すぐに新しいスキャンラウンドを開始し、ファイルシステムを再スキャンして追加、変更、削除を検出します。</block>
+  <block id="75d38d77f71f859f0e6bfa05a8868b12" category="inline-link-macro">AI Data Engineの詳細</block>
+  <block id="26e666e2e4e46660c91e74754caac64f" category="list-text"><block ref="26e666e2e4e46660c91e74754caac64f" category="inline-link-macro-rx"></block></block>
+  <block id="e24b77f89668ee9cb97930aad67c47cb" category="inline-link-macro">AIDEのデプロイメントについて</block>
+  <block id="71a1e4d97605fe8774b49ca1dce1bf4f" category="list-text"><block ref="71a1e4d97605fe8774b49ca1dce1bf4f" category="inline-link-macro-rx"></block></block>
+  <block id="c161c41ee580d32d31bdc317b8636009" category="summary">AI Data Engineについて説明します。AI Data Engineは、ストレージシステムに保存されている構造化データと非構造化データの可視性を提供します。</block>
+  <block id="10205b2b1a0570eb1e538ad453946b06" category="paragraph">AI Data Engine は、ストレージシステムに保存されている構造化データと非構造化データに関する可視性を提供するメタデータインテリジェンスサービスです。ストレージシステムをスキャンしてファイルシステムのメタデータをカタログ化することで、AI Data Engine は、データを移動したりコピーしたりすることなく、メタデータをその場で分析することで、ストレージ最適化の機会を特定し、データを調査し、ガバナンスポリシーを適用するのに役立ちます。</block>
+  <block id="5b78c83d95e5745d473240203777c774" category="section-title">AI Data Engineの機能</block>
+  <block id="93ac98d7e0f46af4be06d763ca8e4d9b" category="paragraph">AI Data Engineは、接続されているストレージシステムをスキャンしてファイルシステムのメタデータを抽出し、スキャンサイクルごとに更新されるカタログを作成します。このカタログから以下のことが可能です。</block>
+  <block id="851d3089d23f602e41cb88e4a24c7049" category="list-text">ダッシュボードでストレージ最適化に関するインサイトを確認できます。これには、組織のコールドおよびステールのしきい値を満たすファイルや重複ファイルなど、再利用可能なストレージを保持しているデータ所有者が含まれます。</block>
+  <block id="d4cf1ae8d3de1580dd4b64635c327386" category="list-text">柔軟なメタデータフィルターを使用してデータを調査し、ターゲットを絞ったデータグループを作成します。</block>
+  <block id="365d4efead84b227551ff1b66a19925b" category="list-text">調査基準を再利用可能なルールとして保存するポリシーを作成する</block>
+  <block id="df7ad139df65c04c4945d61374956c8b" category="list-text">データに対してアクションを実行する：タグ付け、アーカイブ、コピー、またはポリシー基準に一致するファイルの削除</block>
+  <block id="149bf441b327b46f1cee6927c3821fb9" category="section-title">ストレージの最適化とデータ ガバナンス</block>
+  <block id="652d2454860d7fc35944afe99e879614" category="paragraph">AI Data Engineは、ストレージシステムに保存されている構造化データと非構造化データのストレージ最適化およびデータのライフサイクル管理に特化しています。</block>
+  <block id="0c46a9a4d5421afa53e0965858a40308" category="section-title">AI Data Engineを使用するのは誰か</block>
+  <block id="64f79c32b0b61631101d478d31e9f7d3" category="paragraph">AI Data Engineは、以下のユーザー向けに設計されています。</block>
+  <block id="cd407958cd82f6304bcf61eaf827f40c" category="list-text">*ストレージ管理者*：組織の定めるコールドファイルおよび古くなったファイルのしきい値を満たすファイルをどのデータ所有者が保持しているかを特定および監視し、重複ファイルを特定し、ストレージ最適化の機会を評価する必要があるお客様。</block>
+  <block id="ba9f66e96d3a72c260292e7e433d9c1e" category="list-text">ストレージ環境全体に存在する構造化データと非構造化データを一元的に把握する必要がある*ITオペレーションチーム*。</block>
+  <block id="f5d8c539c573d98ed75c16e6120b556e" category="section-title">AI Data Engineの場所</block>
+  <block id="2e41d1b0867653660816d43d38a3d448" category="paragraph">NetApp Console の *ガバナンス &gt; AI Data Engine* から AI Data Engine にアクセスします。AIDE Lite （シングル VM インストール）として、クラウドアカウントの仮想マシンまたはオンプレミス環境のマシンとして管理する Linux インフラストラクチャ上にデプロイします。環境が大規模な Kubernetes ベースの高可用性を必要とする場合は、代わりに AIDE Enterprise をデプロイできます。</block>
+  <block id="e3d3e027f48463eb78e548236f017140" category="paragraph">AI Data Engineは、NetApp ONTAPおよびStorageGRIDシステム、ならびにNFS、SMB/CIFS、またはS3プロトコルをサポートする非NetAppシステム上のデータをスキャンします。</block>
+  <block id="5195f9c28c95a19d82dbbab0c1b03be8" category="list-text"><block ref="5195f9c28c95a19d82dbbab0c1b03be8" category="inline-link-macro-rx"></block></block>
+  <block id="06ad314b340900d226b1196e1fe289e9" category="inline-link-macro">クイック スタート</block>
+  <block id="bdeb5cd25a7dbc37504b3514d1fd7016" category="list-text"><block ref="bdeb5cd25a7dbc37504b3514d1fd7016" category="inline-link-macro-rx"></block></block>
+  <block id="977e38bc044068997869d10e6979a705" category="list-text"><block ref="977e38bc044068997869d10e6979a705" category="inline-link-macro-rx"></block></block>
+  <block id="4c1a261e30da6a55a9b3726af88508d4" category="summary">AI Data Engine を導入し、ストレージシステムを接続して最初の調査を開始することで、サービスを起動および実行できます。</block>
+  <block id="0faf8679fa64c37768334eb399f37dcc" category="doc">AI Data Engineのクイックスタート</block>
+  <block id="06c2cea18679d64399783748fa367bdd" category="inline-image-macro">1</block>
+  <block id="a8f814495d9a5097386d4d0fa44d053b" category="paragraph-title"><block ref="58f667aaf05f87159670e12bd9bc076b" category="inline-image-macro-rx" type="image"></block>要件の確認</block>
+  <block id="d95edcb83173c645e4cdae7d65d60d50" category="inline-link-macro">デプロイメントモードの詳細</block>
+  <block id="bc643586ebbdea3a67e8e78803edef1d" category="paragraph"><block ref="374da513b9cc4d9fde319e2e3de4220b" category="inline-link-macro-rx"></block>と<block ref="1fb19d6de740c7259fc64be5fec6d5ce" category="inline-link-macro-rx"></block>を確認して、AIDE Lite または AIDE Enterprise のどちらをインストールするかを決定してください。</block>
+  <block id="aada29daee1d64ed0fe907043855cb7e" category="inline-image-macro">2</block>
+  <block id="5508a1321b4a833f86a54cc7821a3b51" category="paragraph-title"><block ref="54f425ce8d89f4ed6b8a546561af5d60" category="inline-image-macro-rx" type="image"></block> AI Data Engineの展開</block>
+  <block id="8b64721c44a2f53b46f63f848ac39d35" category="paragraph">NetApp Consoleから<block ref="f746162465c96a1adff24c92f0728c5e" category="inline-link-macro-rx"></block>または<block ref="eb04f2a0df94baa820b9a7e6f474747f" category="inline-link-macro-rx"></block>をデプロイします。セットアップ ページでは、インストール場所と構成サイズの選択、およびインストール コマンドの実行手順を案内します。</block>
+  <block id="ca8a2087e5557e317599344687a57391" category="inline-image-macro">3つ</block>
+  <block id="1c588aa33f42b4c4c20be39616a29ded" category="paragraph-title"><block ref="05b2444faffd66d76e88602ea7dd353f" category="inline-image-macro-rx" type="image"></block>データソースを接続する</block>
+  <block id="96542a64c03a6496363376fdc6a2fbc6" category="paragraph"><block ref="3540fa5efa78b3ae6e9c7d52a1e7d21a" category="inline-link-macro-rx"></block>をクリックしてスキャンを開始します。AI Data Engineは、指定したストレージシステムからファイルシステムメタデータをカタログ化します。</block>
+  <block id="981b8fcee42e1e726a67a2b9a98ea6e9" category="inline-image-macro">4</block>
+  <block id="be456a52157be16e2bb64e80582b27c7" category="paragraph-title"><block ref="beadfa85a2fdca06b91edc1131c603e6" category="inline-image-macro-rx" type="image"></block>データを確認する</block>
+  <block id="dc7161be3dbf2250c8954e560cc35060" category="inline-link-macro">ダッシュボード</block>
+  <block id="5cbac16d406ddfc92080f39efa7437d8" category="inline-link-macro">調査</block>
+  <block id="fb3b1d7b841806f690ee73aaa0c8d14c" category="paragraph"><block ref="fb0f058ee96ad213f6425340e1f6e497" category="inline-link-macro-rx"></block>を開いてストレージ最適化のインサイトを確認するか、<block ref="baf11e96ddb5cf9a99e9104cce3d98fd" category="inline-link-macro-rx"></block>でメタデータを直接検索およびフィルタリングしてください。</block>
+  <block id="e5d9de39f7ca1ba2637e5640af3ae8aa" category="inline-image-macro">五</block>
+  <block id="27daab068a7cde6f0b947da706cd9c7a" category="paragraph-title"><block ref="99e8b2f00e172bfcff96afdce69907bc" category="inline-image-macro-rx" type="image"></block>ポリシーを作成する</block>
+  <block id="434a141f3cf546ea041658ccf5e2e280" category="inline-link-macro">調査フィルターをポリシーとして保存する</block>
+  <block id="90d578959921e40c779e3651e77e209f" category="paragraph"><block ref="bf586bccd0bf27b6e1fabd9280d26067" category="inline-link-macro-rx"></block>同じ条件に一致するファイルを、一定期間にわたって監視します。通知の送信、一致するファイルの完全削除、または結果の追跡を行うポリシーを設定できます。</block>
+  <block id="fdb19c6fec05b54408b4b0f903fd81ee" category="summary">エンドツーエンドフローを使用して、ダッシュボードの調査結果を調査、対策、継続的なポリシーモニタリングへと進めます。</block>
+  <block id="1df62125b1fa407d537cb4d69ea2cea4" category="doc">AI Data Engine でストレージ最適化ワークフローを確認する</block>
+  <block id="b7a7e43957c3e85adef192b310b6b3d2" category="paragraph">これらの AI Data Engine ワークフローは、ダッシュボード上でストレージの問題を特定するところから、調査と対策、そして継続的な監視ポリシーに至るまでを網羅しています。各ワークフローは、ダッシュボード、調査、アクション、ポリシーとしての保存という同じ経路をたどります。</block>
+  <block id="2e48f83a3b8559bc839f287b372ae63a" category="section-title">コールドデータを特定し、それに基づいて行動する</block>
+  <block id="54861efdd06fc309e1c9a420feff98eb" category="paragraph-title">シナリオ</block>
+  <block id="3b84a859e68974b8b6a7c2e5209e8031" category="paragraph">ダッシュボードを見ると、ストレージリソースに大量のデータがコールドとしてフラグ付けされていることがわかります。コールドファイルとは、設定されたコールドデータしきい値（デフォルトは1年で、*構成* &gt; *設定*で変更可能）内にアクセスされていないファイルです。</block>
+  <block id="44e6a1f5dab90577824d8f22e1988fde" category="inline-link-macro">ダッシュボード</block>
+  <block id="a9ff44ea6a5fe6dc227b4ea55b034864" category="list-text"><block ref="8f8592489ae57c27af5c107a0d44dae6" category="inline-link-macro-rx"></block>から、コールドデータの集中度が最も高いリソースを特定し、*調査*を選択します。</block>
+  <block id="47f41e739fa983e85fc6c87ce98479c5" category="list-text"><block ref="52e9ed5e3e773251fd429eeb0045af22" category="inline-link-macro-rx"></block>で、設定したコールドデータしきい値（デフォルト：*1年以上*）に一致するように設定された *最終アクセス日* フィルタを使用してリソースを確認してください。</block>
+  <block id="af03039d1382ef8676c4fdd8760440cf" category="inline-link-macro">タグを付けるか、アーカイブするか、削除するか</block>
+  <block id="e9ed6d698e78f62a0321650cd016f395" category="list-text">結果を確認して、一致するファイル<block ref="3efcafeea256ec5f5f80d2df60560120" category="inline-link-macro-rx"></block>を決定してください。</block>
+  <block id="7ef0163ee717bd6fd04d7eeb49b51058" category="inline-link-macro">フィルタセットをポリシーとして保存する</block>
+  <block id="5b5ae5eda1079bc84d33033a52fa0bd2" category="list-text">これらのリソースを継続的に監視する価値がある場合は、<block ref="7d8ac40ed60791213197ab6f4e0c9736" category="inline-link-macro-rx"></block>新しいファイルがコールドになると通知されます。</block>
+  <block id="0d10005b6bd2a6b85eb9f287e40da0fe" category="section-title">古いデータを特定し、対処する</block>
+  <block id="90fe85823d1212c8a3b704aa6c8ded5c" category="paragraph">時折アクセスされるものの、何年も変更されていないファイルは、組織が定める「古いファイル」のしきい値（デフォルト：最終アクセスまたは変更から3年）を超えた場合に「古いファイル」として分類されます。</block>
+  <block id="b0c4d387a50a45d4f64e0a353764db5a" category="admonition">このしきい値は、「Configuration」&gt;「Settings」で設定できます。</block>
+  <block id="7bdb301d8f2bd1bc4dc8ff7228adae25" category="list-text"><block ref="8f8592489ae57c27af5c107a0d44dae6" category="inline-link-macro-rx"></block>から、大量の古いデータを含むリソースを特定します。</block>
+  <block id="1456972c0c54611fb33073481d7d23b9" category="list-text"><block ref="52e9ed5e3e773251fd429eeb0045af22" category="inline-link-macro-rx"></block>で、古いデータのしきい値（デフォルトは「3年以上」）に設定された「最終更新日」フィルターを適用します。</block>
+  <block id="ee0e6032122c761b81fc2cd66a35b691" category="inline-link-macro">フィルタセットをポリシーとして保存する</block>
+  <block id="b35a68b716804484978c21c7594fcad8" category="list-text"><block ref="537d965580da49e1e6c3a096271213f7" category="inline-link-macro-rx"></block>これらのリソースを後続のスキャン全体にわたって追跡するため。</block>
+  <block id="1c26e78563d9a7bad5cd8730fb3014eb" category="section-title">データ保持コンプライアンスの管理</block>
+  <block id="a255165b7b7823a623dbb6b105440b3f" category="paragraph">貴組織では、一定期間以上経過したファイルについては、データ保持の可否を確認するためにレビューを行うことを義務付けています。AI Data Engine のデフォルトの保持しきい値は、ファイル作成から7年以上経過していることです。このしきい値は、組織のコンプライアンスおよびデータ保持ポリシーに合わせて調整できます。</block>
+  <block id="1882b006574819130803840fe1b9469b" category="list-text"><block ref="52e9ed5e3e773251fd429eeb0045af22" category="inline-link-macro-rx"></block>で、データ保持のしきい値（デフォルトは「7年以上」）に設定された「最終作成日」フィルターを適用します。</block>
+  <block id="5913dad45eb7f4d4c33e3d5282acecea" category="list-text">行動を起こす前に、関係者と結果を確認してください。保存期間が設定されたファイルは、自動的に削除されるのではなく、監視されることが多いです。</block>
+  <block id="9ccc4a73e855e5fd0cf236f7725bec04" category="list-text"><block ref="a6ba65d5603bedd3e970c59f52c864db" category="inline-link-macro-rx"></block>監視のみ、またはメール通知のアクションを設定することで、新しいファイルがデータ保持しきい値に達したときに通知を受け取ることができ、これらのリソースに対して一度だけアクションを実行する必要がなくなります。</block>
+  <block id="03490a48891dc30405298515cb0a2ec1" category="section-title">重複ファイルを見つけて削除する</block>
+  <block id="ef14c05b00c07359bf1b4ea88e94054e" category="paragraph">同じファイルの複数の同一コピーがボリュームや共有フォルダに分散して存在する状態は、バックアップジョブ、データ移行、共有プロジェクトフォルダなどが存在する環境でよく見られる問題です。</block>
+  <block id="f9ca2405c30ced0ee904d9e0f97cf9a0" category="list-text"><block ref="52e9ed5e3e773251fd429eeb0045af22" category="inline-link-macro-rx"></block>で、*フィルターを追加*を選択し、次に*重複*を選択します。</block>
+  <block id="01d46cb938e4d511d3e9999a33fcf5f9" category="list-text">結果を確認してください。記載されているファイルには、カタログ内の他の場所に同一のコピーが1つ以上存在します。</block>
+  <block id="7742546bbb754d84caafaa114682a8fa" category="inline-link-macro">アクション</block>
+  <block id="7314dc8edb48e7722955c7e114704518" category="list-text">操作するファイルを選択し、<block ref="969e8bd9170e1e99801569561e044682" category="inline-link-macro-rx"></block>を選択します。オリジナルが他に存在することが確認された重複ファイルは、アーカイブするか削除してください。</block>
+  <block id="b0c0d5d2684f243b989c8f373fd49af4" category="inline-link-macro">フィルターをポリシーとして保存する</block>
+  <block id="c9ff8855af97bd1a12a7e6912ad77df9" category="list-text"><block ref="46439728f888d79fb7cc9b685ae19ce6" category="inline-link-macro-rx"></block>時間の経過に伴う重複データの蓄積を追跡し、その数が増加した際に通知を受け取ることができます。</block>
+  <block id="5f142691dc2e5880dde4fa4e8308addd" category="section-title">データ所有者によるターゲットのクリーンアップ</block>
+  <block id="eb825210e78145b21120ef3c8c285534" category="paragraph">組織が定める「古くなったデータ」および「利用価値の低いデータ」の基準を満たすデータは、多くの所有者に分散されています。これらのカテゴリに属するファイルを最も多く保有しているデータ所有者を特定することで、クリーンアップの優先順位付けに役立ちます。</block>
+  <block id="d18055bb263b716bd2926c7fbc634768" category="list-text"><block ref="8f8592489ae57c27af5c107a0d44dae6" category="inline-link-macro-rx"></block>から、_再利用可能なストレージによる上位データ所有者_テーブルを見つけます。</block>
+  <block id="4b9bd7dec241c003603e9ba36f85a4e9" category="list-text">オーナー行を選択すると、<block ref="52e9ed5e3e773251fd429eeb0045af22" category="inline-link-macro-rx"></block>がその所有者のファイルでフィルタリングされた状態で開きます。</block>
+  <block id="8826c83ac41b279afb2deb64b8e4f22d" category="list-text">結果を確認し、<block ref="3efcafeea256ec5f5f80d2df60560120" category="inline-link-macro-rx"></block>ファイルを決定します。</block>
+  <block id="e2b9c3b26ba26fd50d8e5ea52baf5615" category="list-text"><block ref="537d965580da49e1e6c3a096271213f7" category="inline-link-macro-rx"></block>所有者の回収可能な可能性のあるデータが時間の経過とともにどのように変化するかを監視します。</block>
+  <block id="099b7eb42ed02e26b076249d7bc9e248" category="inline-link-macro">非構造化データを調査する</block>
+  <block id="86f84a6aeae2c3ff3b735d8e60ef5504" category="list-text"><block ref="86f84a6aeae2c3ff3b735d8e60ef5504" category="inline-link-macro-rx"></block></block>
+  <block id="4e17f6659f1ce957a9128ff286ebb060" category="summary">調査ビューを使用して、接続されているシステム全体のファイルベースのストレージ、データベーステーブル、およびディレクトリ構造を調査できます。探している内容に一致するタブを選択してください。</block>
+  <block id="679e69e9bdc70ba02f2657d93510fff9" category="doc">AI Data Engine でデータを調査する</block>
+  <block id="44da94769eacd19020729f27fef9441d" category="paragraph">ストレージを消費している要因を把握したり、制御不能なほど肥大化しているデータベーステーブルを特定したり、アクセス権限が過度に緩いディレクトリを見つけたりする必要がある場合は、メタデータフィルタを使用して、接続されているすべてのシステムにわたってデータを調査してください。</block>
+  <block id="3082e4bef0a9c97ce9f133bff6ea5eb5" category="section-title">出発点を選択してください</block>
+  <block id="18102ed05bb0a8ff6f88556fda449b9c" category="paragraph">左側のナビゲーションで「調査」を選択すると、ビューが開きます。ダッシュボードから調査ビューを開くには、_再利用可能なストレージによる上位データリソース_ テーブルで「調査」を選択します。これにより、そのリソースに対するフィルターが自動的に適用されます。</block>
+  <block id="b4554dcd354d221900b1346138e1cd61" category="paragraph">「調査」は3つのタブに分かれています。調査対象のデータタイプに一致するタブを選択してください。</block>
+  <block id="5c6ba25104401c9ee0650230fc6ba413" category="cell">Tab</block>
+  <block id="e214b95958c9f93ea16e42f7db6cc60d" category="cell">使用する場合</block>
+  <block id="ab066b3292d8ab61ef3b5c77169cdd19" category="cell">詳細情報</block>
+  <block id="c7187f6fea22a59bf7665d6a00bc979f" category="cell">*非構造化*</block>
+  <block id="df48daaf43ed83934872f416dc296e9a" category="cell">NFSおよびSMB/CIFSボリューム全体で、コールドデータ、古いデータ、または重複したファイルベースのデータを検索します。</block>
+  <block id="81764035d4bb7622fe386f2c8b866f2d" category="cell"><block ref="81764035d4bb7622fe386f2c8b866f2d" category="inline-link-macro-rx"></block></block>
+  <block id="5eca2bb7beed7342cca1106688651049" category="cell">*構造化*</block>
+  <block id="f0c49b1f5a3d381d7e5aaf049286da6b" category="cell">ストレージを消費している、サイズが大きすぎる、または使用されていないデータベーステーブルを特定します。</block>
+  <block id="4a85d1ee07bb8b9d1edfdad83663f695" category="inline-link-macro">構造化データを調査する</block>
+  <block id="56e5a25f46de7fd625c2a35f379b85a5" category="cell"><block ref="56e5a25f46de7fd625c2a35f379b85a5" category="inline-link-macro-rx"></block></block>
+  <block id="6f81d7719620f85dcacb3a3a4375a869" category="cell">*ディレクトリ*</block>
+  <block id="85076b52dccc264b25239b17f908a37d" category="cell">ディレクトリレベルのアクセス許可を監査し、広くアクセス可能なパスを特定する</block>
+  <block id="c3752096b16f86b02150e9d64aeefb03" category="inline-link-macro">ディレクトリを調査する</block>
+  <block id="243090fac4ef0153c4d49200a899b55c" category="cell"><block ref="243090fac4ef0153c4d49200a899b55c" category="inline-link-macro-rx"></block></block>
+  <block id="2febbf7b97a1bd1e8bf90649b86ce36f" category="paragraph">ページ上部の集計数と合計サイズは、アクティブなタブを反映して更新されます（例：「非構造化データ（400M）｜5.7 PiB」）。</block>
+  <block id="03469f3b31a2702640b0a64e1fae7825" category="inline-link-macro">フィルターを操作する</block>
+  <block id="4b141310f8c42d32665587f57a3d5e06" category="list-text"><block ref="4b141310f8c42d32665587f57a3d5e06" category="inline-link-macro-rx"></block></block>
+  <block id="0a32a9c8f26d2c4f95b1f16b549ee04a" category="list-text"><block ref="0a32a9c8f26d2c4f95b1f16b549ee04a" category="inline-link-macro-rx"></block></block>
+  <block id="acc5764f7cffbcb72bf1a80039f58b45" category="summary">ストレージシステム全体のディレクトリレベルのアクセス許可を監査して、広くアクセス可能なパスを特定し、誰がアクセス権限を持っているかを確認し、調査結果を再利用可能なポリシーとして保存します。</block>
+  <block id="0112ff7d7742da75e2844fccf8e0c00d" category="doc">AI Data Engine でディレクトリを調査する</block>
+  <block id="6613a2040255dc6982fe712823bd450a" category="paragraph">意図したよりも多くのユーザーに公開されているディレクトリを特定する必要がある場合は、アクセス許可でフィルタリングして、組織全体に公開されているフォルダーを見つけます。例えば、ダッシュボード上で公開されているディレクトリがフラグ付けされているのを確認したセキュリティ管理者は、組織全体でアクセス可能なすべてのディレクトリを特定し、読み取り権限と書き込み権限を持つユーザーを確認し、各スキャン後に新たな公開箇所を監視するポリシーを作成できます。</block>
+  <block id="99cf048b4570a503827b433537bf7a58" category="list-text">少なくとも1つのデータソースが接続され、スキャンを実行している必要があります。<block ref="3540fa5efa78b3ae6e9c7d52a1e7d21a" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="51572c9a667a33a3847aef86b292e654" category="section-title">広く利用可能なディレクトリを探す</block>
+  <block id="87e928f2a1c66c783997d4245415120c" category="paragraph">権限フィルターを使用して、本来のユーザー以外に公開されているディレクトリを特定します。</block>
+  <block id="f2a60bd092547b3abe2cf0a9d1abe8e2" category="list-text">AI Data Engine の UI で「調査」を選択します。</block>
+  <block id="10ba159cb5ee1b6139fccac82d24494d" category="list-text">「ディレクトリ」タブを選択します。</block>
+  <block id="453c1a03af4844925b9c44be0f0a776e" category="paragraph">テーブルには、ディレクトリ名（完全パス）、データ コンテナ、ディレクトリの所有者、ディレクトリの種類、およびシステムが表示されます。</block>
+  <block id="bf1cef9127c9e6edc37958d8a4037666" category="list-text">「フィルターを追加」を選択し、次に「オープン権限」を選択します。</block>
+  <block id="aa0dd989b4d2622818bfe9976fab25fe" category="list-text">フィルターを「組織に公開」に設定すると、組織全体でアクセス可能なディレクトリが表示されます。</block>
+  <block id="dd386e911c1b569dfc2cf3427f37d663" category="paragraph">結果テーブルが更新され、最終アクセス日時やアクセス権限の状態など、アクセス権限の条件に一致するディレクトリが表示されます。</block>
+  <block id="f2d7a774ed1ac216d1452a55765e4201" category="paragraph">利用可能なフィルターの完全なリストについては、<block ref="4b141310f8c42d32665587f57a3d5e06" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="c790c517b487eb008ec91ccb9c64b087" category="section-title">ディレクトリのアクセス許可を確認する</block>
+  <block id="23fdcec5412294db96c0d0fa0caa9028" category="paragraph">詳細パネルを開いてアクセス権限を持つユーザーを確認するには、ディレクトリの行を選択してください。</block>
+  <block id="3cad8b69ba020943e96d17a6e54caf82" category="paragraph">詳細パネルには、ディレクトリの種類、システム、ディレクトリの所有者、およびアクセス許可の概要（例：「組織に公開」）が表示されます。*アクセス許可の表示*を選択すると、ディレクトリへのアクセス権を持つ各ユーザーまたはグループの読み取りおよび書き込みアクセス権限の内訳が表示されます。</block>
+  <block id="7ba5f74e28642cd22f893052cee01692" category="paragraph">この情報を使用して、ポリシーを作成したり、ディレクトリの所有者にエスカレーションしたりする前に、アクセス レベルが意図的なものであるかどうかを確認してください。</block>
+  <block id="31bfae586bf76c48ae93881709c7e146" category="section-title">調査結果をポリシーとして保存する</block>
+  <block id="cba82d10856d128f229e20e00b1e9a2a" category="paragraph">広くアクセス可能なディレクトリを特定するためにフィルタリングを行った後、その基準をポリシーとして保存し、各スキャンサイクル後に新たな露出がないか監視します。</block>
+  <block id="29d02aa1a491ca6fa24ed83bafd47040" category="list-text">権限フィルターを適用したら、フィルターツールバーの「ポリシーの作成」を選択します。</block>
+  <block id="4fbab17ed9ad970e5548a7d1d4569e6b" category="list-text">保険申込書にご記入ください。<block ref="a6ba65d5603bedd3e970c59f52c864db" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="801ab24683a4a8c433c6eb40c48bcd9d" category="inline-image-macro">ダウンロード</block>
+  <block id="ac81d0c9d07b55c8f3e61604209babad" category="paragraph">ディレクトリ タブからフィルタリングされた結果をダウンロードするには、<block ref="5cdab54312f4c99b6053532c2103d660" category="inline-image-macro-rx" type="image"></block> を選択します。</block>
+  <block id="d59f12356f9957c4b4ff227159fcf4ce" category="list-text"><block ref="d59f12356f9957c4b4ff227159fcf4ce" category="inline-link-macro-rx"></block></block>
+  <block id="882b7cd90ab9c836a860233e4f0eead8" category="list-text"><block ref="882b7cd90ab9c836a860233e4f0eead8" category="inline-link-macro-rx"></block></block>
+  <block id="b91af9e0d2dba364d6d2a561af5363cd" category="summary">接続されているデータベースサーバー全体で、サイズが大きすぎる、または使用されていないデータベーステーブルを検出し、その結果を再利用可能なガバナンスポリシーとして保存します。</block>
+  <block id="b1a1fd02deed95037828a36a7179afbf" category="doc">AI Data Engineの構造化データを調査する</block>
+  <block id="1e41100e4bae97b934039a13901ff517" category="paragraph">データベースのストレージ容量が予期せず増加している場合は、テーブルのメタデータでフィルタリングして、サイズが大きすぎるテーブルや、最初に発見されてからアクティビティが全くないテーブルを特定します。例えば、ストレージ管理者は、以前のスキャン以降変更されていない大きなテーブルを特定し、データベース所有者と連携してそれらが依然として必要かどうかを評価することができます。</block>
+  <block id="c8cd110517c3b92d3347f4ec9aa59bfb" category="list-text">少なくとも1つのデータベースデータソースが接続され、スキャンが実行されている必要があります。<block ref="3540fa5efa78b3ae6e9c7d52a1e7d21a" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="4bbbe5b15760624da31d87f512b3cc15" category="section-title">データベーステーブル一覧を確認する</block>
+  <block id="43d29d6a732a4589622f09b5ac4afdf9" category="list-text">「構造化データ」タブを選択します。</block>
+  <block id="1ecc9fc79ee3d69d421d06063a731522" category="paragraph">この表には、データベーステーブル名、スキーマ、DBサーバー、検出時刻、テーブルの寸法（列数×行数）、およびテーブルサイズが表示されます。</block>
+  <block id="5ad9d9ad516549de5fb814e3b5b35506" category="section-title">大きすぎるテーブルや使用されていないテーブルを特定する</block>
+  <block id="6a0c39f9c98f5df1491258dd20bb772d" category="paragraph">フィルターを使用して、再利用の機会が最も期待できるテーブルのみを表示するように絞り込んでください。</block>
+  <block id="382d8811bbc95deb4119e6f0dfd639c3" category="list-text">「フィルターを追加」を選択し、次に「検出時刻」を選択します。</block>
+  <block id="3b3db3939971236d8ce2306dd9d88c2d" category="list-text">複数のスキャンサイクルにわたって存在しているテーブル（例えば、1年以上前に初めて検出されたテーブル）を表示するように範囲を設定します。</block>
+  <block id="df9b75f54ade626477192154c29e9801" category="list-text">さらに絞り込むには、再度 *フィルターを追加* を選択し、DBサーバーまたはスキーマでフィルターして、特定のシステムに焦点を当てます。</block>
+  <block id="ce7f610ced968febc3cd61a9bb7cdefb" category="paragraph">適用されたフィルターは、フィルターバーの下にタグとして表示されます。フィルターを追加するたびに結果が更新されます。</block>
+  <block id="4dd34ef90a77f1d09391c45476e798b3" category="section-title">表の詳細を確認する</block>
+  <block id="fd3754f4f7b2ef38094a8fc62525fab1" category="paragraph">テーブルの行を選択すると詳細パネルが開き、そのテーブルが再利用の対象となるかどうかを評価できます。</block>
+  <block id="84287206d3f05ec7283ab9d5a52c461c" category="paragraph">詳細パネルには、DBサーバー、スキーマ、テーブルのディメンション、テーブルサイズ、および検出時刻が表示されます。この情報を使用して、テーブルが検出後に拡大したか、変化していないかを確認してください。</block>
+  <block id="07ac78891bad6396bded1a9176f8e297" category="admonition">データベーステーブルを操作する前に、データベース所有者と調整して、そのテーブルが不要になったことを確認してください。</block>
+  <block id="25f30c6941a078ab089edf63b56bd24d" category="paragraph">関心のあるテーブルを特定するフィルターを適用した後、継続的な監視のためにその基準を保存します。</block>
+  <block id="3f6002a9d5a412d0cfc083657206daed" category="list-text">フィルターツールバーの「ポリシーの作成」を選択します。</block>
+  <block id="39760bf31d6d1280fffe7fdda7c2f0f5" category="paragraph">構造化タブからフィルタリングされた結果をダウンロードするには、<block ref="5cdab54312f4c99b6053532c2103d660" category="inline-image-macro-rx" type="image"></block>を選択します。</block>
+  <block id="66b7953990a2c19a573306360e644fe9" category="summary">メタデータフィルタを使用して、NFSおよびSMB/CIFSボリューム全体でファイルをコールド、古い、または大容量として検索および分類し、結果を確認して適切な措置を講じるか、フィルタ条件を再利用可能なポリシーとして保存します。</block>
+  <block id="e641dbbcf92be8ee6a73622ebe033070" category="doc">AI Data Engine で非構造化データを調査する</block>
+  <block id="1c4dfb9d2f2d457842021d37ab190421" category="paragraph">ファイルベースのストレージが予期せず増加している場合は、最終アクセス時刻、ファイルサイズ、所有者でフィルタリングして、どのファイルが容量を消費しているかを特定します。例えば、ストレージ管理者は、1年以上アクセスされていないテラバイト規模のVMスナップショットを特定し、それらをアーカイブするか、削除するか、または保持するかを評価できます。</block>
+  <block id="ba342bb770d37972475e46fec4007716" category="section-title">最終アクセス時刻に基づいて、使用頻度の低いファイルや古いファイルを検索する</block>
+  <block id="8ab92643f17b04229c9edd9da18a21b5" category="inline-link-macro">コールドデータと古いデータのしきい値を設定する</block>
+  <block id="28f4c25388d7d09ca2a87d44d5c9a79f" category="paragraph">日付ベースのフィルターを使用して、組織が設定したアクセス頻度の低いデータや古いデータのしきい値内でアクセスされていないファイルを特定します。しきい値は *Configuration* &gt; *Settings* で設定できます。<block ref="5b2f6a0e7f285ed05b047fba791060b7" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="81b39180656b54592301851e11944e31" category="paragraph">「非構造化データ」タブがデフォルトで選択されています。</block>
+  <block id="24446f194b4e840f6a8fc2e8d83584fa" category="list-text">「フィルターを追加」を選択し、次に「最終アクセス日」を選択します。</block>
+  <block id="69c7c55399371b6a9da3b5a279f6218f" category="list-text">コールドデータのしきい値に一致する期間を選択します（例：*1+ year*）。</block>
+  <block id="75a212d69d73a2bed522805ef8d11c80" category="list-text">最も消費量の多いユーザーに絞り込むには、再度「フィルターを追加」を選択し、「ファイルサイズ」を選択して、最小値（例：*&gt;1 GiB*）を設定します。</block>
+  <block id="93161565eff7dd1bcd7695ef334eb442" category="paragraph">適用されたフィルターは、フィルターバーの下にタグとして表示されます。フィルターを追加するたびに、結果テーブルとアイテム数が更新されます。</block>
+  <block id="c064ea72a2e73b982c10fdbee1cc2f42" category="section-title">所有者別に結果をグループ化する</block>
+  <block id="27e3ceb3bbe18fe6b8cbfdbf811dadc1" category="paragraph">所有者ごとにグループ化することで、どこで対処するかを決定する前に、最も回収可能性のあるデータを保有しているのが誰かを把握できます。</block>
+  <block id="77327dffbe725494ad0395784b0923ab" category="list-text">フィルターを適用した状態で、「表示方法」ドロップダウンを選択します。</block>
+  <block id="22e027d4752aaf407ea183c679494a52" category="list-text">「Owner」を選択してください。</block>
+  <block id="bd41ceeb815c1a7689b77f615b603cd5" category="paragraph">結果は、所有者ごとのファイル総数とファイルサイズを表示するように再編成されます。所有者の行を選択すると展開され、それぞれの所有者の個別ファイルが表示されます。</block>
+  <block id="13102176d90562c915296329d372cf05" category="section-title">ファイルの詳細を確認する</block>
+  <block id="e45fbe0fa3391072b64ce7b218c7f9cd" category="paragraph">いずれかのファイル行を選択すると詳細パネルが開きますので、操作を行う前にファイルが意図した範囲と一致していることを確認してください。</block>
+  <block id="570232dc9d8301751d1f0df3d7d6ded5" category="paragraph">詳細パネルには、ファイルのシステム、ストレージリポジトリ、ファイル所有者、および適用されているタグやポリシーが表示されます。アーカイブまたは削除する前に、システムと所有者を確認してください。</block>
+  <block id="739c8a225ec9d4388a87cbff74a364d6" category="section-title">結果に基づいて操作するか、ポリシーとして保存する</block>
+  <block id="9115023d9a2299cdbb6c4094a3b32978" category="paragraph">処理したいファイルを特定したら、結果テーブルのチェックボックスを使用して1つ以上の項目を選択してください。</block>
+  <block id="1da1c3b62b44c3206eda6a0bfaa3608b" category="list-text">すぐに行動を起こすには、<block ref="0a32a9c8f26d2c4f95b1f16b549ee04a" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="4dfc97cca55649475fd1827176bf7835" category="list-text">継続的な監視のためにフィルタ条件を保存するには、フィルタツールバーの「ポリシーの作成」を選択します。<block ref="a6ba65d5603bedd3e970c59f52c864db" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="c53e81a36cf6536770e3901db796b77b" category="paragraph">非構造化タブからフィルタリングされた結果をダウンロードするには、<block ref="5cdab54312f4c99b6053532c2103d660" category="inline-image-macro-rx" type="image"></block>を選択します。</block>
+  <block id="466cb045e839cbb73b8cad13c419eadc" category="summary">コールドファイル、古くなったファイル、または不要になったファイルとして特定したファイルに対して、アーカイブ、追跡のためのタグ付け、または完全な削除を行うことができます。</block>
+  <block id="c6cdf2484e43853022e3d34a4196e735" category="doc">AI Data Engine でデータに対してアクションを実行する</block>
+  <block id="cb54b53eef654e8ada475149b79f002c" category="paragraph">定義したフィルターを使用してファイルを特定した後、組織のデータのライフサイクルポリシーを適用するための直接的な措置を講じることができます。例えば、ストレージ管理者は、1年以上アクセスされていないテラバイト規模のVMスナップショットをフィルタリングして見つけ出し、保持要件やビジネスポリシーに応じて、それらをまとめてコールドストレージ共有にアーカイブしたり、削除したりすることができます。</block>
+  <block id="bbe48fb854ea022537208eeeff822f91" category="paragraph-title">タスク概要</block>
+  <block id="728d5066b3e522f53ee9bb1aa1cceff2" category="paragraph">アクションを実行するには、チェックボックスを使用して調査結果表の項目を1つ以上選択してください。アクションツールバーには、「削除」、「アーカイブ」、「コピー」、「タグ」の4つのオプションが表示されます。</block>
+  <block id="3b701cb2531be0b00189872b17d5f0c9" category="paragraph">利用できる操作は、割り当てられた役割によって異なります。</block>
+  <block id="004bf6c9a40003140292e97330236c53" category="cell">アクション</block>
+  <block id="c101058e7ea21bbbf2a5ac893088e90b" category="cell">Tag</block>
+  <block id="e727b00944f81e1d0a95c12886ac4641" category="cell">アーカイブ</block>
+  <block id="5fb63579fc981698f97d55bfecb213ea" category="cell">コピー</block>
+  <block id="f2a6c498fb90ee345d997f888fce3b18" category="cell">削除</block>
+  <block id="95649a07a392f0eeb3ca64399627eba1" category="paragraph">役割の詳細については、<block ref="d59f12356f9957c4b4ff227159fcf4ce" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="db1d23e5179a9fe160dcc88e195ec706" category="section-title">何をするか決める</block>
+  <block id="147b072cafab1c2dd42e22e5d15301b6" category="paragraph">データの確実性に基づいて、操作を選択してください：</block>
+  <block id="098576d35c2d491f4817320ed47b6aaa" category="cell">いつ使うべきか</block>
+  <block id="0f9189cdc3e0a037abe09638c750c872" category="cell">アーカイブまたは削除を決定する前に、より多くの時間が必要か、他のチームと連携する必要があります。タグ付けは、ファイルの場所を変更せずにファイルを追跡します。</block>
+  <block id="b2ec648a2d141cdfffc053e7b6563866" category="cell">データ自体にはまだ価値があるかもしれませんが、プライマリストレージに保存すべきではありません。アーカイブすることで、データをより低コストな場所に移動しながら、復元可能な状態を維持できます。</block>
+  <block id="7a513a3c28a8f669fd4aca87edc7d4ff" category="cell">データは、バックアップや移行などの目的で、別の場所にも保存しておく必要があります。複製することで、原本は元の場所に保持されます。</block>
+  <block id="bc3816ab076629adfe40a0bb74253630" category="cell">当該データはもはや不要であり、保存義務もありません。削除は元に戻せないため、確信が持てる場合にのみ使用してください。</block>
+  <block id="3a86a1f3200bc13f3e6e25cd8c63f387" category="paragraph">データにまだ価値がある場合や、さらにレビューが必要な場合は、削除ではなく、タグ付け、アーカイブ、またはコピーを選択してください。データを完全に削除しても安全だと確信できる場合にのみ削除してください。</block>
+  <block id="b94cf9b41dc14b08e350609a8dda9851" category="section-title">アーカイブファイル</block>
+  <block id="d583e1dacb23bebde940fa5e8d865f0e" category="paragraph">アーカイブ処理では、NFSまたはSMB/CIFSを介してファイルをコールドストレージに移動します。必要に応じて、元の場所にパンくずリストファイルを残しておくことができます。</block>
+  <block id="1570687f8725a213b4a686f6ac4fdae2" category="list-text">調査ビューで、アーカイブするファイルを選択します。</block>
+  <block id="2c77adf5fa1de4ed37a6e14d2212f074" category="list-text">「アーカイブ」を選択してください。</block>
+  <block id="f54b7c864a181cded9240ed6104e3daf" category="list-text">アーカイブダイアログで、保存先のボリュームプロトコルを選択します：</block>
+  <block id="cd500862e33a75abfb5031fad39b1142" category="list-text">*NFS*：NFS接続先フォルダのパスを入力してください。</block>
+  <block id="3935da95b9989cca3c105737826afe11" category="list-text">*CIFS*: CIFS 宛先フォルダーのパスを次の形式で入力してください<block ref="fe92c67c0b14ced5563463f4fafedf55" prefix=" " category="inline-code"></block>。Active Directory の認証情報を入力してください：ユーザー名を<block ref="17d3c626ba751e0e94dda4f25e2f7917" prefix=" " category="inline-code"></block>または<block ref="6dbef44fd2513f0adc2001ca12b9ab28" prefix=" " category="inline-code"></block>の形式で入力し、パスワードを入力してください。</block>
+  <block id="057781ed20a2756d33dd5357cc3202fe" category="list-text">元の場所にパンくずファイルを作成するには、*パンくずを残す*を有効にしてください。</block>
+  <block id="58a462660ae302250a4d780d0b3e6c75" category="paragraph">パンくずリストファイルは、ユーザーがファイルが移動された理由を理解するのに役立ちます。</block>
+  <block id="558f28628ba8ab4cb8420949524832d3" category="section-title">ファイルをコピーする</block>
+  <block id="02a8733c4bf7bb8ff585c8b99ea9c13d" category="paragraph">重複したファイルを元の場所から削除せずに、宛先ボリュームにコピーします。</block>
+  <block id="a058b0c45ff3df328bd80e228d5ce518" category="list-text">調査ビューで、コピーしたいファイルを選択します。</block>
+  <block id="ff721def565be95c3cfffe25fdb400a0" category="list-text">「コピー」を選択します。</block>
+  <block id="672c6ba1d9b352d97c0a978b29edc305" category="list-text">コピーダイアログで、宛先ボリュームのプロトコルを選択します：</block>
+  <block id="19e43848563797a6f937c7895b604754" category="section-title">ファイルを削除する</block>
+  <block id="febaf5fabe3319f93b2fe563154ea639" category="paragraph">削除すると、ストレージからファイルが完全に削除され、元に戻すことはできません。</block>
+  <block id="78ed60cd08755488e6329393322735be" category="admonition">削除は永久的な操作であり、元に戻すことはできません。この操作は、アクティブなデータが含まれている場合でも、ソースファイルを削除します。</block>
+  <block id="2502b05a7977f127e7281b538960066d" category="list-text">調査ビューで、削除するファイルを選択します。</block>
+  <block id="0f024621e0673f1f4e657983682d6e72" category="list-text">*Delete*を選択します。</block>
+  <block id="0dd343f5a1b1a1c2fe813f560aebc821" category="list-text">削除ダイアログで、確認フィールドに *permanently delete* と入力します。</block>
+  <block id="72e2db7d480025db5af43c2aac619bc7" category="paragraph">選択されたファイルはストレージから完全に削除されます。</block>
+  <block id="df35ebac2a41097b9917523bd3c2bc09" category="section-title">タグファイル</block>
+  <block id="44449c40b94c6968d500d3ac0000d80f" category="paragraph">タグ付けとは、ファイルの分類と追跡のために、ファイルに業務タグを付ける機能です。</block>
+  <block id="8e257df1aecf26a0f56609f5b258ac48" category="list-text">調査ビューで、タグ付けするファイルを選択します。</block>
+  <block id="2aef7b9ad66d778cf2b4d09ef8ca9e20" category="list-text">「タグ」を選択します。</block>
+  <block id="4a928d09a792f7bb80c2f5c0cd76c45d" category="list-text">適用するタグを入力または選択してください（例：「アーカイブ候補」）。</block>
+  <block id="e0c82a884434f7335c9d93b81ff581a8" category="list-text">タグを適用することを確認してください。</block>
+  <block id="1a00c6d70a5f287fa08a2f560298aaaf" category="list-text"><block ref="1a00c6d70a5f287fa08a2f560298aaaf" category="inline-link-macro-rx"></block></block>
+  <block id="e8feacb52d9a8d1ca3dc8fece412de38" category="summary">環境全体のストレージの状態を評価し、再利用可能なストレージが集中している場所を特定し、最初に調査すべきシステムまたはデータベース所有者を決定します。</block>
+  <block id="e51a89894bc2fbb0eac3aacc1ae7e58e" category="doc">AI Data Engine ダッシュボードでストレージの健全性を評価する</block>
+  <block id="b943da8162c47c91e3486439e26e1301" category="paragraph">調査対象を決定する前に、ストレージの状態を把握する必要があります。お客様の組織が定めるコールドデータおよび陳腐データの分類基準を満たすストレージ容量はどれくらいですか？また、これらのカテゴリに該当するデータが最も多く保存されているシステムや所有者は誰ですか？例えば、容量アラートに対応したストレージ管理者は、スキャンされたストレージの大部分がコールドデータであることを確認し、最も影響の大きいシステムを詳しく調べて、直ちに調査を開始できます。</block>
+  <block id="c3f8d99caf13f1c9cc868c7e63ac0b27" category="paragraph">NetApp Console から、*ガバナンス* &gt; *AI Data Engine UI* を選択します。ダッシュボードはデフォルトで開きます。</block>
+  <block id="91e4a9de07cf0d0c9175eae1427f1f38" category="section-title">影響を受けるストレージ容量の把握</block>
+  <block id="c8e00eaecbe5dcb031f4ca326e46a4c6" category="paragraph">概要パネルには、スキャン対象環境全体における問題の規模が表示されます。</block>
+  <block id="7ef3152904e46ae7f94840efc09c3b92" category="list-text">*コールドデータ*：コールドデータしきい値（デフォルト：1年）以内にアクセスされていないストレージ。お客様の組織は、データ保持およびガバナンスポリシーに従って、このデータを評価することができます。</block>
+  <block id="d712d7ee942e358c4009c49431ef2f2d" category="list-text">*古いデータ*：古いデータのしきい値（デフォルト：3年）内にアクセスまたは変更されていないストレージ。組織のデータのライフサイクルポリシーに従って、アーカイブや削除などの措置を決定する前に、古いデータの見直しが必要となる場合があります。</block>
+  <block id="cc2f4d57c9484a23c4a96fc8f23b8656" category="list-text">*公開ディレクトリ*：アクセス設定が過度に緩いディレクトリ。これらは、ストレージ消費量とは無関係なガバナンスリスクを表します。</block>
+  <block id="10f5b659d787bd27e2a927247a54a851" category="list-text">*データリソース*：現在スキャンされているボリューム、共有、およびバケットの数。</block>
+  <block id="4032aca872e761b4f5e049b7efe7b33b" category="list-text">*スキャンされたファイル総数*：スキャンされたすべてのデータリソースでインデックス化されたファイルの総数。</block>
+  <block id="5ecd0a2f3bf7cb827b44868e8678c44a" category="paragraph">コールドおよびステールのしきい値は、設定内容を反映しており、*Configuration* &gt; *Settings* で変更できます。デフォルト値は製品のデフォルト値であり、法的、コンプライアンス、または業界標準のデータ保持期間を表すものではありません。<block ref="5b2f6a0e7f285ed05b047fba791060b7" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="4c1929bca68da328a7aa87cbf4e79c82" category="paragraph">_Active versus reclaimable storage_ のグラフは、スキャンされたすべてのリソースにおける、アクティブデータとコールドデータおよび古いデータの割合を示しています。利用頻度の低いデータ、古いデータ、または重複データの割合が高い場合は、ストレージの最適化に大きな機会があることを示している可能性があります。</block>
+  <block id="13350d4cdc4449515291e667e2318234" category="paragraph">「システム」および「システムタイプ」フィルターは、ダッシュボードのスコープを制御します。ストレージシステムがフィルターリストに表示されない場合は、<block ref="3540fa5efa78b3ae6e9c7d52a1e7d21a" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="8b361c02b649d493e4f9211584d129e7" category="section-title">ストレージ最適化の機会を特定する</block>
+  <block id="4bab448286926edb332cf3552e879598" category="paragraph">要約パネルとグラフを使用して、ストレージ最適化の機会を特定し、優先順位を付けます。</block>
+  <block id="2e8488475a072fccfcc2119d2b03ea22" category="list-text">総量が最も多いリソースではなく、潜在的に回収可能なサイズが最も大きいリソースに焦点を当ててください。ほとんどがコールドデータまたは古いデータで構成されている小規模なシステムは、ほとんどがアクティブな大規模システムよりも、最初に評価するリソースとして適している場合があります。</block>
+  <block id="b1bb6fb4de70db88e5ce6c82540ddb6d" category="list-text">孤立したファイルではなく、大量のコールドデータや古いデータが集中している場所を探してください。1つのリソース上で、数十テラバイトものデータが古くなったというしきい値に達した場合は評価が必要ですが、個々のファイルについては対応が必要ない場合もあります。</block>
+  <block id="9b7c190f314417a73c41881f5ea8e249" category="section-title">ダッシュボードから調査画面へ移動</block>
+  <block id="e17f5b218ebb105d6297d499db8bf9ab" category="paragraph">調査する価値のあるリソースまたは所有者を特定したら、ダッシュボード下部の表を使用して詳細情報に直接移動してください。</block>
+  <block id="e7ef56695ea04d5a8ed28ad8f4c0057d" category="inline-link-macro">非構造化</block>
+  <block id="f60bce136c62f7ab3c73aa4f0d5fcae9" category="inline-link-macro">ディレクトリ</block>
+  <block id="f902c7ef331eec27ba7c19c76dd13ea7" category="paragraph">「再利用可能なストレージによる上位データリソース」表には、スキャンされたストレージリソースが、重複しているデータ、または組織のコールドデータおよび古くなったデータのしきい値を満たしているデータの割合に基づいてランク付けされて表示されます。いずれかの行を選択すると、そのリソースに絞り込まれた調査ビューが開きます。そこから、<block ref="2ffd1417cc35a965547bb2150ad9550e" category="inline-link-macro-rx"></block>タブを使用してコールドファイルまたは古いファイルを識別するか、<block ref="6d961a2a6fb0e60e8e41943755ff0165" category="inline-link-macro-rx"></block>タブを使用して権限の漏洩状況を監査します。</block>
+  <block id="10160b4a6005b5e64e6bb3c6cd4ce9f4" category="paragraph">「再利用可能なストレージによる上位データ所有者」テーブルには、再利用可能な可能性のあるデータを所有しているデータ所有者が表示されます。任意の行を選択すると、<block ref="7c7d8a698a0c8312e3f60c4049c831eb" category="inline-link-macro-rx"></block>ビューがその所有者のファイルに絞り込まれた状態で開きます。そこから、結果を確認したり、それに基づいて操作したり、ポリシーとして保存したりできます。</block>
+  <block id="5b2f6a0e7f285ed05b047fba791060b7" category="list-text"><block ref="5b2f6a0e7f285ed05b047fba791060b7" category="inline-link-macro-rx"></block></block>
+  <block id="29f269506dea333c951e5bdd24f562e8" category="summary">AI Data Engine 調査ビューで使用可能なメタデータフィルタのリファレンス。</block>
+  <block id="3f1e5985ebe63ee48079ec674c8e712c" category="doc">AI Data Engine のメタデータフィルター</block>
+  <block id="32098fe855860a385d3e78e6f21bddba" category="paragraph">AI Data Engine の調査ビューでは、メタデータフィルターを使用して、結果を特定のデータグループに絞り込むことができます。1つ以上のフィルターを同時に適用して、検査または操作対象のファイルを定義します。</block>
+  <block id="4f0571511f3798371fc4148cfd519ee4" category="section-title">時間フィルター</block>
+  <block id="d7778d0c64b6ba21494c97f77a66885a" category="cell">フィルタ</block>
+  <block id="12707aedcfa4c45ecea0e99004cb9c09" category="cell">最終作成日</block>
+  <block id="6c4f535cc063708aa94771d54aac42fc" category="cell">作成日でファイルを絞り込みます。</block>
+  <block id="fe8430e1398bb650f70a7f4ac687f688" category="cell">最終更新日</block>
+  <block id="932670db976eb5163da370a9844d60a2" category="cell">最終更新日でファイルを絞り込みます。</block>
+  <block id="54bc6f9dec592e510fe90ddcb5c6e572" category="cell">最終アクセス日時</block>
+  <block id="fae6ad3654612fb7f673d44ed469f25d" category="cell">ファイルの最終アクセス日でファイルを絞り込みます。このフィルターを使用して、古いデータや利用頻度の低いデータを特定します。</block>
+  <block id="eed7cc7f64269eb19a98b58ae0d79b6f" category="cell">検出時刻</block>
+  <block id="0cd081aab0fdbd4873a2df7b40288c7e" category="cell">AI Data Engine がスキャン中に初めて検出した時期でファイルをフィルタリングします。</block>
+  <block id="478b6b0fb2364dfbd840a53ccc181cdf" category="section-title">ファイル属性フィルタ</block>
+  <block id="e539fd665e202f536325140d87d7bf72" category="cell">ファイル タイプ</block>
+  <block id="451bd265f7d7e6ef80f9660ce3f8938b" category="cell">ファイル拡張子またはタイプ分類でフィルタリングします。リストから1つ以上のファイルタイプを選択してください。</block>
+  <block id="a00fe904aecabd4bff74d8776e6da2c5" category="cell">ファイル サイズ</block>
+  <block id="ab46ef9ee6c9aeb566a0052138ce96fe" category="cell">ファイルサイズで絞り込む。最小値、最大値、または範囲を入力してください。</block>
+  <block id="39ef84f61972b7a15df8579366a81c58" category="cell">ファイル/ディレクトリパス</block>
+  <block id="c15d26ebf6d6ddcb7b27630b29418303" category="cell">ファイルまたはその格納ディレクトリの完全パスまたは部分パスでフィルタリングします。</block>
+  <block id="bca27ee6b79f497c1dda149cd12ce9f6" category="cell">ファイル/ディレクトリの所有者</block>
+  <block id="19642f59edd25d4d972fe6baaccee253" category="cell">ファイルまたはディレクトリを所有するユーザーまたはグループでフィルタリングします。</block>
+  <block id="116279f96a5a5a07b36a9ed5e3b30ae8" category="cell">ファイルハッシュ</block>
+  <block id="c0714ffda0184867f1dc524ff0e5e420" category="cell">ファイルのハッシュ値でフィルタリングして、特定のファイルを見つけたり、重複コンテンツを確認したりできます。</block>
+  <block id="763275034b3bde5ad4f0fb074a35e741" category="cell">重複</block>
+  <block id="32faa42aebad484f8da6541b5505c7e0" category="cell">カタログ内で重複コピーが検出されたファイルのみを表示するようにフィルタリングします。</block>
+  <block id="c3a9830be43f6515257f3979e66816fd" category="cell">ディレクトリの種類</block>
+  <block id="6354853e63c8ea1bdaef8b483969bac2" category="cell">ディレクトリの種類で絞り込む。環境：「ディレクトリ」タブ。</block>
+  <block id="f6ee46e7a4dcaeef127cb631d4d71eba" category="section-title">ソースフィルター</block>
+  <block id="0a2e90839e516c5beec6a6b2383bebbb" category="cell">データコンテナ</block>
+  <block id="18f84adbe62810f511dc08313445b852" category="cell">特定のボリュームまたはシェアに絞り込みます。</block>
+  <block id="a45da96d0bf6575970f2d27af22be28a" category="cell">システム</block>
+  <block id="b4e6aff3dc86a2a0b3d147648dcffc93" category="cell">特定のクラスターに絞り込む。</block>
+  <block id="09a501049563e4eed9d4a3de0e0ef779" category="cell">システム タイプ</block>
+  <block id="817145c1a1deab51f396b987565b3847" category="cell">ストレージシステムの種類で絞り込みます。</block>
+  <block id="1b3b8b36365509a34458842ab634d447" category="section-title">データ ガバナンス フィルター</block>
+  <block id="189f63f277cd73395561651753563065" category="cell">Tags</block>
+  <block id="088563aec15dfe81a18f529521715ea6" category="cell">特定の業種タグが付与されたファイルをフィルタリングします。</block>
+  <block id="51359e8b51c63b87d50cb1bab73380e2" category="cell">Policy</block>
+  <block id="a7958d6b539c348235ccc6bee16e5ce1" category="cell">特定の保存済みポリシーに一致するファイルをフィルタリングします。フィルタリストにはポリシー名が表示されます。</block>
+  <block id="9f6155ee2fa8065bc4074b1d7c733d3f" category="section-title">アクセスフィルター</block>
+  <block id="81593873baa2c232be0bc3600b554eb3" category="cell">アクセス権を持つユーザー数</block>
+  <block id="7b94fe52ebacb5ec60b2cc5908f95eab" category="cell">アクセス権を持つユーザー数またはグループ数に基づいてファイルをフィルタリングします。これを使って、広くアクセス可能なデータを特定してください。</block>
+  <block id="1f5111136feebd2cebb509caf39d84ea" category="cell">ユーザー/グループの権限</block>
+  <block id="2c6c8d72b780de32255fbc74be0e6042" category="cell">アクセス権限を持つ特定のユーザーまたはグループでファイルをフィルタリングします。</block>
+  <block id="56dc1022c52105e2bab579a7c3eb86ec" category="section-title">フィルターの組み合わせ</block>
+  <block id="30b3b28cbcc9fe320c89ccf0cd63c711" category="paragraph">フィルターはAND論理で組み合わされるため、結果は適用されたすべてのフィルターに同時に一致する必要があります。</block>
+  <block id="30d965eef5ba25c6b9998ae38270b43e" category="doc">法律上の表示</block>
+  <block id="e9c44bbfd795a5d63d74c6a77afee70d" category="paragraph">法的通知から、著作権情報、商標、特許などを確認できます。</block>
+  <block id="6016a2b341113bf496b719905398ecd2" category="section-title">著作権</block>
+  <block id="52009bb7ee17227f566cd26a02caee56" category="inline-link-macro"><block ref="52009bb7ee17227f566cd26a02caee56" category="inline-link-rx"></block></block>
+  <block id="a1a9afcf552a769c282769271829889a" category="paragraph"><block ref="a1a9afcf552a769c282769271829889a" category="inline-link-macro-rx"></block></block>
+  <block id="126a02652da6de02962cf1b654fd6376" category="section-title">商標</block>
+  <block id="c4ce4761e466527d26b3e3d5ed1006fd" category="paragraph">NetApp、NetAppのロゴ、NetAppの商標一覧のページに掲載されているマークは、NetApp, Inc.の商標です。その他の会社名と製品名は、それを所有する各社の商標である場合があります。</block>
+  <block id="f99aa604031e5049799e73b5c3748a98" category="inline-link-macro"><block ref="f99aa604031e5049799e73b5c3748a98" category="inline-link-rx"></block></block>
+  <block id="5d545fe5152641e2ebe654e336e520e5" category="paragraph"><block ref="5d545fe5152641e2ebe654e336e520e5" category="inline-link-macro-rx"></block></block>
+  <block id="be89498d2f8a22ce47c02ba9795fe2af" category="section-title">特許</block>
+  <block id="d0b19d36be2c5f16e9aef46c8a452d3d" category="paragraph">現在NetAppが所有する特許の一覧は以下のページから閲覧できます。</block>
+  <block id="88e5eabd3917048b6927c42496b98f86" category="inline-link-macro"><block ref="88e5eabd3917048b6927c42496b98f86" category="inline-link-rx"></block></block>
+  <block id="dd38f906b37d412de7d1c1dcf4cbf31c" category="paragraph"><block ref="dd38f906b37d412de7d1c1dcf4cbf31c" category="inline-link-macro-rx"></block></block>
+  <block id="56c34c6410dd45c5cec44149ad0ce037" category="section-title">プライバシー ポリシー</block>
+  <block id="8acb58cbd50ef1b468a020ee0bd351d3" category="inline-link-macro"><block ref="8acb58cbd50ef1b468a020ee0bd351d3" category="inline-link-rx"></block></block>
+  <block id="2352c4e1f4d0024ade0869e00e6243f4" category="paragraph"><block ref="2352c4e1f4d0024ade0869e00e6243f4" category="inline-link-macro-rx"></block></block>
+  <block id="c0227cef6f07a8cd2ac72f2945b031aa" category="section-title">オープンソース</block>
+  <block id="9b73989307c1975dfa4d5e1581e4afe8" category="paragraph">通知ファイルは、NetAppソフトウェアで使用されるサードパーティの著作権とライセンスに関する情報を提供します。</block>
+  <block id="93d6496a69f6384320dab15ccadbc4e8" category="inline-link-macro">AI Data Engine の通知</block>
+  <block id="7ab36480d3c1a530e02ac892b3191e4a" category="paragraph"><block ref="7ab36480d3c1a530e02ac892b3191e4a" category="inline-link-macro-rx"></block></block>
+  <block id="e7dc26f23cfcebf955f51e9ec20046b1" category="summary">調査フィルターの条件を名前付きポリシーとして保存することで、同じデータグループを長期にわたって追跡し、条件が変更されたときに通知を受け取ることができます。</block>
+  <block id="0e276db5651852f12c3a3c7be8b2939e" category="doc">AI Data Engine でポリシーを作成する</block>
+  <block id="ede0a89e2e37ef9e8c3495af56db91eb" category="paragraph">繰り返し発生するデータ状態を監視したい場合、同じ調査を手動で繰り返すことなく、ポリシーを作成すると便利です。例えば、データ ガバナンス管理者は「大量の古いファイル」ポリシーを保存して、スキャンサイクル全体にわたってそのグループを追跡し、影響を受けるファイル数が変更されたときにメールで通知を受け取ることができます。</block>
+  <block id="f52de95261912772fdb0cf144dbe03b4" category="section-title">ポリシーについて</block>
+  <block id="a5fa586a92013c5c97e29689057b2cb1" category="paragraph">ポリシーは、調査で定義したフィルタ条件を再利用可能なルールとして保存します。AI Data Engine は、各スキャンサイクル後に各ポリシーをメタデータカタログと照合して評価します。いつでもポリシーを開いて、現在一致している結果セットを表示できます。削除アクションを添付すると、AI Data Engine は各スキャンサイクル後に一致するファイルを削除します。メール通知を添付すると、AI Data Engine は影響を受けるファイル数が変更された場合に更新情報を送信します。</block>
+  <block id="a6386166765944cb85899326a6b2c476" category="section-title">ポリシーアクションを選択してください</block>
+  <block id="c64d18b33c4649a44b2628b0bb93ef7c" category="paragraph">ポリシーとは、オプションのアクションが添付された保存済みのフィルタセットのことです。</block>
+  <block id="0c38824176557eba4a1f516f7b088c6a" category="list-text">*監視のみ（アクションなし）*：アクションを起こさずに、一致するグループを時間の経過とともに追跡します。自動応答にコミットせずに可視性を確保したい場合に使用してください。</block>
+  <block id="c2e1f4c774ea10b57abefcb31aa76536" category="list-text">*メール通知を送信*：一致するファイルの数が変更されたときに、ユーザーにメールで通知します。</block>
+  <block id="cb68685abc4007772bf80e880f6ac0b8" category="list-text">*完全に削除*：スキャンサイクルごとに、追加の確認なしに、一致するすべてのファイルを完全に自動的に削除します。この操作は元に戻すことができません。このアクションを適用する前に、フィルタ条件が正確であること、および特定されたファイルを削除する権限があることを確認してください。</block>
+  <block id="e1b7f70c1cf13a700c2cf801fe8ab552" category="section-title">調査からポリシーを作成する</block>
+  <block id="238cdb076cf9e0d915750e9789485a70" category="list-text">削除アクションまたはメール通知アクションを添付するには、_AI Data Engine administrator_ ロールが必要です。_AI Data Engine viewer_ ロールは、監視専用のポリシーを作成できます。</block>
+  <block id="b2aa56915b8338c2ab4bb92754d8c8b0" category="list-text">NetApp Console で、*ガバナンス* &gt; *AI Data Engine* &gt; *調査* に移動します。</block>
+  <block id="4556be3d18976a94e35e9505a84ce0a8" category="list-text">ポリシーの適用対象とするファイルを識別するフィルターを1つ以上適用します。</block>
+  <block id="3c5d0d0d1c86fad21c867f867ba470c0" category="paragraph">例えば、*ファイルの種類* = .vmdk かつ *最終アクセス日時* &gt; 365 日。</block>
+  <block id="af8e50ebd71c84b70d4d016cc5af3ace" category="paragraph">結果テーブルを確認し、フィルターセットが意図したデータグループを正しく抽出していることを確認してください。</block>
+  <block id="2a2288a0330a9617d3c0853f85e68419" category="list-text">フィルターアクションバーで、*ポリシーの作成*を選択します。</block>
+  <block id="8a37796b9da962274f41ca52f950bc99" category="list-text">*ポリシー名*を入力してください。</block>
+  <block id="9915d257811585adeea12f4d8e40cc73" category="list-text">必要に応じて、*概要*（最大500文字）を入力してください。</block>
+  <block id="d334da0bb32759f8d5a78f143560afcd" category="list-text">フィルタ条件式（例：<block ref="9ece38ef1bce889b5cd8f71bfea85fdc" prefix=" " category="inline-code"></block>）を確認して、選択内容が反映されていることを確認してください。</block>
+  <block id="f77f4eb500540d8520b974e5058db78e" category="list-text">アクションを添付するには、*アクション* の下で以下のいずれかを選択してください。</block>
+  <block id="f07b095e62dc1ddbd4bf74cc9ca2b983" category="list-text">*監視のみ（アクションなし）*（デフォルト）：ポリシーは監視のみの条件として保存されます。</block>
+  <block id="5942095503f6d7e1e26b60a2a6e62d7f" category="list-text">*メール通知の送信*：指定した受信者にメール通知を送信します。</block>
+  <block id="92b84f78dfb45bf70e508b01224589fc" category="list-text">*完全に削除*：追加の入力は不要です。</block>
+  <block id="e396b1ac5c2d912ca6a8b13ed0e05a07" category="admonition">「完全に削除」アクションは、スキャンサイクルごとに、このポリシーに一致するすべてのファイルを自動的かつ不可逆的に削除します。保存する前に、フィルタ条件を確認し、これらのファイルを削除する権限があることを確認してください。</block>
+  <block id="bf18811faac9b8e4fcaebab51afd1113" category="list-text">「作成」を選択します。</block>
+  <block id="9e476387322a5c250893cf9c5c4ce78c" category="inline-link-macro">ポリシー</block>
+  <block id="ce31e5e1b0f1c49223168a724c959c80" category="paragraph">ポリシーは保存され、<block ref="94996367e765be6e764d9bd137e8806b" category="inline-link-macro-rx"></block>ページに表示されます。アクションを関連付けた場合、AI Data Engine はポリシー基準に一致するファイルにそのアクションを適用します。</block>
+  <block id="2fdca2ba1ed7693e487bec5025936503" category="section-title">例：コールドアーカイブファイルを識別する</block>
+  <block id="8d0110cf0e0c534d680481796f5a88f5" category="paragraph">次の例では、1年以上アクセスされていないファイルが検出された場合、メール通知を送信するポリシーを作成します。</block>
+  <block id="e86db3241da52f3960cf869272355591" category="list-text">調査では、以下のフィルターを適用します：</block>
+  <block id="d91d018dd5cfcadde4007e74098c07ea" category="list-text">*最終アクセス日時* &gt; 365日</block>
+  <block id="db92c743d97601150bbdfa11bf3cf66b" category="list-text">「ポリシーの作成」を選択します。</block>
+  <block id="874c7fe25e0efe0e2f1f89158d6b2375" category="list-text">ポリシー名を入力してください：*Cold Files — Unaccessed 1 Year*。</block>
+  <block id="ce8113155f35b52456a2501ac34f598f" category="list-text">アクション「メール通知を送信」を選択し、受信者のメールアドレスを入力してください。</block>
+  <block id="e7326f303b8abf78625da7d8f22fa0b4" category="inline-link-macro">ポリシーの管理</block>
+  <block id="e9ba76d54e1aa8410ae34a053e8340ea" category="list-text"><block ref="e9ba76d54e1aa8410ae34a053e8340ea" category="inline-link-macro-rx"></block></block>
+  <block id="56a7a067af00ee6bab27db9405ac066d" category="summary">保存済みのポリシーを確認して、現在どのファイルが各条件に合致しているかを確認し、不要になったポリシーを削除してください。</block>
+  <block id="74ec5da2fefa69fddb2881fbc2dbd402" category="doc">AI Data Engine でのポリシーの管理</block>
+  <block id="ff4836632ff67a727c02672236e6e643" category="paragraph">保存済みのポリシーのうち、どのポリシーがデータに一致するかを確認したり、影響を受けるファイル数を比較してアクションの優先順位を付けたり、不要になったポリシーを削除したりする場合は、「ポリシー」ページを使用してください。例えば、複数のコールドデータポリシーを持つストレージ管理者は、影響を受けるファイル数を比較することで、どのデータグループに優先的に対応する必要があるかを判断できます。</block>
+  <block id="64c6e97782938b65828124df5bf425e3" category="paragraph">各ポリシー一覧には、現在その条件に一致するファイルとオブジェクトの数が表示されます。このカウントを利用して、レビューに値するデータを積極的に収集しているポリシーを特定してください。</block>
+  <block id="369b015b44433288d8d9f44f10b8f01c" category="section-title">どのファイルがポリシーに一致するかを確認する</block>
+  <block id="f1d0cd6ff1faaa9828ee3daf3aa01b7c" category="paragraph">ポリシーを編集または削除する前に、現在そのポリシーが一致しているファイルを確認し、基準が引き続き適切なデータを取得していることを確認してください。</block>
+  <block id="fb1f704e8084c654c300bf0b7e8f6abd" category="list-text">AI Data Engine の UI で、「ポリシー」を選択します。</block>
+  <block id="1e62455bacaf81600fe41fd0658e0acf" category="list-text">ポリシーの横にあるアクションメニューを開き、「結果を調査する」を選択します。</block>
+  <block id="fb6e9d876191a4c0c156e739e377be59" category="section-title">ポリシーを編集する</block>
+  <block id="7bce56498401ba4fb04b8af6d984b307" category="list-text">編集したいポリシーのアクションメニューを開き、*ポリシーの編集* を選択します。</block>
+  <block id="b43ad3d67481f4076cbc1f9453c9b41c" category="list-text">必要に応じて、ポリシー名、説明、またはアクションを更新してください。</block>
+  <block id="8b6af900279ab887f7d317420c8ef15c" category="section-title">ポリシーの削除</block>
+  <block id="6da2239d74d67983073e7b7ef1decbb0" category="admonition">削除は永久的な操作であり、元に戻すことはできません。</block>
+  <block id="55c29241fe1686604368df5845be9163" category="list-text">削除するポリシーのアクションメニューを開き、*ポリシーの削除*を選択します。</block>
+  <block id="172a47418c24bf93ca97612514cafed3" category="list-text">プレビューダイアログで削除を確認してください。</block>
+  <block id="28fa47d57487a7a01a693e7abece3024" category="list-text"><block ref="28fa47d57487a7a01a693e7abece3024" category="inline-link-macro-rx"></block></block>
+  <block id="a80dc868c7fe91b119b830460ef35842" category="summary">既知の制限事項では、このリリースの AI Data Engine でサポートされていない機能を示しています。</block>
+  <block id="df210d5dd27498fc443f259d10010182" category="doc">AI Data Engine の既知の制限事項</block>
+  <block id="c1d0108537baf61ec55a7c0d2bf2865c" category="paragraph">既知の制限事項では、このリリースの AI Data Engine でサポートされていない機能、または正しく相互運用されない機能を示しています。製品の導入または使用前に、これらの制限事項を確認してください。</block>
+  <block id="ea355214fd4bc7c57f471bd92918879b" category="section-title">導入</block>
+  <block id="b154839e03c7861cb59c16d126dfb18b" category="list-text">Lite および Enterprise の展開は独立しています</block>
+  <block id="50994614c7e6b09b219e17a7563708d8" category="list-text">AIDE Lite と AIDE Enterprise は、別々のデプロイメント モードです。既存のデプロイメントを一方のモードから他方のモードに移行するためのサポートされた移行パスはありません。</block>
+  <block id="d7ac65d8f6471ff1370e8ad4fda2db56" category="section-title">ポリシーとアクション</block>
+  <block id="22d58514041f9d266de2982f62b704e1" category="list-text">ポリシーによってトリガーされるアクションは制限されています</block>
+  <block id="1bd7116c1271070fddc738ca1e2a63ac" category="list-text">ポリシーを作成する際、利用可能な自動アクションは、完全削除とメール通知に限定されます。このリリースでは、ポリシーに基づく自動アーカイブおよびタグ付け機能は利用できません。データの状態を長期的に監視するために、アクションを指定しないポリシーを作成することができます。</block>
+  <block id="5e5599b4ab847835c7ed2699cdee9711" category="list-text">タグは削除または名前変更できません</block>
+  <block id="f8219070c8f68fd81cbf60bf1fe96f84" category="list-text">このリリースでは、タグ管理機能は利用できません。タグを作成すると、システム内に保持されます。アイテムにタグを付けたり、アイテムからタグを削除したりすることはできますが、タグの定義自体を削除したり、スペルミスのあるタグ名を修正したりすることはできません。</block>
+  <block id="33871b6190a8d5adbe8b15282054766c" category="inline-link-macro">新機能</block>
+  <block id="d2cf1d75a14c1b649ad24af4f7cc016a" category="list-text"><block ref="d2cf1d75a14c1b649ad24af4f7cc016a" category="inline-link-macro-rx"></block></block>
+  <block id="42f8643eb52a942747937327c72c8361" category="inline-link-macro">導入概要</block>
+  <block id="cd987b27c3ccd639db6b361c502cc401" category="list-text"><block ref="cd987b27c3ccd639db6b361c502cc401" category="inline-link-macro-rx"></block></block>
+  <block id="f83adadb9550a879c846995e2192c210" category="summary">AI Data Engine の新機能について説明します。</block>
+  <block id="44b91c30c9b87c702f04abec51577e90" category="doc">AI Data Engineの新機能</block>
+  <block id="18b0745779f8b981a16d46a4004a7a76" category="section-title">AI Data Engine 1.1.0</block>
+  <block id="4803fa959f55c9868ce67add988b1bc3" category="paragraph">AI Data Engine は、NetApp Console を通じて管理されるメタデータインテリジェンスサービスであり、接続されたシステムをスキャンし、メタデータカタログを構築し、ストレージの最適化と大規模なデータ ガバナンスを実現するための可視性とツールを提供します。AI Data Engine は <block ref="8fdf49583b6b6aae3264dbfdc5e4db3c" category="inline-link-macro-rx"></block> としてデプロイすることも、大規模な環境で Kubernetes ベースの高可用性が必要な場合は AIDE Enterprise としてデプロイすることもできます。</block>
+  <block id="acff41ea8efa2706fc9a587f718f0796" category="paragraph">新機能：</block>
+  <block id="5985e93b91139d269803898603d579a6" category="inline-link-macro">ストレージ容量を回復する</block>
+  <block id="b86b47941c4c25cee43b3c71138fd185" category="list-text"><block ref="b86b47941c4c25cee43b3c71138fd185" category="inline-link-macro-rx"></block></block>
+  <block id="28ee8cd4b89e717d7369cec556fc8ecb" category="list-text">設定したしきい値に基づいて、接続されているシステム全体で、利用頻度の低いデータ、古いデータ、重複データを特定し、これらのデータが最も多く蓄積されているシステムとデータ所有者を確認します。</block>
+  <block id="48f8775f839e036416f7dc0d633d5f90" category="inline-link-macro">コストとリスクを削減する</block>
+  <block id="e52b3bfa6b31678effcc50ac056804c0" category="list-text"><block ref="e52b3bfa6b31678effcc50ac056804c0" category="inline-link-macro-rx"></block></block>
+  <block id="847b10ef72a08afa0a7a2bccfc9f722a" category="list-text">アクセス時間、更新日時、作成日時、ファイルサイズ、重複状態、その他の基準で接続されているすべてのシステムをフィルタリングし、組織のデータ管理目標に合致するファイルを見つけ出します。結果に基づいて直接操作するか、基準をポリシーとして保存します。</block>
+  <block id="3ff38183453704f2e6ad7755f7b18083" category="inline-link-macro">データを継続的に管理する</block>
+  <block id="051b1389b635c6321bf59c8160978b9c" category="list-text"><block ref="051b1389b635c6321bf59c8160978b9c" category="inline-link-macro-rx"></block></block>
+  <block id="324524f3e5ca24846ad76aa3a39d085c" category="list-text">フィルタ条件を名前付きポリシーとして保存することで、コールドファイルやサイズ超過ファイルなど、時間の経過とともに繰り返し発生するデータ状況を追跡し、影響を受けるファイル数が変化したときに通知を受け取ることができます。</block>
+  <block id="a82c68dd721dede489a3f3b8e95372d3" category="inline-link-macro">保管コストを削減する</block>
+  <block id="3cdd5ec3a4c7cb1197214bf213ebc152" category="list-text"><block ref="3cdd5ec3a4c7cb1197214bf213ebc152" category="inline-link-macro-rx"></block></block>
+  <block id="5ba3f47da1647119a0c451e5cddf25f4" category="list-text">組織のデータのライフサイクルポリシーを徹底するために、ファイルをNFSまたはSMB/CIFS宛先にコピーしてアーカイブしたり、追跡のためにアイテムにタグを付けたり、保持要件に従ってファイルを完全に削除したりできます。</block>
+  <block id="a39bf4bdcac229739d4368182e65aa6a" category="inline-link-macro">管理者と閲覧者の役割を割り当てる</block>
+  <block id="c0d075a2db1d36d19fe844351b6f646e" category="list-text"><block ref="c0d075a2db1d36d19fe844351b6f646e" category="inline-link-macro-rx"></block></block>
+  <block id="05cd97f29840d5823c5d103c71b26a1a" category="list-text">誰がデータを調査してアクションを実行できるかを制御するには、組織内のユーザーに AI Data Engine の管理者または閲覧者の役割を割り当てます。</block>
+  <block id="aa06fbb4900808cad7e234eac413020c" category="inline-link-macro">重複データを削除する</block>
+  <block id="ac3a7591b6c527c7f8b4165add1344e5" category="list-text"><block ref="ac3a7591b6c527c7f8b4165add1344e5" category="inline-link-macro-rx"></block></block>
+  <block id="7b13634364ab63bb85b99711d8e97507" category="list-text">接続されたシステム全体で重複コピーが存在するファイルを検索します。「Duplicates」属性またはファイルハッシュでフィルタリングして、重複グループを直接確認し、対処します。</block>
+  <block id="b35eff1ca35dd2f41cd4416cbe7b1867" category="inline-link-macro">データ所有者に責任を負わせる</block>
+  <block id="95ab69d3f8b9dd3c20895e2a8f620b1d" category="list-text"><block ref="95ab69d3f8b9dd3c20895e2a8f620b1d" category="inline-link-macro-rx"></block></block>
+  <block id="7dbe065509bb17277c7b17f3766f97be" category="list-text">ダッシュボードから、どのデータ所有者が最も多くのコールドデータ、古いデータ、または重複データを保有しているかを特定し、調査ビューで所有者またはグループごとにフィルタリングして、ポリシーに従って結果を確認および管理します。</block>
+  <block id="482723983a4f2af954e36ff41e567451" category="inline-link-macro">既知の制限事項</block>
+  <block id="34e34c0debc388181c3934f84b977ddd" category="list-text"><block ref="34e34c0debc388181c3934f84b977ddd" category="inline-link-macro-rx"></block></block>
+  <block id="e72c60c273700856ad0eeb853a353e52" category="sidebar">AI Data Engineは、NetAppシステムに保存されている非構造化データへの可視性を提供します。これを利用して、ストレージ最適化の機会を特定し、データを調査し、ライフサイクルポリシーを適用してください。</block>
+  <block id="ed67b8aec97dcec019f1b2972d70f5af" category="sidebar">AI Data Engineドキュメント</block>
+  <block id="0416d02572f9d563fa4967178dc5c5fb" category="sidebar">AI Data Engine のドキュメントでは、デプロイ方法、データソースの接続方法、およびストレージの最適化、メタデータの調査、データ ガバナンスのための AI Data Engine の使用方法について説明しています。</block>
+  <block id="be11c74c1dd7f307bb80183a90dc2067" category="sidebar">はじめに</block>
+  <block id="507a3a88cebc46603ce2be8eaa924eee" category="sidebar">導入</block>
+  <block id="11806d1dadc91ccfe2ae6f339e25a1c9" category="sidebar">AIDE Lite のデプロイ</block>
+  <block id="257ce553226ee14243e41d9927b62f9a" category="sidebar">AIDE Enterprise のデプロイ</block>
+  <block id="1b127134042c4fb15c087d142010cbf8" category="sidebar">データを調べる</block>
+  <block id="aa01e24e60b9724b9b233b2a1e85f950" category="sidebar">フィルターを使用する</block>
+  <block id="325a8ad959d134128fc6baa371b4bbac" category="sidebar">データに基づいて行動を起こす</block>
+  <block id="10a6be92e43e8ae9229f893030d4ea66" category="sidebar">管理</block>
+  <block id="a0b9d46eb31f48b358b5d002a6a61532" category="sidebar">データしきい値を設定する</block>
+  <block id="482048d0a60a52e1c59023a695b7ddf7" category="sidebar">AI Data Engineドキュメント</block>
+  <block id="dd60be60a280d7b79db7dd4b933c4f6c" category="sidebar">AIDEを使用する</block>
+  <block id="c362fa2cf25cd98532ce4b3771f9fc76" category="sidebar">データソースを接続する</block>
+  <block id="ec728291e475cad65a149d393bcb1011" category="sidebar">AIDEの詳細</block>
+  <block id="0e68193094000ac3da408457283ae464" category="sidebar">AIDEアーキテクチャ</block>
+  <block id="1cbaf70f8f4340f5a7ef57a023be3309" category="sidebar">データを調査する</block>
+  <block id="6b2443d2529b7b19a67154f7a04c9877" category="sidebar">AIDE ダッシュボードを使用してストレージの状態を評価する</block>
+  <block id="4bd61438e659088dded1d69964caccb1" category="sidebar">ポリシーとアクションを管理する</block>
+  <block id="7d0ee6fed10d3d4e5c9ee496729ab519" category="sidebar">リリース ノート</block>
+</blocks>

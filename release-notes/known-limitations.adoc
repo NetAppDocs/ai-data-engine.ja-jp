@@ -1,0 +1,48 @@
+---
+sidebar: sidebar 
+permalink: release-notes/known-limitations.html 
+keywords: known limitations, limitations, restrictions, AI Data Engine 
+summary: 既知の制限事項では、このリリースの AI Data Engine でサポートされていない機能を示しています。 
+---
+= AI Data Engine の既知の制限事項
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+既知の制限事項では、このリリースの AI Data Engine でサポートされていない機能、または正しく相互運用されない機能を示しています。製品の導入または使用前に、これらの制限事項を確認してください。
+
+
+
+[[deployment]]
+== 導入
+
+Lite および Enterprise の展開は独立しています:: AIDE Lite と AIDE Enterprise は、別々のデプロイメント モードです。既存のデプロイメントを一方のモードから他方のモードに移行するためのサポートされた移行パスはありません。
+
+
+
+
+[[policies-and-actions]]
+== ポリシーとアクション
+
+ポリシーによってトリガーされるアクションは制限されています:: ポリシーを作成する際、利用可能な自動アクションは、完全削除とメール通知に限定されます。このリリースでは、ポリシーに基づく自動アーカイブおよびタグ付け機能は利用できません。データの状態を長期的に監視するために、アクションを指定しないポリシーを作成することができます。
+
+
+
+
+[[tags]]
+== Tags
+
+タグは削除または名前変更できません:: このリリースでは、タグ管理機能は利用できません。タグを作成すると、システム内に保持されます。アイテムにタグを付けたり、アイテムからタグを削除したりすることはできますが、タグの定義自体を削除したり、スペルミスのあるタグ名を修正したりすることはできません。
+
+
+
+
+[[related-information]]
+== 関連情報
+
+* link:whats-new.html["新機能"]
+* link:../deploy/deployment-overview.html["導入概要"]
+* link:../investigate/take-actions.html["データに対してアクションを実行する"]
+

@@ -1,0 +1,52 @@
+---
+sidebar: sidebar 
+permalink: deploy/deploy-aide-lite.html 
+keywords: deploy, install, lite, wizard, NetApp Console, deployment wizard, onboarding 
+summary: デプロイメント ウィザードを使用して、NetApp Console から AIDE Lite をデプロイします。 
+---
+= AI Data Engine Lite のデプロイ
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+デプロイメントウィザードを使用して、NetApp Console から AIDE Lite をデプロイします。ウィザードは、インストール場所の選択、構成サイズの選択、および対象ホストでのインストールコマンドの実行手順を案内します。
+
+.開始する前に
+* お客様はNetApp Consoleで_組織管理者_以上の権限を持っています。
+* インストールコマンドを実行するには、対象ホスト上でsudo（またはroot）権限が必要です。
+* お客様の環境は、link:aide-requirements.html["AIDEの要件"]に記載されているすべての前提条件を満たしています。
+* NetApp Console エージェント https://docs.netapp.com/us-en/console-setup-admin/concept-agent-install-options.html#agent-console-deploy["展開されています"^]は、AI Data Engine ホストから到達可能である必要があります。インストールコマンドを実行するには、Console Agent の IP アドレスが必要です。
+
+
+.手順
+. NetApp Console で、*ガバナンス* > *AI Data Engine* に移動します。
++
+AI Data Engineのランディングページが表示されます。
+
+. *AI Data Engine のデプロイ*を選択します。
+. 「Lite」展開オプションを選択し、「次へ」を選択します。
+. ウィザードに表示されている、あらかじめ設定されたインストールコマンドをエディタにコピーします。
+. 構成サイズを選択してください：
++
+** *小型*：約2億ファイルまでの環境に推奨されます。
+** *中（デフォルト）*：約10億ファイルまでの環境に推奨されます。
+** *ラージ*：約30億ファイルまでの環境に推奨されます。
++
+これらのサイズは推奨される基準値であり、厳密な制限ではありません。お客様の環境がこれらの範囲外である場合は、link:aide-requirements.html#flexible-sizing-lite["柔軟なサイズガイドライン"]を参照してください。
+
+
+
+. 小規模構成または大規模構成の場合は、選択したサイズに合わせてインストールコマンドを調整してください： `--flavor <small|medium|large>`
+. ターゲットホストで、必要な構成サイズの調整を加えたインストールコマンドを実行します。
++
+
+NOTE: インストールには約45分かかります。タイムアウトや再試行が発生する場合がありますが、これは正常な動作です。
+
+. プロンプトが表示されたら、ホストのIPアドレスとユーザーIDを確認してインストールを続行してください。
+. 成功画面が表示されて「AI Data Engine deployed」と表示されるまで、進行状況画面を監視します。
+
+
+.結果
+AI Data Engine がデプロイされ、NetApp Console に接続されました。これでlink:../data-sources/connect-data-source.html["データソースを接続する"]スキャンを開始できます。

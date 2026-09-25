@@ -1,0 +1,106 @@
+---
+sidebar: sidebar 
+permalink: get-started/storage-optimization-workflows.html 
+keywords: storage optimization, cold data, stale data, retention, workflow, dashboard, investigate, policy 
+summary: エンドツーエンドフローを使用して、ダッシュボードの調査結果を調査、対策、継続的なポリシーモニタリングへと進めます。 
+---
+= AI Data Engine でストレージ最適化ワークフローを確認する
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+これらの AI Data Engine ワークフローは、ダッシュボード上でストレージの問題を特定するところから、調査と対策、そして継続的な監視ポリシーに至るまでを網羅しています。各ワークフローは、ダッシュボード、調査、アクション、ポリシーとしての保存という同じ経路をたどります。
+
+
+
+[[identify-and-act-on-cold-data]]
+== コールドデータを特定し、それに基づいて行動する
+
+.シナリオ
+ダッシュボードを見ると、ストレージリソースに大量のデータがコールドとしてフラグ付けされていることがわかります。コールドファイルとは、設定されたコールドデータしきい値（デフォルトは1年で、*構成* > *設定*で変更可能）内にアクセスされていないファイルです。
+
+.手順
+. link:../investigate/understand-dashboard.html["ダッシュボード"]から、コールドデータの集中度が最も高いリソースを特定し、*調査*を選択します。
+. link:../investigate/investigate-unstructured.html["調査"]で、設定したコールドデータしきい値（デフォルト：*1年以上*）に一致するように設定された *最終アクセス日* フィルタを使用してリソースを確認してください。
+. 結果を確認して、一致するファイルlink:../investigate/take-actions.html["タグを付けるか、アーカイブするか、削除するか"]を決定してください。
+. これらのリソースを継続的に監視する価値がある場合は、link:../policies/create-policy.html["フィルタセットをポリシーとして保存する"]新しいファイルがコールドになると通知されます。
+
+
+
+
+[[identify-and-act-on-stale-data]]
+== 古いデータを特定し、対処する
+
+.シナリオ
+時折アクセスされるものの、何年も変更されていないファイルは、組織が定める「古いファイル」のしきい値（デフォルト：最終アクセスまたは変更から3年）を超えた場合に「古いファイル」として分類されます。
+
+
+NOTE: このしきい値は、「Configuration」>「Settings」で設定できます。
+
+.手順
+. link:../investigate/understand-dashboard.html["ダッシュボード"]から、大量の古いデータを含むリソースを特定します。
+. link:../investigate/investigate-unstructured.html["調査"]で、古いデータのしきい値（デフォルトは「3年以上」）に設定された「最終更新日」フィルターを適用します。
+. 結果を確認して、一致するファイルlink:../investigate/take-actions.html["タグを付けるか、アーカイブするか、削除するか"]を決定してください。
+. link:../policies/create-policy.html["フィルタセットをポリシーとして保存する"]これらのリソースを後続のスキャン全体にわたって追跡するため。
+
+
+
+
+[[manage-data-retention-compliance]]
+== データ保持コンプライアンスの管理
+
+.シナリオ
+貴組織では、一定期間以上経過したファイルについては、データ保持の可否を確認するためにレビューを行うことを義務付けています。AI Data Engine のデフォルトの保持しきい値は、ファイル作成から7年以上経過していることです。このしきい値は、組織のコンプライアンスおよびデータ保持ポリシーに合わせて調整できます。
+
+
+NOTE: このしきい値は、「Configuration」>「Settings」で設定できます。
+
+.手順
+. link:../investigate/investigate-unstructured.html["調査"]で、データ保持のしきい値（デフォルトは「7年以上」）に設定された「最終作成日」フィルターを適用します。
+. 行動を起こす前に、関係者と結果を確認してください。保存期間が設定されたファイルは、自動的に削除されるのではなく、監視されることが多いです。
+. link:../policies/create-policy.html["ポリシーを作成します。"]監視のみ、またはメール通知のアクションを設定することで、新しいファイルがデータ保持しきい値に達したときに通知を受け取ることができ、これらのリソースに対して一度だけアクションを実行する必要がなくなります。
+
+
+
+
+[[find-and-eliminate-duplicate-files]]
+== 重複ファイルを見つけて削除する
+
+.シナリオ
+同じファイルの複数の同一コピーがボリュームや共有フォルダに分散して存在する状態は、バックアップジョブ、データ移行、共有プロジェクトフォルダなどが存在する環境でよく見られる問題です。
+
+.手順
+. link:../investigate/investigate-unstructured.html["調査"]で、*フィルターを追加*を選択し、次に*重複*を選択します。
+. 結果を確認してください。記載されているファイルには、カタログ内の他の場所に同一のコピーが1つ以上存在します。
+. 操作するファイルを選択し、link:../investigate/take-actions.html["アクション"]を選択します。オリジナルが他に存在することが確認された重複ファイルは、アーカイブするか削除してください。
+. link:../policies/create-policy.html["フィルターをポリシーとして保存する"]時間の経過に伴う重複データの蓄積を追跡し、その数が増加した際に通知を受け取ることができます。
+
+
+
+
+[[target-cleanup-by-data-owner]]
+== データ所有者によるターゲットのクリーンアップ
+
+.シナリオ
+組織が定める「古くなったデータ」および「利用価値の低いデータ」の基準を満たすデータは、多くの所有者に分散されています。これらのカテゴリに属するファイルを最も多く保有しているデータ所有者を特定することで、クリーンアップの優先順位付けに役立ちます。
+
+.手順
+. link:../investigate/understand-dashboard.html["ダッシュボード"]から、_再利用可能なストレージによる上位データ所有者_テーブルを見つけます。
+. オーナー行を選択すると、link:../investigate/investigate-unstructured.html["調査"]がその所有者のファイルでフィルタリングされた状態で開きます。
+. 結果を確認し、link:../investigate/take-actions.html["タグを付けるか、アーカイブするか、削除するか"]ファイルを決定します。
+. link:../policies/create-policy.html["フィルタセットをポリシーとして保存する"]所有者の回収可能な可能性のあるデータが時間の経過とともにどのように変化するかを監視します。
+
+
+
+
+[[related-information]]
+== 関連情報
+
+* link:../investigate/understand-dashboard.html["ダッシュボードからストレージの使用状況を評価する"]
+* link:../investigate/investigate-data.html["データを調査する"]
+* link:../investigate/investigate-unstructured.html["非構造化データを調査する"]
+* link:../investigate/take-actions.html["データに対してアクションを実行する"]
+* link:../policies/create-policy.html["ポリシーを作成します。"]
+

@@ -1,0 +1,8 @@
+---
+section: administer
+title: 管理
+entries:
+- title: ユーザーとロールを管理する
+  url: "/administer/manage-users-roles.html"
+- title: データしきい値を設定する
+  url: "/administer/configure-settings.html"

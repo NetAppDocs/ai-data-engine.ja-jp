@@ -1,0 +1,12 @@
+---
+section: deploy
+title: 導入
+entries:
+- title: AIDEのデプロイメントについて
+  url: "/deploy/deployment-overview.html"
+- title: AIDEの要件
+  url: "/deploy/aide-requirements.html"
+- title: AIDE Lite のデプロイ
+  url: "/deploy/deploy-aide-lite.html"
+- title: AIDE Enterprise のデプロイ
+  url: "/deploy/deploy-enterprise.html"

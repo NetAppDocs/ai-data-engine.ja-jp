@@ -1,0 +1,69 @@
+---
+sidebar: sidebar 
+permalink: deploy/deployment-overview.html 
+keywords: deployment, aide lite, aide enterprise, kubernetes, vm, deployment modes, sizing 
+summary: AI Data Engine を AIDE Lite としてデプロイするか、Kubernetes ベースの高可用性が必要な環境では AIDE Enterprise としてデプロイしてください。 
+---
+= AI Data Engine のデプロイメントについて
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+AI Data Engine を AIDE Lite（シングル VM インストール）としてデプロイします。環境が大規模な Kubernetes ベースの高可用性を必要とする場合は、代わりに AIDE Enterprise をデプロイできます。
+
+
+
+[[aide-lite]]
+== AIDE Lite
+
+AIDE Liteは単一のLinux VMにインストールされます。インストーラーがk3sを自動的にプロビジョニングするため、Kubernetesの専門知識は必要ありません。
+
+AIDE Lite は Small、Medium、Large の 3 つのサイズで提供されており、それぞれ最大約 2 億、10 億、30 億のファイルに対応する環境向けに設計されています。VM のサイジングと OS の要件の詳細については、link:aide-requirements.html["AIDEの要件"]を参照してください。これらのサイズは推奨される基準値であり、厳密な制限ではありません。サイジングを決定する要因とさらなるスケールアウト方法については、link:aide-requirements.html#flexible-sizing-lite["柔軟なサイズガイドライン"]を参照してください。
+
+
+
+[[aide-enterprise]]
+== AIDE Enterprise
+
+お客様の環境で高可用性、耐障害性、ローリングアップグレード、または AIDE Lite の最大サイズを超える水平スケーリングが必要な場合は、AIDE Enterprise をデプロイしてください。AIDE Enterprise は、お客様がプロビジョニングおよび管理する RKE2 クラスタ上に、マルチノード Kubernetes クラスタとしてデプロイされます。
+
+AIDE Enterprise版は、Small、Medium、Largeの3つのサイズがあり、それぞれ最大約10億、30億、60億のファイルに対応する環境向けに設計されています。ノードのサイジングとクラスタの要件の詳細については、link:aide-requirements.html["AIDEの要件"]を参照してください。これらのサイズは推奨される基準値であり、厳密な制限ではありません。60億ファイルを超える環境は、水平方向のスケールアウトによりサポートされます。詳細については、link:aide-requirements.html#flexible-sizing-enterprise["柔軟なサイズガイドライン"]を参照してください。
+
+
+
+[[deployment-process]]
+== 展開プロセス
+
+NetApp Console は AI Data Engine のインフラストラクチャをプロビジョニングしません。要件を満たす Linux マシンまたはクラスターを準備し、NetApp Console から事前に生成されたインストールコマンドをコピーして、対象ホスト上で実行します。このコマンドはランタイムをブートストラップし、AI Data Engine スタックを自動的にデプロイします。インストール中、インストーラーはインストールを続行する前に、対象ホストの IP アドレスとユーザー ID を確認するよう求めます。
+
+AIDE Liteのインストールは、通常45分以内に完了します。AIDE Enterpriseのインストールは、通常30分以内に完了します。インストーラーには、コンポーネントの起動中に発生する一時的な問題に対処するためのタイムアウト機能と再試行機能が組み込まれています。
+
+
+
+[[deployment-mode-reference]]
+== 展開モードリファレンス
+
+[cols="1h,2,2"]
+|===
+|  | AIDE Lite | AIDE Enterprise 
+
+
+| 展開モデル | 単一のLinux VM | マルチノードKubernetesクラスター（顧客がプロビジョニングしたRKE2） 
+
+
+| スキャンレート | 1日あたり5000万～10億ファイル（サイズによって異なる） | 1日あたり2億5000万～20億ファイル（サイズによって異なる） 
+
+
+| 最大ファイル数（大容量） | 約30億 | 約60億 
+|===
+
+
+[[related-information]]
+== 関連情報
+
+* link:aide-requirements.html["AIDEの要件"]
+* link:deploy-aide-lite.html["AI Data Engine のデプロイ — Lite"]
+* link:deploy-enterprise.html["AI Data Engine のデプロイ — エンタープライズ"]
+

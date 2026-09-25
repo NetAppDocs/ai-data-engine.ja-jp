@@ -1,0 +1,8 @@
+---
+section: policies
+title: ポリシーとアクションを管理する
+entries:
+- title: ポリシーを作成します。
+  url: "/policies/create-policy.html"
+- title: ポリシーの管理
+  url: "/policies/manage-policies.html"

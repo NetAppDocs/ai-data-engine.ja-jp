@@ -1,0 +1,66 @@
+---
+sidebar: sidebar 
+permalink: get-started/learn-about.html 
+keywords: ai data engine, aide, overview, use cases, storage optimization, data governance 
+summary: AI Data Engineについて説明します。AI Data Engineは、ストレージシステムに保存されている構造化データと非構造化データの可視性を提供します。 
+---
+= AI Data Engineの詳細
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+AI Data Engine は、ストレージシステムに保存されている構造化データと非構造化データに関する可視性を提供するメタデータインテリジェンスサービスです。ストレージシステムをスキャンしてファイルシステムのメタデータをカタログ化することで、AI Data Engine は、データを移動したりコピーしたりすることなく、メタデータをその場で分析することで、ストレージ最適化の機会を特定し、データを調査し、ガバナンスポリシーを適用するのに役立ちます。
+
+
+
+[[what-ai-data-engine-does]]
+== AI Data Engineの機能
+
+AI Data Engineは、接続されているストレージシステムをスキャンしてファイルシステムのメタデータを抽出し、スキャンサイクルごとに更新されるカタログを作成します。このカタログから以下のことが可能です。
+
+* ダッシュボードでストレージ最適化に関するインサイトを確認できます。これには、組織のコールドおよびステールのしきい値を満たすファイルや重複ファイルなど、再利用可能なストレージを保持しているデータ所有者が含まれます。
+* 柔軟なメタデータフィルターを使用してデータを調査し、ターゲットを絞ったデータグループを作成します。
+* 調査基準を再利用可能なルールとして保存するポリシーを作成する
+* データに対してアクションを実行する：タグ付け、アーカイブ、コピー、またはポリシー基準に一致するファイルの削除
+
+
+
+
+[[storage-optimization-and-data-governance]]
+== ストレージの最適化とデータ ガバナンス
+
+AI Data Engineは、ストレージシステムに保存されている構造化データと非構造化データのストレージ最適化およびデータのライフサイクル管理に特化しています。
+
+
+
+[[who-uses-ai-data-engine]]
+== AI Data Engineを使用するのは誰か
+
+AI Data Engineは、以下のユーザー向けに設計されています。
+
+* *ストレージ管理者*：組織の定めるコールドファイルおよび古くなったファイルのしきい値を満たすファイルをどのデータ所有者が保持しているかを特定および監視し、重複ファイルを特定し、ストレージ最適化の機会を評価する必要があるお客様。
+* ストレージ環境全体に存在する構造化データと非構造化データを一元的に把握する必要がある*ITオペレーションチーム*。
+
+
+
+
+[[where-ai-data-engine-lives]]
+== AI Data Engineの場所
+
+NetApp Console の *ガバナンス > AI Data Engine* から AI Data Engine にアクセスします。AIDE Lite （シングル VM インストール）として、クラウドアカウントの仮想マシンまたはオンプレミス環境のマシンとして管理する Linux インフラストラクチャ上にデプロイします。環境が大規模な Kubernetes ベースの高可用性を必要とする場合は、代わりに AIDE Enterprise をデプロイできます。
+
+AI Data Engineは、NetApp ONTAPおよびStorageGRIDシステム、ならびにNFS、SMB/CIFS、またはS3プロトコルをサポートする非NetAppシステム上のデータをスキャンします。
+
+link:../deploy/deployment-overview.html["導入オプションの詳細はこちら"]。
+
+
+
+[[related-information]]
+== 関連情報
+
+* link:architecture.html["AI Data Engineアーキテクチャ"]
+* link:quick-start.html["クイック スタート"]
+* link:storage-optimization-workflows.html["ストレージ最適化ワークフローを探索する"]
+

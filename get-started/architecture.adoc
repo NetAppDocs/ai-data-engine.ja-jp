@@ -1,0 +1,79 @@
+---
+sidebar: sidebar 
+permalink: get-started/architecture.html 
+keywords: architecture, components, metadata engine, policy, deployment, data flow 
+summary: AI Data Engine のコンポーネントと、それらが連携してストレージシステムからメタデータをカタログ化する仕組みについて説明します。 
+---
+= AI Data Engineアーキテクチャ
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+AI Data Engine（AIDE）は、Metadata Engine とポリシーフレームワークで構成されています。これらの機能は連携して、ストレージシステムからメタデータを抽出し、検索可能なインデックスにカタログ化し、特定の条件に一致するファイルを識別して操作するための保存済みクエリを定義できるようにします。
+
+
+
+[[components]]
+== [コンポーネント]
+
+AI Data Engine との主なやり取りは、ダッシュボード、調査、ポリシー、構成という4つの機能領域を通じて行われます。これらの機能領域は、以下の基盤となるコンポーネントによって支えられています。
+
+
+
+[[metadata-engine]]
+=== Metadata Engine
+
+Metadata EngineはAI Data Engineのコア機能です。接続されているストレージシステムをスキャンしてファイルシステムのメタデータを抽出し、そのメタデータを検索可能なカタログに保存します。Metadata Engineはスキャンサイクルごとにカタログを更新し、ストレージシステム全体にわたる追加、変更、削除を検出します。
+
+
+
+[[netapp-console-agent]]
+=== NetApp Console エージェント
+
+AI Data Engineには、お客様の環境にデプロイされたNetApp Console Agentが必要です。Console Agentは汎用的なNetAppプラットフォームコンポーネントであり、オンプレミス環境とNetApp Console間の接続を維持します。サイトとAIDEサービス間の認証と通信を処理します。
+
+
+NOTE: コンソールエージェントは AI Data Engine 専用ではありません。他の NetApp サービス用にコンソールエージェントをすでにデプロイしている場合は、同じエージェントを使用できます。コンソールエージェントのデプロイ手順については、link:https://docs.netapp.com/us-en/console-setup-admin/concept-agents.html["NetApp Console Agentのドキュメント"] を参照してください。
+
+
+
+[[deployment-models]]
+== 展開モデル
+
+AI Data Engineは2つのデプロイメントモデルをサポートしています：
+
+AIDE Lite:: 小規模環境に適した、単一VM構成のデプロイメント。カタログ化するファイル数に応じて、Small、Medium、Largeの3つの構成が用意されています。
+AIDE Enterprise:: 高可用性が求められる大規模環境向けの、Kubernetesベースのマルチノードクラスタ構成。
+
+
+AIDE エンタープライズ版は、最大約10億個のファイルと1日あたり2億5,000万個のファイルをサポートする3ノード構成から、最大約60億個のファイルと1日あたり20億個のファイルをサポートする9ノード構成までスケールアウトできます。ノードのサイジングの詳細については、link:../deploy/aide-requirements.html["AIDEの要件"]を参照してください。ノードを追加することで、容量を60億ファイル以上に拡張できます。スケールアウトの詳細については、link:../deploy/aide-requirements.html#flexible-sizing-enterprise["柔軟なサイズガイドライン"]を参照してください。
+
+link:../deploy/deployment-overview.html["導入オプションの詳細はこちら"]。
+
+
+
+[[data-flow]]
+== データフロー
+
+. AI Data Engineはオンプレミス環境にデプロイされます。
+. AIIDEがカタログ化するストレージシステムを*構成 > システム*で追加します。サポートされているシステムには、NetApp ONTAP、StorageGRID、データベースシステム、およびNFS、SMB/CIFS、またはS3プロトコルを公開するNASまたはオブジェクトストレージシステムが含まれます。
+. Metadata EngineはNFSおよびSMB/CIFSプロトコルを使用して共有フォルダをマウントし、ファイルシステムをスキャンしてファイルメタデータを抽出します。
+. メタデータはカタログに索引付けされています。
+. ダッシュボードには、カタログからストレージに関するインサイトが表示されます。
+. 調査機能を使用すると、メタデータフィルターを使用してカタログを直接検索できます。
+. 検索条件をポリシーとして保存し、それを再実行することで、一致するファイルを特定して処理することができます。
+
+
+
+NOTE: Metadata Engineは、設定されているすべてのボリュームのスキャンが完了すると、すぐに新しいスキャンラウンドを開始し、ファイルシステムを再スキャンして追加、変更、削除を検出します。
+
+
+
+[[related-information]]
+== 関連情報
+
+* link:learn-about.html["AI Data Engineの詳細"]
+* link:../deploy/deployment-overview.html["AIDEのデプロイメントについて"]
+

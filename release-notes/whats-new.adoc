@@ -1,0 +1,40 @@
+---
+sidebar: sidebar 
+permalink: release-notes/whats-new.html 
+keywords: 'what"s new, release notes, AI Data Engine, storage optimization' 
+summary: AI Data Engine の新機能について説明します。 
+---
+= AI Data Engineの新機能
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+AI Data Engine の新機能について説明します。
+
+
+
+[[ai-data-engine-1-1-0]]
+== AI Data Engine 1.1.0
+
+AI Data Engine は、NetApp Console を通じて管理されるメタデータインテリジェンスサービスであり、接続されたシステムをスキャンし、メタデータカタログを構築し、ストレージの最適化と大規模なデータ ガバナンスを実現するための可視性とツールを提供します。AI Data Engine は link:../deploy/deployment-overview.html["AIDE Lite"] としてデプロイすることも、大規模な環境で Kubernetes ベースの高可用性が必要な場合は AIDE Enterprise としてデプロイすることもできます。
+
+新機能：
+
+link:../investigate/understand-dashboard.html["ストレージ容量を回復する"]:: 設定したしきい値に基づいて、接続されているシステム全体で、利用頻度の低いデータ、古いデータ、重複データを特定し、これらのデータが最も多く蓄積されているシステムとデータ所有者を確認します。
+link:../investigate/investigate-data.html["コストとリスクを削減する"]:: アクセス時間、更新日時、作成日時、ファイルサイズ、重複状態、その他の基準で接続されているすべてのシステムをフィルタリングし、組織のデータ管理目標に合致するファイルを見つけ出します。結果に基づいて直接操作するか、基準をポリシーとして保存します。
+link:../policies/create-policy.html["データを継続的に管理する"]:: フィルタ条件を名前付きポリシーとして保存することで、コールドファイルやサイズ超過ファイルなど、時間の経過とともに繰り返し発生するデータ状況を追跡し、影響を受けるファイル数が変化したときに通知を受け取ることができます。
+link:../investigate/take-actions.html["保管コストを削減する"]:: 組織のデータのライフサイクルポリシーを徹底するために、ファイルをNFSまたはSMB/CIFS宛先にコピーしてアーカイブしたり、追跡のためにアイテムにタグを付けたり、保持要件に従ってファイルを完全に削除したりできます。
+link:../administer/manage-users-roles.html["管理者と閲覧者の役割を割り当てる"]:: 誰がデータを調査してアクションを実行できるかを制御するには、組織内のユーザーに AI Data Engine の管理者または閲覧者の役割を割り当てます。
+link:../investigate/use-filters.html["重複データを削除する"]:: 接続されたシステム全体で重複コピーが存在するファイルを検索します。「Duplicates」属性またはファイルハッシュでフィルタリングして、重複グループを直接確認し、対処します。
+link:../investigate/understand-dashboard.html["データ所有者に責任を負わせる"]:: ダッシュボードから、どのデータ所有者が最も多くのコールドデータ、古いデータ、または重複データを保有しているかを特定し、調査ビューで所有者またはグループごとにフィルタリングして、ポリシーに従って結果を確認および管理します。
+
+
+
+
+[[related-information]]
+== 関連情報
+
+* link:known-limitations.html["既知の制限事項"]
+

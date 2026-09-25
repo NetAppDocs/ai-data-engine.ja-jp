@@ -1,0 +1,50 @@
+---
+sidebar: sidebar 
+permalink: investigate/investigate-data.html 
+keywords: investigate, metadata, unstructured, structured, directories, cold data, stale data, permissions, reclaimable storage 
+summary: 調査ビューを使用して、接続されているシステム全体のファイルベースのストレージ、データベーステーブル、およびディレクトリ構造を調査できます。探している内容に一致するタブを選択してください。 
+---
+= AI Data Engine でデータを調査する
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ストレージを消費している要因を把握したり、制御不能なほど肥大化しているデータベーステーブルを特定したり、アクセス権限が過度に緩いディレクトリを見つけたりする必要がある場合は、メタデータフィルタを使用して、接続されているすべてのシステムにわたってデータを調査してください。
+
+
+
+[[choose-a-starting-point]]
+== 出発点を選択してください
+
+左側のナビゲーションで「調査」を選択すると、ビューが開きます。ダッシュボードから調査ビューを開くには、_再利用可能なストレージによる上位データリソース_ テーブルで「調査」を選択します。これにより、そのリソースに対するフィルターが自動的に適用されます。
+
+「調査」は3つのタブに分かれています。調査対象のデータタイプに一致するタブを選択してください。
+
+[cols="1,2,1"]
+|===
+| Tab | 使用する場合 | 詳細情報 
+
+
+| *非構造化* | NFSおよびSMB/CIFSボリューム全体で、コールドデータ、古いデータ、または重複したファイルベースのデータを検索します。 | link:investigate-unstructured.html["非構造化データを調査する"] 
+
+
+| *構造化* | ストレージを消費している、サイズが大きすぎる、または使用されていないデータベーステーブルを特定します。 | link:investigate-structured.html["構造化データを調査する"] 
+
+
+| *ディレクトリ* | ディレクトリレベルのアクセス許可を監査し、広くアクセス可能なパスを特定する | link:investigate-directories.html["ディレクトリを調査する"] 
+|===
+ページ上部の集計数と合計サイズは、アクティブなタブを反映して更新されます（例：「非構造化データ（400M）｜5.7 PiB」）。
+
+
+
+[[related-information]]
+== 関連情報
+
+* link:investigate-unstructured.html["非構造化データを調査する"]
+* link:investigate-structured.html["構造化データを調査する"]
+* link:investigate-directories.html["ディレクトリを調査する"]
+* link:use-filters.html["フィルターを操作する"]
+* link:take-actions.html["データに対してアクションを実行する"]
+

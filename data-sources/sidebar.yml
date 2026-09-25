@@ -1,0 +1,10 @@
+---
+section: data-sources
+title: データソースを接続する
+entries:
+- title: データソースを接続する
+  url: "/data-sources/connect-data-source.html"
+- title: データソースの管理
+  url: "/data-sources/manage-data-sources.html"
+- title: スキャン状態を監視する
+  url: "/data-sources/monitor-scanning-health.html"

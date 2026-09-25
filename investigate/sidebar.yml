@@ -1,0 +1,18 @@
+---
+section: investigate
+title: データを調査する
+entries:
+- title: AIDE ダッシュボードを使用してストレージの状態を評価する
+  url: "/investigate/understand-dashboard.html"
+- title: データを調査する
+  url: "/investigate/investigate-data.html"
+- title: 非構造化データを調査する
+  url: "/investigate/investigate-unstructured.html"
+- title: 構造化データを調査する
+  url: "/investigate/investigate-structured.html"
+- title: ディレクトリを調査する
+  url: "/investigate/investigate-directories.html"
+- title: フィルターを操作する
+  url: "/investigate/use-filters.html"
+- title: データに基づいて行動を起こす
+  url: "/investigate/take-actions.html"
