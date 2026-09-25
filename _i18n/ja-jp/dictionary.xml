@@ -871,7 +871,6 @@
   <block id="7dbe065509bb17277c7b17f3766f97be" category="list-text">ダッシュボードから、どのデータ所有者が最も多くのコールドデータ、古いデータ、または重複データを保有しているかを特定し、調査ビューで所有者またはグループごとにフィルタリングして、ポリシーに従って結果を確認および管理します。</block>
   <block id="482723983a4f2af954e36ff41e567451" category="inline-link-macro">既知の制限事項</block>
   <block id="34e34c0debc388181c3934f84b977ddd" category="list-text"><block ref="34e34c0debc388181c3934f84b977ddd" category="inline-link-macro-rx"></block></block>
-  <block id="e72c60c273700856ad0eeb853a353e52" category="sidebar">AI Data Engineは、NetAppシステムに保存されている非構造化データへの可視性を提供します。これを利用して、ストレージ最適化の機会を特定し、データを調査し、ライフサイクルポリシーを適用してください。</block>
   <block id="ed67b8aec97dcec019f1b2972d70f5af" category="sidebar">AI Data Engineドキュメント</block>
   <block id="0416d02572f9d563fa4967178dc5c5fb" category="sidebar">AI Data Engine のドキュメントでは、デプロイ方法、データソースの接続方法、およびストレージの最適化、メタデータの調査、データ ガバナンスのための AI Data Engine の使用方法について説明しています。</block>
   <block id="be11c74c1dd7f307bb80183a90dc2067" category="sidebar">はじめに</block>
@@ -892,4 +891,5 @@
   <block id="6b2443d2529b7b19a67154f7a04c9877" category="sidebar">AIDE ダッシュボードを使用してストレージの状態を評価する</block>
   <block id="4bd61438e659088dded1d69964caccb1" category="sidebar">ポリシーとアクションを管理する</block>
   <block id="7d0ee6fed10d3d4e5c9ee496729ab519" category="sidebar">リリース ノート</block>
+  <block id="ac219e2fd9f167e916107df50eb88fad" category="sidebar">AI Data Engine は、NetApp Console を通じて管理されるメタデータインテリジェンスサービスであり、接続されたシステムをスキャンし、メタデータカタログを構築し、ストレージの最適化と大規模なデータ ガバナンスを実現するための可視性とツールを提供します。</block>
 </blocks>

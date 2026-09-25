@@ -5,7 +5,8 @@ indexpage:
     AI Data Engine の使用方法について説明しています。
   keywords: ai data engine, aide, storage optimization, investigation, policies, data
     governance, NetApp Console
-  lead: AI Data Engineは、NetAppシステムに保存されている非構造化データへの可視性を提供します。これを利用して、ストレージ最適化の機会を特定し、データを調査し、ライフサイクルポリシーを適用してください。
+  lead: AI Data Engine は、NetApp Console を通じて管理されるメタデータインテリジェンスサービスであり、接続されたシステムをスキャンし、メタデータカタログを構築し、ストレージの最適化と大規模なデータ
+    ガバナンスを実現するための可視性とツールを提供します。
   tiles:
   - title: はじめに
     links:
