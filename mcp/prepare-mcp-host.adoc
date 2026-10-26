@@ -1,0 +1,179 @@
+---
+sidebar: sidebar 
+permalink: mcp/prepare-mcp-host.html 
+keywords: mcp, governed ai access, ingress script, kubernetes ingress rule, mcp host, aide cluster host name, host name, verified domain, certificate, dns, entra id, 401 
+summary: イングレススクリプトを実行して、AIクライアントがAI Data Engine MCPサーバーにアクセスするために使用するAIDEクラスタのホスト名と証明書を設定し、ホスト名がMicrosoft Entra IDテナントで検証済みのドメイン上にあることを確認してください。 
+---
+= AI Data Engineが管理するAIアクセス用にMCPホストを準備します
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+AIクライアントがAI Data Engine MCPサーバーにアクセスするために使用する、AI Data Engine（AIDE）クラスターのホスト名と証明書を設定します。Entra IDのアプリケーションID URIはAIDEクラスターのホスト名から構築されるため、Microsoft Entra IDを構成する前にこのタスクを完了してください。
+
+このタスクでは、スクリプトを実行してドメインと証明書を設定し、クライアントマシンがホストにアクセスできることを確認し、最後にホストを検証します。
+
+
+NOTE: MicrosoftはMicrosoft Entra IDのUIを変更する可能性があるため、表示される手順やパスが異なる場合があります。基本的な構成は変わりません。
+
+
+
+[[before-you-begin]]
+== 開始する前に
+
+* AI Data Engineが展開されました。MCPサーバーはAI Data Engineとともに展開されるため、別途インストールする必要はありません。
+* AI Data Engineが稼働するクラスタにアクセスできます。
+* お客様のMicrosoft Entra IDテナントで検証済みの、登録済みのDNSドメイン名をお持ちです。AIDEクラスタホスト名はこのドメイン上に存在する必要があります。<<verified-domain-requirement,検証済みドメイン要件>>を参照してください。
+
+
+
+
+[[verified-domain-requirement]]
+== 検証済みドメイン要件
+
+AIDEクラスターのホスト名は、貴社のMicrosoft Entra IDテナントで検証済みの登録済みDNSドメイン上に存在する必要があります。イングレススクリプトが設定するホスト名はApplication ID URIの `<host>`になるため、アプリケーションを登録する前にドメインを検証する必要があります。
+
+AI Data Engineは、Microsoft Entra IDに登録するアプリケーションのアプリケーションID URIとして `\https://<host>/mcp/tools`を使用します。Microsoft Entra IDは、検証済みのドメイン上にあるアプリケーションID URIのみを受け入れます。未検証ドメインのホスト（ `.cluster.local`ホスト名など）は使用できません。
+
+どのドメインが検証済みかを確認するには、Microsoft Entra 管理センターで、*Entra ID* > *ドメイン名* に移動します。
+
+
+
+[[run-the-ingress-script]]
+== イングレススクリプトを実行します
+
+イングレススクリプトは、AIクライアントがクラスター外部からMCPサーバーにアクセスできるように、以下の項目を設定します：
+
+* 証明書
+* クラスタホスト名
+* クラスタホスト名のトラフィックをMCPサーバーにルーティングするKubernetesイングレスルール
+
+
+.手順
+. AI Data Engineインストーラーをダウンロードしたシステムで、インストーラーのスクリプトフォルダーを開きます： `/tmp/installer/runbook/ingress-manager-scripts/scripts/`。イングレススクリプトはインストーラーの一部としてダウンロードされます。フォルダーが見つからない場合は、<<restore-the-ingress-script,イングレススクリプトを復元する>>を参照してください。
+. イングレススクリプトを実行します：
++
+[source, bash]
+----
+./ingress-manager.sh
+----
+. スクリプトが設定したホスト名を記録してください。このホスト名は、アプリケーションID URI、スコープ、およびAIクライアント構成で `<host>`として使用します。
+
+
+
+NOTE: スクリプトが設定するホスト名は、AIDEクラスタのホスト名です。スクリプトが終了すると、AI Data Engine UIでホスト名を確認することもできます。「設定」＞「MCP コレクション」＞「MCP 設定」に移動し、「MCP ホスト名」を確認してください。
+
+スクリプトが自己署名証明書を作成する場合、AIクライアントを実行するすべてのマシンはその証明書を信頼する必要があります。<<make-the-host-reachable,クライアントマシンからホストにアクセスできるようにする>>を参照してください。
+
+
+
+[[restore-the-ingress-script]]
+=== イングレススクリプトを復元する
+
+インストーラーフォルダは、デフォルトでは一時ディレクトリにあります。オペレーティングシステムは、システムの再起動時に一時ディレクトリを削除する場合があります。スクリプトフォルダがシステム上に存在しない場合は、インストーラーを再度ダウンロードして解凍し、スクリプトを実行してください。
+
+.手順
+. スクリプトを実行するシステム上で、インストーラーをダウンロードして解凍します：
++
+[source, bash]
+----
+curl -fsSL https://d13jb5dapseb36.cloudfront.net/aide/latest/aide-installer.tar.gz | tar -xzf - -C /tmp
+----
+. スクリプトフォルダを開き、イングレススクリプトを実行します：
++
+[source, bash]
+----
+cd /tmp/installer/runbook/ingress-manager-scripts/scripts/
+./ingress-manager.sh
+----
+
+
+再起動後もスクリプトを保持するには、再起動時にクリアされないディレクトリにインストーラを展開してください。 `/tmp`コマンドおよび `cd`コマンド内の `tar`をそのディレクトリに置き換えてください。
+
+
+
+[[make-the-host-reachable-from-client-machines]]
+[[make-the-host-reachable]]
+== クライアントマシンからホストにアクセスできるようにする
+
+AIクライアントを実行するすべてのマシンは、以下の機能を備えている必要があります：
+
+* DNSを使用してホスト名を解決します。
+* 社内ネットワークまたはVPN経由で、HTTPSを使用してポート443経由でホストにアクセスしてください。
+* ホストが提示する証明書を信頼してください。証明書が自己署名証明書の場合は、各クライアントマシンに信頼できる証明書としてインストールしてください。
+* Microsoft Entra IDサインインにアクセスします(`login.microsoftonline.com`）。
+
+
+
+
+[[verify-the-host]]
+== ホストを確認する
+
+MCPサーバーがAIDEクラスタのホスト名で応答することを確認します。MCPサーバーは、既知のエンドポイントでメタデータを公開します。この応答により、ホスト名、ドメイン、およびMCPサーバーが正しく設定されていることが確認できます。
+
+.手順
+. クライアントマシンから、MCPサーバーの既知のエンドポイントにリクエストを送信します。 `<host>`をAIDEクラスターのホスト名に置き換えます：
++
+[source, bash]
+----
+curl -sk https://<host>/.well-known/oauth-protected-resource/mcp/tools
+----
+. 応答が以下の例と同様であることを確認してください。この例は、ホスト名 `aide-cluster.contoso.com`のコマンドと応答を示しています。
++
+[listing]
+----
+curl -sk https://aide-cluster.contoso.com/.well-known/oauth-protected-resource/mcp/tools | python3 -m json.tool
+{
+    "resource": "https://aide-cluster.contoso.com/mcp/tools",
+    "authorization_servers": [
+        "https://login.microsoftonline.com/7f3e2a91-4b6c-4d58-9a0e-2c81d5f6b347/v2.0"
+    ],
+    "scopes_supported": [
+        "https://aide-cluster.contoso.com/mcp/tools/power_users"
+    ],
+    "bearer_methods_supported": [
+        "header"
+    ],
+    "resource_name": "NetApp AI Data Engine MCP Server"
+}
+----
++
+応答で、以下を確認してください：
+
++
+** `resource`は `\https://<host>/mcp/tools`であり、 `"resource": "https://aide-cluster.contoso.com/mcp/tools"`のようになります。これは、Microsoft Entra ID に登録するアプリケーション ID URI です。
+** `authorization_servers` は、 `https://login.microsoftonline.com/7f3e2a91-4b6c-4d58-9a0e-2c81d5f6b347/v2.0` のようにお客様の Microsoft Entra ID テナントを指します。
+** `scopes_supported` には、ホスト名の  `power_users` スコープが含まれます（例： `https://aide-cluster.contoso.com/mcp/tools/power_users`）。
+** `resource_name`は `NetApp AI Data Engine MCP Server`です。
+
+
+. オプション：追加の確認として、トークンなしで `\https://<host>/mcp/tools`をリクエストします：
++
+[source, bash]
+----
+curl -i https://<host>/mcp/tools
+----
++
+ `401 Unauthorized` という応答が想定されます。このリクエストは証明書の検証をスキップしないため、クライアントマシンが証明書を信頼していることも確認されます。
+
+
+
+
+IMPORTANT:  `401`応答があっただけでは、設定が機能していることの証明にはなりません。以前に別のイングレスが設定されていた場合、MCPサーバーが応答していなくても `401`を返す可能性があります。既知のエンドポイントの応答を使用して、ホストを検証してください。
+
+.次の手順
+link:configure-entra-id-mcp.html["Microsoft Entra ID の設定"]。
+
+
+
+[[related-information]]
+== 関連情報
+
+* link:quick-start-mcp.html["AI Data Engineを使用したガバナンスされたAIアクセスのクイックスタート"]
+* link:configure-entra-id-mcp.html["管理されたAIアクセス用にMicrosoft Entra IDを構成する"]
+* link:connect-entra-id-aide-mcp.html["AI Data EngineをMicrosoft Entra IDに接続する"]
+* link:maintain-mcp-setup.html#review-mcp-server-settings["MCPサーバーの設定を確認する"]
+* link:../deploy/aide-requirements.html#networking-requirements["ネットワーク要件"]
+

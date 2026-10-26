@@ -1,0 +1,22 @@
+---
+section: mcp
+title: 統制されたAIアクセス（MCP）
+entries:
+- title: ガバナンスされたAIアクセスについて学ぶ
+  url: "/mcp/learn-about-mcp.html"
+- title: クイック スタート
+  url: "/mcp/quick-start-mcp.html"
+- title: MCPホストを準備する
+  url: "/mcp/prepare-mcp-host.html"
+- title: Microsoft Entra ID の設定
+  url: "/mcp/configure-entra-id-mcp.html"
+- title: AIDEをMicrosoft Entra IDに接続する
+  url: "/mcp/connect-entra-id-aide-mcp.html"
+- title: データコレクションを管理する
+  url: "/mcp/manage-data-collections.html"
+- title: AI クライアントの接続
+  url: "/mcp/connect-ai-clients-mcp.html"
+- title: AIDE MCPツール
+  url: "/mcp/mcp-tools-reference.html"
+- title: MCP設定の維持
+  url: "/mcp/maintain-mcp-setup.html"

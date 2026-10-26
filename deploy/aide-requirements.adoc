@@ -11,7 +11,7 @@ summary: AI Data Engineを導入する前に、インフラストラクチャと
 
 
 [role="lead"]
-AI Data Engine を導入する前に、ご使用の環境におけるネットワーク、VMのサイジング、およびオペレーティングシステムの要件を確認してください。
+AI Data Engine（AIDE）を展開する前に、環境のネットワーク、Kubernetes、サイジング、およびオペレーティングシステムの要件を確認してください。シングルノード展開の場合、Linux VMをご用意いただければ、AI Data Engineがその他のすべてを自動的にプロビジョニングします。マルチノード展開の場合、独自のKubernetesクラスタをご用意いただく必要があります。
 
 
 
@@ -25,7 +25,7 @@ AI Data Engine を導入する前に、ご使用の環境におけるネット�
 | 接続 | ポート | Protocol | 送受信方向 | 目的 
 
 
-| コンソールエージェントから NetApp コンソールへ | 443 | TCP | アウトバウンド | HTTPS：NetApp Consoleへの接続 
+| コンソールエージェントからNetApp Consoleへ | 443 | TCP | アウトバウンド | HTTPS：NetApp Consoleへの接続 
 
 
 | コンソールエージェントからONTAPへ | 443 | TCP | アウトバウンド | HTTPS：ONTAPクラスターの検出 
@@ -34,98 +34,194 @@ AI Data Engine を導入する前に、ご使用の環境におけるネット�
 | コンソールエージェントからAI Data Engineへ | 80、443、8080、9000 | TCP | 双方向 | コンソールエージェントとAI Data Engine間の通信 
 
 
+| AIクライアントからMCPサーバへ | 443 | TCP | インバウンド | HTTPS：社内ネットワークまたはVPNからAIDEクラスタのホスト名へのAIクライアントアクセス。AIクライアントは、ポート443でホスト名に接続します。内部サービスポートには接続しません。 
+
+
 | AI Data EngineからONTAP （NFS）へ | 111つまたは2049つ | TCP/UDP | 保管場所へ | NFSデータソースへのアクセス 
 
 
-| AI Data Engine から ONTAP （SMB/CIFS） | 139つまたは445つ | TCP/UDP | 保管場所へ | SMB/CIFSデータソースへのアクセス 
+| AI Data EngineからONTAP （SMB）へ | 139つまたは445つ | TCP/UDP | 保管場所へ | SMBデータソースへのアクセス 
 
 
-| AI Data EngineからActive Directoryへ | 389、636、3268、3269 | TCP/UDP | アウトバウンド | LDAP (389)、LDAPS (636)、およびグローバルカタログ (3268、3269) はユーザ認証およびSMB/CIFSスキャンに使用します。ポート389はTCPとUDPの両方を使用します。その他のポートはすべてTCPのみを使用します。 
+| クラスタノードからNFSサーバ（マルチノード構成ボリューム） | 2049 | TCP | アウトバウンド | AI Data Engine構成を保持するエクスポートへのNFSアクセス。環境はマルチノード展開のみです。Kerberosを使用する場合、管理ホストもこのエクスポートをマウントします。 
 
 
-| AI Data EngineからNetAppサービス / コンテナレジストリへ | 443 | TCP | アウトバウンド | HTTPS：アーティファクトのダウンロードとコンテナイメージのプル（AWS S3およびECR） 
+| AI Data EngineからActive Directoryへ | 389、636、3268、3269 | TCP（389番ポートはUDPも使用） | アウトバウンド | ユーザ認証、SMB/CIFSスキャン、およびNFSユーザIDとグループIDのActive Directory名へのマッピング用のLDAP（389）、LDAPS（636）、およびグローバルカタログ（3268、3269）。ポート389はTCPとUDPの両方を使用します。その他のポートはすべてTCPのみを使用します。 
+
+
+| AI Data EngineからKerberos KDC（Active Directoryドメイン コントローラ）へ | 88 | TCP/UDP | アウトバウンド | SMB/CIFSデータソースに対するKerberos認証。Kerberosを使用する場合にのみ必要です。<<kerberos-ad-requirements,KerberosおよびActive Directoryの要件>>を参照してください。 
+
+
+| AI Data EngineからDNSサーバへ | 53 | TCP/UDP | アウトバウンド | Kerberosを使用する場合のファイルサーバとKDCの名前解決 
+
+
+| AI Data EngineからNetAppサービス、コンテナレジストリ、CDNへ | 443 | TCP | アウトバウンド | HTTPS：CDNからのインストーラスクリプトのダウンロード、ECRからのコンテナイメージとHelmチャートのプル、S3からのコンポーネントカタログのダウンロード 
 |===
 
 
 [[outbound-internet-access]]
 === アウトバウンドインターネットアクセス
 
-オンラインインストールの場合、以下のエンドポイントにAI Data Engineホストからアクセスできる必要があります：
+オンラインインストールの場合、以下のエンドポイントにアクセス可能である必要があります。行に条件が記述されている場合、エンドポイントが必要となるのは、その条件が満たされている場合のみです。
 
-[cols="2,2,1"]
+[cols="3,3,2,1"]
 |===
-| エンドポイント | 目的 | Scope 
+| エンドポイント | 目的 | 開始者 | デプロイメントタイプ 
 
 
-| `\https://api.console.netapp.com` | NetApp Console通信 | 両方 
+| `\https://582244788873.dkr.ecr.us-west-2.amazonaws.com` | NetAppコンテナレジストリ（AIDEコンテナイメージとHelmチャート） | コンテナランタイムとインストーラ | 両方 
 
 
-| `\https://netapp-cloud-account.auth0.com` | 集中型ユーザ認証 | 両方 
+| `\https://582244788873.dkr-ecr.us-west-2.on.aws` | NetAppコンテナレジストリ（デュアルスタック／仮想プライベートクラウド（VPC）エンドポイントアクセス） | コンテナランタイムとインストーラ | 両方 
 
 
-| `\https://auth0.com` | 認証サービス | 両方 
+| `\https://api.ecr.us-west-2.amazonaws.com` | AWS ECR API（認証およびイメージマニフェストの取得） | コンテナランタイムとインストーラ | 両方 
 
 
-| `\https://582244788873.dkr.ecr.us-west-2.amazonaws.com` | NetAppコンテナレジストリ（AIDEコンテナイメージ） | 両方 
+| `\https://ecr.us-west-2.amazonaws.com` | AWS ECRレジストリ認証情報の更新 | AI Data Engine | 両方 
 
 
-| `\https://582244788873.dkr-ecr.us-west-2.on.aws` | NetAppコンテナレジストリ（デュアルスタック／仮想プライベートクラウド（VPC）エンドポイントアクセス） | 両方 
+| `\https://prod-us-west-2-starport-layer-bucket.s3.us-west-2.amazonaws.com` | AWS S3（ECRコンテナイメージレイヤーストレージ） | コンテナランタイム | 両方 
 
 
-| `\https://api.ecr.us-west-2.amazonaws.com` | AWS ECR API（認証およびイメージマニフェストの取得） | 両方 
+| `\https://prod-us-west-2-starport-layer-bucket.s3.amazonaws.com` | AWS S3（ECRコンテナイメージレイヤーストレージ） | コンテナランタイム | 両方 
 
 
-| `\https://prod-us-west-2-starport-layer-bucket.s3.us-west-2.amazonaws.com` | AWS S3（ECRコンテナイメージレイヤーストレージ） | 両方 
+| `\https://s3.us-west-2.amazonaws.com` | AWS S3（コンポーネントバージョンカタログ） | インストーラとAI Data Engine | 両方 
 
 
-| `\https://prod-us-west-2-starport-layer-bucket.s3.amazonaws.com` | AWS S3（ECRコンテナイメージレイヤーストレージ） | 両方 
+| `\https://s3.amazonaws.com` | AWS S3（コンポーネントバージョンカタログ） | インストーラとAI Data Engine | 両方 
 
 
-| `\https://s3.us-west-2.amazonaws.com` | AWS S3（インストーラーラッパースクリプト、Helmチャート、コンポーネントバージョンカタログ） | 両方 
+| `\https://sts.us-west-2.amazonaws.com` | AWS STS（レジストリおよびS3アクセス用の一時的な認証情報交換） | AI Data Engine | 両方 
 
 
-| `\https://s3.amazonaws.com` | AWS S3（インストーラーラッパースクリプト、Helmチャート、コンポーネントバージョンカタログ） | 両方 
+| `\https://aide-version-policy.s3.us-west-2.amazonaws.com` | AI Data Engineオペレーター：バージョンポリシー | AI Data Engine | 両方 
 
 
-| `\https://sts.us-west-2.amazonaws.com` | AWS STS（レジストリおよびS3アクセス用の一時的な認証情報交換） | 両方 
+| `\https://api.bluexp.netapp.com` | NetApp Console登録 | インストーラ | 両方 
 
 
-| `\https://support.compliance.api.bluexp.netapp.com` | ソフトウェアイメージ、マニフェスト、テンプレート、ログおよびメトリクスのストリーミング | 両方 
+| `\https://netapp-cloud-account.auth0.com` | NetApp Console認証 | AI Data Engine | 両方 
 
 
-| `\https://dseasb33srnrn.cloudfront.net` | CloudFront CDN（ソフトウェア配信用） | 両方 
+| `\https://api.workloads.netapp.com` | FSxとNetAppワークロード検出 | AI Data Engine | 両方 
 
 
-| `\http://packages.ubuntu.com` | Ubuntuの前提条件パッケージ | Lite版のみ（Ubuntu） 
+| `\https://api.gcp.workloads.netapp.com` | Google Cloud NetApp Volumesの検出 | AI Data Engine | 両方 
 
 
-| `\http://archive.ubuntu.com` | Ubuntuパッケージアーカイブ | Lite版のみ（Ubuntu） 
+| `\https://checkip.amazonaws.com` | ヘルスモニターは、ヘルスダッシュボードにパブリックIPアドレスを表示するためにこれを使用します。AI Data Engineは、これがなくても動作します。 | AI Data Engine | 両方 
 
 
-| `\http://security.ubuntu.com` | Ubuntuセキュリティパッケージアーカイブ | Lite版のみ（Ubuntu） 
+| `\https://api.ipify.org` | ヘルスダッシュボードに表示されるパブリックIPアドレスを取得するための代替手段。AI Data Engineはこれなしでも動作します。 | AI Data Engine | 両方 
 
 
-| `\https://get.k3s.io` | k3sランタイムのダウンロード（インストーラーによる開始） | ライトのみ 
+| `\https://icanhazip.com` | ヘルスダッシュボードに表示されるパブリックIPアドレスを取得するための代替手段。AI Data Engineはこれなしでも動作します。 | AI Data Engine | 両方 
 
 
-| `\https://get.helm.sh` | Helmのダウンロード（インストーラーによる開始） | ライトのみ 
+| `\https://ipinfo.io` | ヘルスダッシュボードに表示されるパブリックIPアドレスを取得するための代替手段。AI Data Engineはこれなしでも動作します。 | AI Data Engine | 両方 
+
+
+| `\https://hub.docker.com` | プロキシ接続テスト。アウトバウンドプロキシを使用する場合にのみ使用されます。テストが失敗しても、インストールや実行は妨げられません。このエンドポイントは、k3sシステムイメージを提供するDocker Hubのエンドポイントとは別個のものです。 | AI Data Engine | 両方 
+
+
+| `\https://cognito-idp.us-east-1.amazonaws.com` | プロキシ接続テスト。アウトバウンドプロキシを使用する場合にのみ使用されます。テストが失敗しても、インストールや実行は妨げられません。 | AI Data Engine | 両方 
+
+
+| `\https://cognito-identity.us-east-1.amazonaws.com` | AI Data EngineインスタンスからNetAppへ製品の使用状況メトリクスを送信するために使用されるAWS Cognitoアクセス。プロキシ接続テストにも使用されます。 | AI Data Engine | 両方 
+
+
+| `\https://support.compliance.api.bluexp.netapp.com` | ログとメトリクスのストリーミング | AI Data Engine | 両方 
+
+
+| `\https://login.microsoftonline.com` | 管理されたAIアクセス（MCP）を使用する場合にのみ必要です。Microsoft Entra IDテナントの検出と署名キーの取得。 | AI Data Engine | 両方 
+
+
+| `\https://d13jb5dapseb36.cloudfront.net` | CloudFront インストーラースクリプト用CDN | インストーラ | 両方 
+
+
+| `\https://get.helm.sh` | Helmのダウンロード | インストーラ | 両方 
+
+
+| `\https://dl.k8s.io` | kubectl ダウンロード | インストーラ | 両方 
+
+
+| `\https://github.com` | jqのダウンロード、およびシングルノード展開におけるk3sバイナリのダウンロード | インストーラ | 両方 
+
+
+| `\https://release-assets.githubusercontent.com` | GitHubダウンロードのリダイレクト | インストーラ | 両方 
+
+
+| `\https://get.k3s.io` | k3sランタイムのダウンロード | インストーラ | シングルノードのみ 
+
+
+| `\https://rpm.rancher.io` | k3s SELinuxポリシーパッケージ(`k3s-selinux`）、SELinuxが無効になっている場合でも、ホスト上にSELinuxファイルが存在する場合は、RHEL、Rocky Linux、またはAlmaLinux 8または9上。リポジトリにコピーが提供されている場合、インストーラはそれを使用します。 | インストーラ | シングルノードのみ（RHELファミリー） 
+
+
+| `\https://auth.docker.io` | k3sシステムイメージのDocker Hub認証 | コンテナランタイム | シングルノードのみ 
+
+
+| `\https://registry-1.docker.io` | k3sシステムイメージのDocker Hubレジストリ | コンテナランタイム | シングルノードのみ 
+
+
+| `\https://production.cloudfront.docker.com` | k3sシステムイメージ用のDocker Hubイメージレイヤーストレージ | コンテナランタイム | シングルノードのみ 
 |===
-AI Data Engine は、集中認証およびコンソールサービスのために NetApp Console にも依存しています。Console およびコンソールエージェントの接続に必要なエンドポイントについては、link:https://docs.netapp.com/us-en/console-setup-admin/reference-networking-saas-console.html["ネットワーク アクセス要件（NetApp Console）"^] を参照してください。
+この表に示されているエンドポイントは、インターネットに直接接続する場合でも、プロキシ経由で接続する場合でも同じです。
+
+プロキシを使用する場合は、ワイルドカードや先頭のドットを使用せず、記載されているホスト名を正確に使用して、ポート443でHTTPS (`CONNECT`）の各エンドポイントを許可してください。
+
+インストーラのダウンロードをホストする `d13jb5dapseb36.cloudfront.net`を、ホスト名で許可します。そのIPアドレスは他のサイトと共有されており、頻繁に変更されるため、IPアドレスに基づくルールは機能しなくなります。
+
+マルチノード構成の場合、クラスタノードがコンテナランタイム接続を確立します。NetApp Consoleからのマルチノードインストールコマンドで異なる `--registry`値が指定されている場合は、表のレジストリホスト名ではなく、そのレジストリホスト名を許可してください。
+
+link:configure-proxy.html["AI Data Engineのプロキシについて"] を参照してください。プロキシを使用してデプロイするには、link:deploy-aide-single-node-proxy.html["プロキシを使用したシングルノード展開としてAI Data Engineを展開します"] または link:deploy-aide-multi-node-proxy.html["プロキシを使用したマルチノード展開としてAI Data Engineを展開する"] を参照してください。
+
+
+NOTE: お使いの環境でプロキシ設定が必要な場合は、パッケージマネージャーに適切なプロキシ設定がされていることを確認してください。
+
+AI Data Engineは、集中認証およびコンソールサービスについてもNetApp Consoleに依存しています。 `\https://api.bluexp.netapp.com`や `\https://netapp-cloud-account.auth0.com`などのエンドポイントは、link:https://docs.netapp.com/us-en/console-setup-admin/reference-networking-saas-console.html#endpoints-contacted-by-netapp-console-and-console-agents["ネットワーク アクセス要件（NetApp Console）"^]にリストされています。
 
 デプロイを開始する前に、AI Data Engine ホストからこれらのエンドポイントへの DNS 解決が機能していることを確認してください。
 
 
 
-[[aide-lite-requirements]]
-== AIDE Lite の要件
+[[supported-kubernetes-versions]]
+[[supported-kubernetes]]
+== サポートされているKubernetesバージョン
+
+AI Data Engineは、この表に記載されているディストリビューションとバージョンのみをサポートしています。
+
+[cols="1,1,1,2"]
+|===
+| 導入 | Kubernetesディストリビューション | サポートされているバージョン | 提供元 
+
+
+| AIDEシングルノード | k3sを使用したチャンク アップロード署名要求がサポートされるようになりました。 | v1.35 | インストーラーはk3sを自動的にプロビジョニングします。特に何もする必要はありません。 
+
+
+| AIDEマルチノード | RKE2を使用したチャンク アップロード署名要求がサポートされるようになりました。 | v1.34～v1.36（v1.36.xを推奨） | クラスターはお客様がご用意ください。共有型でも専用型でも構いません。 
+
+
+| AIDEマルチノード | OpenShift | OpenShift 4.22.16 （Kubernetes v1.35.8） | クラスターはお客様がご用意ください。共有型でも専用型でも構いません。 
+
+
+| AIDEマルチノード | Azure Kubernetes Service（AKS） | v1.34～v1.36 | クラスターはお客様がご用意ください。共有型でも専用型でも構いません。 
+|===
+
+
+[[aide-single-node-deployment-requirements]]
+== AIDEシングルノード展開の要件
+
+Linux VM を用意していただくと、AI Data Engine が k3s を含むその他すべてを自動的にプロビジョニングします。Kubernetes の設定や管理は不要です。ホストの準備、ディスク容量、ファイアウォールの要件については、link:single-node-prerequisites.html["AIDEシングルノード展開の前提条件"] を参照してください。
 
 
 
 [[vm-sizing]]
-[[lite-vm-sizes]]
+[[single-node-vm-sizes]]
 === VMサイジング
 
-これらのサイズは、3～4日間の初期スキャン期間に最適化された推奨基本構成であり、厳密な制限ではありません。<<flexible-sizing-lite,柔軟なサイズガイドライン>>を参照して、これらの数値を左右する要因と、それらを超えてスケールする方法をご確認ください。
+これらのサイズは、3～4日間の初期スキャン期間に最適化された推奨基本構成であり、厳密な制限ではありません。<<flexible-sizing-single-node,柔軟なサイズガイドライン>>を参照して、これらの数値を左右する要因と、それらを超えてスケールする方法をご確認ください。
 
 [cols="1,1,1,1,1,1,1,1"]
 |===
@@ -144,12 +240,15 @@ AI Data Engine は、集中認証およびコンソールサービスのため�
 NOTE: あらゆる規模の導入において、NVMe SSDまたはその他のソリッドステートストレージの使用を推奨します。この表のディスク値は、AIDEデータボリュームのストレージ専用です。OS、k3s ランタイム、および AIDE データがすべて単一のディスクを共有する場合は、選択したサイズのディスク値に約 65 GB を追加してください。たとえば、単一ディスク上の小規模な導入では、合計約 565 GB が必要です。
 
 
+NOTE: 単一ノード構成のAIDEデータボリュームには、NFSではなくブロックストレージを使用してください。NFSをバックエンドとするストレージは、パフォーマンス低下の原因となる可能性があります。
+
+
 
 [[flexible-sizing-guidelines]]
-[[flexible-sizing-lite]]
+[[flexible-sizing-single-node]]
 === 柔軟なサイズガイドライン
 
-<<lite-vm-sizes,小型、中型、大型の構成>>これらは、3～4日間の初期スキャン期間における推奨される基準値であり、ソフトウェアによって強制される厳密な制限ではありません。
+<<single-node-vm-sizes,小型、中型、大型の構成>>これらは、3～4日間の初期スキャン期間における推奨される基準値であり、ソフトウェアによって強制される厳密な制限ではありません。
 
 サイズ推奨の根拠は何ですか？::
 +
@@ -161,29 +260,25 @@ NOTE: あらゆる規模の導入において、NVMe SSDまたはその他のソ
 
 
 --
-サイズが小さすぎるとどうなりますか？::
+展開したサイズが小さすぎたり、そのサイズを上回ったりした場合はどうなりますか::
 +
 --
-推奨サイズを下回るプロビジョニングを行っても、インストールが妨げられたり、サービス障害が発生したりすることはありません。システムは引き続き稼働しており、スキャンも継続していますが、以下の点にご注意ください：
+各設定は、特定のファイル数とスキャン速度に合わせて調整されています。お使いの環境が構成でサポートされている範囲を超える場合、以下のことが予想されます：
 
 * *初期カタログ期間の延長*：計算処理能力の低下により、1日あたりのスキャン対象オブジェクト数が減少します。例えば、30億個のオブジェクトを対象とするデプロイメントでも、より小さなサイズでプロビジョニングされた場合、目標の3～4日よりも大幅に時間がかかる可能性があります。
 * *継続的な取り込みスループットの低下*：継続的な負荷がかかると、新しいファイルイベントと増分スキャン更新の処理速度が低下します。
-* *ストレージ容量リスク*：オブジェクトの総数に対してストレージ容量が不足すると、メタデータインデックスが容量のしきい値に近づく可能性があります。通常、この問題はシステム全体の再デプロイを行わずに、ストレージ容量を拡張することで解決できます。
+* *スキャンの停止*：AI Data Engineコンポーネントは、展開する規模に合わせて構成されます。環境がそのサイズを大幅に超える場合、スキャン速度が低下するだけでなく、停止してしまう可能性があります。ワークロードの異常やリソースの制約を確認するには、link:../administer/monitor-deployment-health.html["デプロイメントの状態を監視し、問題を調査する"]を参照してください。
+* *ストレージ容量リスク*：オブジェクトの総数に対してストレージ容量が不足すると、メタデータインデックスが容量のしきい値に近づく可能性があります。ストレージ拡張を計画するには、NetAppサポートにお問い合わせください。
 
 
 --
-容量を追加する必要がある場合のスケーリング::
+推奨サイズを超える拡張::
 +
 --
-AIDE Liteは単一のVMで動作するため、スケーリングは垂直方向になります。
-
-* ホストVM上のvCPU、メモリ、またはストレージを増やしてください。
-* クラスターの再構成や再インストールは不要です。
-+
-
-NOTE: AIDE Lite はハイパフォーマンスや水平方向のスケールアウトをサポートしていません。環境内のファイル数が常に30億を超える場合、または高可用性と耐障害性が必要な場合は、代わりにlink:deploy-enterprise.html["AIDE Enterprise"]を導入してください。
+AI Data Engineコンポーネントはデプロイする規模に合わせて構成されているため、ホストVMにvCPU、メモリ、またはストレージを追加しても、容量が自動的に増加するわけではありません。ファイル数や必要なパフォーマンスがデプロイしたサイズを超える場合は、NetAppサポートに連絡してサイズを再調整してください。
 
 
+NOTE: シングルノード展開では、高可用性や水平スケールアウトはサポートされません。環境のファイル数が常に30億を超える場合、または高可用性と耐障害性が必要な場合は、代わりにlink:deploy-aide-multi-node.html["AIDEマルチノード展開"]を展開してください。
 
 --
 
@@ -205,41 +300,45 @@ NOTE: AIDE Lite はハイパフォーマンスや水平方向のスケールア�
 |===
 
 
-[[additional-prerequisites]]
-=== 追加の前提条件
+[[aide-multi-node-deployment-requirements]]
+== AIDEマルチノード展開の要件
 
-* インストーラーを実行するには、対象の仮想マシン上でroot権限またはsudo権限が必要です。
-* 最低1GbEのネットワーク接続（大規模展開の場合は10GbE）。
-* ターゲットホストには、bash 4.0以降、curl、およびtarがインストールされている必要があります。
-* インストーラーは自動的にダウンロードしてブートストラップします `k3s`、 `helm`、 `kubectl`、および `jq`。対象となる仮想マシンにこれらのツールを事前にインストールする必要はありません。
-* インストーラーの起動前に、ホスト上でポート6443（TCP）、10250（TCP）、および8472（UDP）が空いている必要があります。ホストファイアウォール（(`firewalld`RHEL上または `ufw`Ubuntu上）がアクティブな場合は、インストーラーを実行する前に、これらのポートとk3sポッドCIDR（(`10.44.0.0/16`）およびサービスCIDR（(`10.45.0.0/16`）を許可してください。必要なコマンドについては、お使いのOSのファイアウォールに関するドキュメントを参照してください。
-* SELinuxをEnforcingモードで実行しているRHELシステムでは、インストーラーが必要なSELinuxポリシーパッケージを自動的に構成します。SELinuxの手動設定は不要です。
+独自のKubernetesクラスターをご用意いただきます。このクラスターは、他のワークロードと共有することも、AI Data Engine専用にすることもできます。インストーラーは、既存のKubernetesクラスターにAI Data Engineを展開しますが、クラスターのプロビジョニングや管理は行いません。クラスター、ストレージ、およびインストーラーホストの要件については、link:multi-node-prerequisites.html["AIDEマルチノード展開の前提条件"]を参照してください。
+
+
+NOTE: すべてのマルチノード構成には、NVMeまたはハイパフォーマンスSSDストレージを推奨します。
 
 
 
+[[linux-kernel-and-nfs-nconnect-support]]
+[[multi-node-requirements]]
+=== LinuxカーネルとNFS nconnectのサポート
 
-[[aide-enterprise-requirements]]
-== AIDE Enterprise の要件
+共有AIDE構成ボリュームで必要となるスループットを提供する `nconnect` NFSマウントオプションには、Linuxカーネル5.3以降が推奨されます。以下のディストリビューションバージョンは `nconnect`をサポートし、カーネルの推奨事項を満たしています。RHELおよびCentOS 8.3では、Red Hatカーネルのバックポートが使用されています。
 
-* インストーラーを実行するマシン上で、クラスター管理者権限を持つkubectlへのアクセス権が必要です。
-* インストールコマンドを実行するマシンには、Sudo（またはroot）権限が必要です。
-* 対象クラスターにRKE2 v1.34以降（v1.36.x推奨）がインストールされています。
-* インストーラー ホストは、 `--tools-dir`を介して `helm`、 `kubectl`、および `jq`を自動的にダウンロードしてブートストラップします。管理マシンにこれらのツールを事前にインストールしておく必要はありません。
-* 構成されたStorageClass（デフォルト名 `aide-sc`）はクラスター上で利用可能で、AIDEのステートフルなバッキングサービスに使用されます。
-* 少なくとも 1 つのエクスポートパスを持つ NFSサーバが利用可能で、AIDE 構成データボリュームと共有インデックス スナップショットに使用されます。
-* ターゲット Kubernetes 名前空間（デフォルト `aide`）はすでにクラスター上に存在しており、インストーラーは作成しません。
+[cols="2,1,2"]
+|===
+| Distribution | カーネルバージョン | `nconnect`サポート 
 
 
+| RHEL / CentOS 8.3以降 | 4.18（バックポート） | はい 
 
-NOTE: NVMeまたはハイパフォーマンスSSDストレージは、すべてのEnterpriseノードの導入に推奨されます。
 
+| RHEL / CentOS 9.x | 5.14 | はい 
+
+
+| Ubuntu 20.04 | 5.4 | はい 
+
+
+| Ubuntu 22.04 | 5.15 | はい 
+|===
 
 
 [[node-sizing]]
-[[enterprise-vm-sizes]]
+[[multi-node-sizes]]
 === ノードサイズ設定
 
-これらのサイズは、約3日間の初期スキャン期間に最適化された推奨ベースライン クラスタ構成であり、厳密な容量制限ではありません。AIDE Enterprise は、水平スケールアウトにより60億ファイルを超える環境をサポートします。詳細については、<<flexible-sizing-enterprise,柔軟なサイズガイドライン>>を参照してください。
+これらのサイズは、3～4日間の初期スキャン期間に最適化された推奨ベースラインクラスタ構成であり、厳密な容量制限ではありません。60億ファイルを超える環境では、NetAppによるカスタムサイジングが必要です。詳細については、<<flexible-sizing-multi-node,柔軟なサイズガイドライン>>を参照してください。
 
 [cols="1,1,1,1,1,1,1,1,1"]
 |===
@@ -257,56 +356,121 @@ NOTE: NVMeまたはハイパフォーマンスSSDストレージは、すべて�
 
 
 [[flexible-sizing-guidelines]]
-[[flexible-sizing-enterprise]]
+[[flexible-sizing-multi-node]]
 === 柔軟なサイズガイドライン
 
-<<enterprise-vm-sizes,小型、中型、大型の構成>>これらは、約3日間の初期スキャン期間における推奨されるベースラインクラスタ構成であり、ソフトウェアによって強制される厳密な容量上限ではありません。AIDE Enterprise は、クラスタ ノード全体での水平スケールアウトにより、30億ファイルを超える環境をサポートします。
+<<multi-node-sizes,小型、中型、大型の構成>> は、3～4日間の初期スキャン期間における推奨ベースラインクラスタ構成であり、ソフトウェアが強制する厳密な容量上限ではありません。60億ファイルを超える環境では、NetAppでのカスタムサイジングが必要です。
 
 サイズ推奨の根拠は何ですか？::
 +
 --
 * *ファイルとディレクトリの合計数*：オブジェクトの合計数は、ストレージとコンピューティングの要件を決定する主要な要因です。大規模な環境では、処理負荷を分散し、パフォーマンスを維持するために、追加のクラスタノードが必要になります。
-* *高可用性レプリケーション*： エンタープライズ展開では、耐障害性のために、デフォルトでノード間でのデータレプリケーションが有効になります。レプリケーションを行うと、同等のシングルノード構成と比較して、ストレージとメモリの総必要量が増加します。
+* *高可用性レプリケーション*：マルチノード展開では、デフォルトでノード間でのデータレプリケーションが有効になり、耐障害性が向上します。レプリケーションを行うと、同等のシングルノード構成と比較して、ストレージとメモリの総必要量が増加します。
 * *ノード数とワークロードの分散*：処理スループットとカタログの総容量は、クラスタ内のノード数に応じてスケールします。追加ノードは、インデックス作成のワークロードとストレージ容量の両方をクラスタ全体に分散します。
 * *必要なスキャン処理能力*：クラスタ全体のCPUとメモリの割り当てによって、1日のスキャン速度と初期カタログの完了速度が決まります。
 * *ノードごとのストレージ性能*：各ノードには高性能ストレージを強く推奨します。クラスタ全体の容量はノード数に比例して増加します。
 
 
 --
-サイズが小さすぎるとどうなりますか？::
+展開したサイズが小さすぎたり、そのサイズを上回ったりした場合はどうなりますか::
 +
 --
-推奨サイズを下回るプロビジョニングを行っても、インストールが妨げられたり、重大な障害が発生したりすることはありません。具体的な影響としては、以下のようなものがあります。
+各設定は、特定のファイル数とスキャン速度に合わせて調整されています。お使いの環境が構成でサポートされている範囲を超える場合、以下のことが予想されます：
 
 * *初期カタログ期間の延長*：ノード数が少ない、またはノードあたりのリソースが少ないとスループットが低下し、初期カタログ期間が比例して延長されます。
-* *ピーク負荷時の処理遅延の増加*：クラスター全体のメモリ不足により、大量のデータを取り込む期間中に処理遅延が増加する可能性があります。進行中の処理は中断されませんが、持続的なスループットは低下します。
-* *ストレージ容量リスク*：対象オブジェクト数に対してクラスタストレージが不足すると、メタデータインデックスが容量しきい値に近づく可能性があります。既存ノードのストレージを拡張する（無停止）か、専用のストレージ ノードを追加することで、この問題を解決できます。
+* *ピーク負荷時の処理遅延の増加*：クラスター全体のメモリ不足により、大量のデータを取り込む期間中に処理遅延が増加する可能性があります。
+* *スキャンの停止*：AI Data Engineコンポーネントは、展開する規模に合わせて構成されます。環境がそのサイズを大幅に超える場合、スキャン速度が低下するだけでなく、停止してしまう可能性があります。ワークロードの異常やリソースの制約を確認するには、link:../administer/monitor-deployment-health.html["デプロイメントの状態を監視し、問題を調査する"]を参照してください。
+* *ストレージ容量リスク*：対象オブジェクト数に対してクラスタストレージが不足すると、メタデータインデックスが容量しきい値に近づく可能性があります。ストレージ拡張を計画するには、NetAppサポートにお問い合わせください。
 
 
 --
-容量を追加する必要がある場合のスケーリング::
+推奨サイズを超える拡張::
 +
 --
-AIDE Enterpriseは、再デプロイなしで水平スケールアウトをサポートします：
-
-* ワーカーノードを追加して、スキャン処理とイベント取り込みに利用できるCPUとメモリを増やします。
-* 専用ストレージ ノードを追加して、カタログの総容量を増やします。これは、事前定義された最大デプロイメント サイズを超えて環境をスケールアウトするための主要な方法です。
-* クラスターにノードを追加することで、60億ファイルを超える規模にも対応できます。カスタムスケールにおけるノードのサイジングに関するガイダンスについては、NetAppの担当者にお問い合わせください。
-+
-
-NOTE: 既存のエンタープライズクラスタにノードを追加しても、進行中のスキャン操作には影響しませんが、変更はアクティビティの少ない時間帯に行うようにしてください。
+既存のマルチノードクラスタの水平スケーリングはサポートされていません。ワーカーノードや専用ストレージノードを追加しても、スキャン処理、イベント取り込み、カタログ容量が自動的に増加するわけではありません。環境が導入したサイズを超える場合、またはスキャン処理やイベント取り込みの容量を増やす必要がある場合は、変更を計画するためにNetAppサポートまたはNetAppの担当者にお問い合わせください。
 
 
+NOTE: 60億ファイルを超える規模に拡張するには、ノードのサイジングのガイダンスやカスタムスケールについて、NetAppの担当者にお問い合わせください。
 
 --
 
+
+
+
+[[kerberos-and-active-directory-requirements]]
+[[kerberos-ad-requirements]]
+== KerberosおよびActive Directoryの要件
+
+Kerberos認証を使用してSMB/CIFS共有をスキャンしたり、NFSユーザーIDとグループIDをActive Directory名にマッピングしたりする前に、これらの要件を確認してください。時刻同期、DNS、およびホストパッケージの要件は、Kerberosにのみ適用されます。AIDEはKerberosクライアントです：既存のKerberosキー配布センター（KDC）に対して認証を行い、Kerberosサーバーとしては動作しません。
+
+
+
+[[time-synchronization]]
+=== 時刻同期
+
+AIDEノードとKDCのクロックの差が許容されるクロックスキューを超えると、Kerberos認証は失敗します。Active Directoryでは、デフォルトで最大5分の時間差が許容されます。
+
+以下の点を確認してください。
+
+* ネットワークタイムプロトコル（NTP）は、すべてのAIDEノードでアクティブになっています。
+* AIDEノードは、ドメインコントローラーと同期された時刻ソースを使用します。
+
+
+
+
+[[dns]]
+=== DNS
+
+以下のDNS要件を満たしてください：
+
+* 各AIDEノードは、完全修飾ドメイン名（FQDN）でファイルサーバーとKDCを解決できます。
+* ノードがActive Directory DNSサーバーを使用するように構成する場合、そのサーバーは外部名も解決する必要があります。そうでない場合、AIDEは<<outbound-internet-access,アウトバウンドインターネットアクセス>>に記載されているエンドポイントに到達できません。
+* マルチノード構成でDNS設定を変更する場合は、各ノードでActive Directory DNSサーバーを唯一のネームサーバーとして構成してください。クラスターにおける名前解決では、リストされているネームサーバーの中からランダムに1つが選択されるため、Active Directoryの名前を解決できないネームサーバーがあると、断続的な障害が発生します。
+
+
+DNS設定を変更するには、link:../administer/configure-kerberos-smb-single-node.html#fix-name-resolution["シングルノード展開でSMB/CIFS共有のKerberosを設定する"] または link:../administer/configure-kerberos-smb-multi-node.html#fix-name-resolution["マルチノード展開でSMB/CIFS共有のKerberosを設定する"] の「名前解決を修正する」を参照してください。
+
+
+
+[[host-packages]]
+=== ホストパッケージ
+
+[cols="1,3"]
+|===
+| 導入 | 必要なパッケージ 
+
+
+| シングル ノード | Kerberosクライアントツール：Ubuntu上の `krb5-user`、またはRHEL上の `krb5-workstation`。インストーラは、Kerberos認証によるSMBアクセスをサポートするために `cifs-utils`を自動的にインストールします。 
+
+
+| マルチノード | 各ノードに`cifs-utils`を、キータブを作成およびテストするホストにKerberosクライアントツールとNFSクライアントをインストールする必要があります。 
+|===
+KerberosベースのSMB/CIFSスキャンを行う場合にのみ、すべてのAIDEノードで `cifs-utils`が必要になります。シングルノードインストーラがインストールします。マルチノード構成の場合は、各ノードにインストールします。ノードに `cifs-utils`がない場合、SMB/CIFS共有のKerberosスキャンは失敗します。
+
+
+
+[[active-directory-attributes-for-nfs]]
+=== NFS の Active Directory 属性
+
+NFSユーザーIDとグループIDをActive Directory名に解決するには、 `uidNumber`および `gidNumber`属性が入力され、AIDEがクエリを実行する場合はグローバルカタログにレプリケートされている必要があります。link:../administer/configure-ad-nfs.html["NFS 用の Active Directory ID マッピングを構成する"]を参照してください。
+
+
+
+[[active-version-and-support-contact]]
+== アクティブバージョンとサポート連絡先
+
+AI Data EngineのアクティブなバージョンとNetAppサポートの連絡先情報を確認するには、*Configuration* > *About AIDE* に移動してください。
 
 
 
 [[related-information]]
 == 関連情報
 
+* link:../administer/configure-kerberos-smb.html["AI Data EngineでのSMB/CIFS共有のKerberos認証"]
+* link:../administer/configure-ad-nfs.html["NFS 用の Active Directory ID マッピングを構成する"]
 * link:deployment-overview.html["AIDE導入概要"]
-* link:deploy-aide-lite.html["AI Data Engine のデプロイ — Lite"]
-* link:deploy-enterprise.html["AI Data Engine のデプロイ — エンタープライズ"]
+* link:single-node-prerequisites.html["AIDEシングルノード展開の前提条件"]
+* link:multi-node-prerequisites.html["AIDEマルチノード展開の前提条件"]
+* link:deploy-aide-single-node.html["AI Data Engineをシングルノード展開として展開する"]
+* link:deploy-aide-multi-node.html["AI Data Engineをマルチノード展開として展開する"]
 

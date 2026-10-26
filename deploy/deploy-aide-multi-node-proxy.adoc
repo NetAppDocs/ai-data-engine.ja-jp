@@ -1,0 +1,325 @@
+---
+sidebar: sidebar 
+permalink: deploy/deploy-aide-multi-node-proxy.html 
+keywords: deploy, install, multi-node, multi node, proxy, outbound proxy, forward proxy, wizard, NetApp Console, kubernetes, RKE2, OpenShift, AKS, container runtime, installer download, proxy password file, proxy CA certificate 
+summary: クラスターとインストーラーホストがアウトバウンドプロキシ経由でのみインターネットに接続できる場合、NetApp Consoleからマルチノード展開としてAIDEを展開します。 
+---
+= プロキシを使用したマルチノード展開としてAI Data Engineを展開する
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Kubernetesクラスタとインストーラホストがアウトバウンドプロキシ経由でのみインターネットにアクセスできる場合は、NetApp ConsoleからAI Data Engine（AIDE）をマルチノード環境として導入します。この手順には、プロキシの手順に加え、マルチノード展開のすべてのステップが含まれています。クラスタとインストーラホストがインターネットに直接アクセスできる場合は、代わりにlink:deploy-aide-multi-node.html["AI Data Engineをマルチノード展開として展開する"]を使用してください。
+
+サポートされているプロキシの種類と完全なパラメータリファレンスについては、link:configure-proxy.html["AI Data Engineのプロキシについて"]を参照してください。プロキシで許可するエンドポイントについては、link:aide-requirements.html#outbound-internet-access["アウトバウンドインターネットアクセス"]を参照してください。
+
+
+
+[[before-you-begin]]
+== 開始する前に
+
+.権限とアクセス
+* お客様はNetApp Consoleで_組織管理者_以上の権限を持っています。
+* 対象クラスタへのcluster-adminアクセス権を持つkubeconfigが必要です。 `kubectl`が `PATH`にない場合、インストーラはそれをtoolsディレクトリにダウンロードします。
+
+
+.Kubernetesクラスター
+* Kubernetesクラスタは、link:multi-node-prerequisites.html["AIDEマルチノード展開の前提条件"]およびlink:aide-requirements.html["AIDEの要件"]に記載されているマルチノードの前提条件を満たしています。
+* インストールコマンドを実行する前に、 `aide`ネームスペースがクラスタ上に存在します。
+* AI Data Engineワークロードをスケジュールするノードには、link:multi-node-prerequisites.html#node-labels["ノードラベル"]で説明されているノードラベルがあります。
+* 構成されたStorageClass（デフォルト名： `aide-sc`）はクラスター上で利用可能で、AIDEのステートフルなバッキングサービスに使用されます。
+
+
+.ストレージおよびNetApp Console
+* エクスポートされたパスを持つNFSサーバが利用可能で、AIDE設定ボリューム用にクラスターからアクセス可能です。
+* NetApp Consoleエージェント https://docs.netapp.com/us-en/console-setup-admin/concept-agent-install-options.html#agent-console-deploy["展開されています"^]クラスタノードからアクセス可能である必要があります。インストールコマンドを実行するには、ConsoleエージェントのIPが必要です。
+
+
+.プロキシ
+* link:aide-requirements.html#outbound-internet-access["アウトバウンドインターネットアクセス"] のエンドポイントを許可するようにプロキシを設定しました。
+* プロキシのホスト、ポート、スキーム(`http`または `https`）を把握している。プロキシで認証が必要な場合は、ユーザ名とパスワードも把握している。
+* プライベート署名証明書を使用したHTTPSプロキシを使用する場合、インストーラホスト上にCA証明書をPEMファイル、または `.crt`および `.pem`ファイルのフラットディレクトリとして用意します。
+
+
+
+NOTE: インストーラは、AIDEの初回インストール時にのみ使用してください。AIDEのアップグレードには使用しないでください。インストール後は、AIDEオペレータがアップグレードを管理します。アップグレードの詳細については、NetAppサポートにお問い合わせください。
+
+
+
+[[how-the-proxy-applies-to-a-multi-node-deployment]]
+== プロキシがマルチノード展開にどのように適用されるか
+
+マルチノード構成の場合、Kubernetesクラスタはお客様が所有します。インストーラはプロキシ用のAI Data Engineワークロードを設定しますが、お客様のノードは変更しません。インストーラを実行する前に、各ノードでコンテナランタイムと証明書の信頼を設定する必要があります。
+
+インストーラは、インストーラホストからのプロキシのみをチェックします。ノードのチェックは行いません。ノードのコンテナランタイムが構成されていない場合、インストールは完了し、そのノード上のポッドは後で `ImagePullBackOff`と表示されます。
+
+また、インストーラはノードにオペレーティングシステムパッケージをインストールしません。ノードに環境で必要となるパッケージがインストールされていること、および環境で必要とされる場合はパッケージマネージャに適切なプロキシ設定が行われていることを確認してください。
+
+
+
+[[configure-the-nodes-for-the-proxy]]
+[[configure-proxy-multi-node]]
+== プロキシ用のノードを設定する
+
+インストーラを実行する前に、すべてのノード、コントロールプレーン、ワーカーでコンテナランタイムを設定し、プロキシ経由でイメージをプルするようにしてください。インストーラに指定したプロキシホスト、ポート、スキームと同じものを使用してください。
+
+* ノードは、プロキシ経由でlink:aide-requirements.html#outbound-internet-access["アウトバウンドインターネットアクセス"]に記載されているNetAppコンテナレジストリホストおよびイメージレイヤバケットに到達できる必要があります。
+* クラスタ内部アドレスおよびノードアドレスはプロキシに含めないでください。
+* プライベート署名付き証明書を使用したHTTPSプロキシを使用する場合、ノードはプロキシのCA証明書も信頼する必要があります。
+
+
+手順は、使用しているKubernetesディストリビューションによって異なります。お使いのディストリビューションのドキュメントを参照してください。
+
+
+
+[[copy-the-install-command]]
+== インストールコマンドをコピーする
+
+. NetApp Console で、*AI data hub* > *AI Data Engine* に移動します。
++
+AI Data Engineのランディングページが表示されます。
+
+. *AI Data Engine のデプロイ*を選択します。
+. 「マルチノード」デプロイメントオプションを選択し、「次へ」をクリックします。
+. 構成サイズを選択してください：
++
+** *小*：約10億ファイルまでの環境に推奨されます。
+** *中（デフォルト）*：約30億ファイルまでの環境に推奨されます。
+** *ラージ*：約60億ファイルまでの環境に推奨されます。
++
+これらのサイズは推奨される基準値であり、厳密な制限ではありません。60億ファイルを超える環境でのAIDEマルチノード展開には、NetAppによるカスタムサイジングが必要です。詳細については、link:aide-requirements.html#flexible-sizing-multi-node["柔軟なサイズガイドライン"]を参照してください。
+
++
+ウィザードは、選択した構成サイズに基づいてインストールコマンドを生成します。サイズを設定するためにコマンドを編集する必要はありません。
+
+
+
+. ウィザードに表示されているインストールコマンドをエディタにコピーしてください。
+
+
+インストールコマンドは、 `d13jb5dapseb36.cloudfront.net`からインストーラをダウンロードし、1つのステップで開始します。そのダウンロードではプロキシは使用されません。
+
+* インストーラホストが `d13jb5dapseb36.cloudfront.net`に直接到達できる場合は、次のセクションをスキップして<<create-password-file-multi-node,プロキシパスワードファイルを作成する>>に進んでください。コピーしたインストールコマンドを実行します。インストーラでプロキシ設定の入力を求められます。代わりにコマンドラインで指定する方法については、<<command-line-flags-multi-node,コマンドラインフラグを使用した非対話型インストール>>を参照してください。
+* インストーラホストがプロキシ経由でしかインターネットに接続できない場合、コマンドはダウンロードの段階で停止します。まず次のセクションを完了してください。これはインストーラホストにのみ必要です。ノードはインストーラをダウンロードしません。
+
+
+
+
+[[download-the-installer-through-the-proxy]]
+[[download-installer-multi-node]]
+== プロキシ経由でインストーラーをダウンロードする
+
+ご自身でインストーラをダウンロードし、 `./install-enterprise.sh`以降のインストールコマンドを実行します。
+
+. インストーラをインストーラホストに取得します。ご使用の環境で許可されている任意の方法を使用して、ファイルをインストーラホストに配置します。
++
+プロキシ経由でインストーラホストからインストーラをダウンロードするには：
+
++
+[source, bash]
+----
+mkdir -p ~/aide && cd ~/aide
+curl -fsSL -x http://PROXY_HOST:PROXY_PORT \
+  https://d13jb5dapseb36.cloudfront.net/aide/latest/aide-installer.tar.gz -o aide-installer.tar.gz
+----
++
+プロキシ サーバにユーザ名が必要な場合は、 `--proxy-user USER`を `curl`コマンドに追加してください。パスワードを省略すると、 `curl`がパスワードの入力を求めるため、シェルの履歴に保存されません。
+
++
+** プロキシ サーバが HTTPS でリッスンしている場合は、 `-x` アドレスに `https://`を使用してください。
+** プロキシがプライベート署名証明書を使用している場合は、 `--proxy-cacert CA_FILE`を追加するか、まずインストーラホストのトラストストアにCA証明書を追加してください。
+** HTTPSプロキシを使用し、 `curl`のバージョンが8.3より前の場合、ダウンロードが約1分間一時停止することがあります。Ubuntu 22.04には、そのようなバージョンが含まれています。完了するまでお待ちください。
++
+または、別のコンピューターから `\https://d13jb5dapseb36.cloudfront.net/aide/latest/aide-installer.tar.gz`をダウンロードし、 `scp`や通常のファイル転送方法を使用してインストーラーホストにコピーします。
+
+
+
+. インストーラーを解凍し、インストーラーフォルダに移動します：
++
+[source, bash]
+----
+tar -xzf aide-installer.tar.gz
+cd installer
+----
++
+以下のコマンドはすべて、このインストーラーフォルダ内で実行してください。フォルダ内の `version.txt`ファイルには、インストーラーのビルドバージョンが表示されます。
+
+. NetApp Consoleからコピーしたインストールコマンドを準備します。インストーラをダウンロードし、指定したパラメータで `./install-enterprise.sh`を実行します。インストーラをすでにダウンロードしているため：
++
+**  `./install-enterprise.sh`より前の部分をすべて削除し、コマンドが `./install-enterprise.sh`から始まるようにします。
+** コマンドが引用符で囲まれている場合、たとえば `bash -c '...'`、一番最後にあるシングルクォーテーション(`'`）を削除します。
+** コマンドに `--no-proxy`が含まれている場合は、削除してください。
++
+残りのコマンドは次のようになります：
+
++
+[source, bash]
+----
+./install-enterprise.sh --flavor <small|medium|large> --kubeconfig <kubeconfig-path> --nfs-server <nfs-server> --nfs-data-share <export-path> --registry <registry> --account-id <account-id> --organization-id <organization-id> --agent-id <agent-id> --cm-host <console-agent-ip>
+----
++
+コピーしたコマンドに表示されているとおりに、 `./install-enterprise.sh` に続くすべてのパラメータを正確に保持してください。インストーラーはプロキシ設定の入力を求めます。<<interactive-setup-multi-node,インタラクティブなガイド付きセットアップ>> を参照してください。
+
+
+
+
+
+
+
+[[create-a-proxy-password-file]]
+[[create-password-file-multi-node]]
+== プロキシパスワードファイルを作成する
+
+プロキシが認証を必要とし、自動展開などでパスワードの入力を求められずにパスワードを入力したい場合は、インストーラーを実行する前にパスワードファイルを作成してください。そうでない場合は、このセクションをスキップしてください。インストーラーは、隠し入力欄でパスワードの入力を求めます。
+
+ファイルにはパスワードのみが含まれています。特殊文字をパーセントエンコードせずに、パスワードをそのまま入力してください。
+
+ `./install-enterprise.sh` を実行するユーザーと同じユーザーとしてファイルを作成してください。インストーラはそのユーザーとしてファイルを読み取るためです。
+
+[source, bash]
+----
+umask 077
+read -rs -p 'Proxy password: ' P && printf '%s' "$P" > $HOME/.aide-proxy-password; unset P; echo
+chmod 600 $HOME/.aide-proxy-password
+----
+インストールが完了したら、ファイルを削除してください。
+
+
+
+[[supply-the-proxy-settings]]
+== プロキシ設定を入力してください
+
+インストーラーはプロキシ設定の入力を求めます。NetApp Consoleからコピーしたインストールコマンドを実行し、プロンプトに回答してください。プロンプトなしで実行する必要がある自動展開については、<<command-line-flags-multi-node,コマンドラインフラグを使用した非対話型インストール>>を参照してください。
+
+ノード上で設定したプロキシホスト、ポート、スキーム、およびCA証明書と同じものを使用してください。
+
+
+
+[[use-the-interactive-guided-setup]]
+[[interactive-setup-multi-node]]
+=== インタラクティブなガイド付きセットアップを使用します
+
+ `--proxy-host`または `--no-proxy`を指定せずにターミナルでインストールコマンドを実行すると、インストーラーは次の質問をします。値をパラメータとして渡した場合、インストーラーはその値を再度要求しません。
+
+[cols="2,3"]
+|===
+| プロンプト | 何を入力すればよいか 
+
+
+| `Configure outbound proxy? (y/N)` | と入力します `y`。 
+
+
+| プロキシホストまたはIPアドレス | プロキシホスト名またはIPv4アドレスを入力します（オプションでポート(`host:port`も指定できます）。 
+
+
+| プロキシスキーム(`https`または `http`） | プロキシがリッスンするプロトコルを入力してください。デフォルトは `https`です。 
+
+
+| プロキシポート | プロキシポートを入力してください。デフォルトは、HTTPSの場合は `443`、HTTPの場合は `80`です。 
+
+
+| プロキシの種類 | デフォルト設定を受け入れるには、Enterキーを押してください。 
+
+
+| プロキシ自身の証明書の認証局証明書（HTTPSのみ、オプション） | CAファイルまたはディレクトリへのパスを入力してください。プロキシ証明書に公開認証局が署名している場合は、Enterキーを押してください。 
+
+
+| プロキシにはユーザー名とパスワードが必要ですか？（y/N） | はいの場合は、ユーザー名を入力し、次にパスワードを2回入力してください。インストーラーはパスワードをエコーバックしません。 
+|===
+端末がない場合、インストーラーはプロンプトを表示しません。プロキシを使用するには `--proxy-host`を渡し、プロキシにパスワードが必要な場合は `--proxy-password-file`を渡します。
+
+
+
+[[use-command-line-flags-for-setup]]
+[[command-line-flags-multi-node]]
+=== セットアップにはコマンドラインフラグを使用してください
+
+プロンプトを表示せずに実行する必要がある自動化されたデプロイメントや、その他の非対話型デプロイメントには、コマンドラインフラグを使用してください。フラグは任意です。インストーラーは、入力されていないプロキシ情報があれば入力を求めます。
+
+プロキシパラメータは、インストールコマンドの末尾、既存の最後のパラメータの後に追記してください。
+
+* NetApp Consoleからコピーしたインストールコマンドを実行する場合は、閉じ引用符の前の引用符内にパラメータを追加してください。
+* インストーラーをダウンロードしてコマンドを短縮した場合は、短縮したコマンドの末尾にパラメータを追加してください。
+
+
+コマンドに `--no-proxy`が含まれている場合は、削除してください。インストールコマンドのその他のパラメータはすべてそのまま使用してください。各パラメータの説明とデフォルト値については、link:configure-proxy.html#proxy-parameters["プロキシ設定パラメータ"]を参照してください。以下の例は、プロキシパラメータのみを示しています。
+
+.ユーザー名とパスワード付きのHTTPプロキシ
+[source, bash]
+----
+--proxy-host proxy.example.com \
+--proxy-port 3128 \
+--proxy-scheme http \
+--proxy-user svc-aide \
+--proxy-password-file $HOME/.aide-proxy-password
+----
+.プライベート署名付き証明書を使用し、認証を行わないHTTPSプロキシ
+[source, bash]
+----
+--proxy-host proxy.example.com \
+--proxy-port 8443 \
+--proxy-scheme https \
+--proxy-ca-cert $HOME/proxy-ca.pem
+----
+* プロキシで認証が不要な場合は、 `--proxy-user` と  `--proxy-password-file` を省略してください。
+*  `--proxy-user`を `--proxy-password-file`なしで指定した場合、ターミナルからインストーラを実行すると、インストーラはパスワードの入力を求めます。
+
+
+
+CAUTION: HTTPプロキシでは、プロキシのユーザー名とパスワードはクリアテキストで送信されます。プロキシが認証を必要とする場合は、HTTPSプロキシを使用してください。
+
+
+
+[[run-the-installation]]
+== インストールを実行します
+
+. Kubernetesクラスターにアクセスできるホストからインストールコマンドを実行してください。インストーラーをダウンロードした場合は、インストーラーフォルダからコマンドを実行してください。
++
+インストーラーは、何かをダウンロードする前に、インストーラーホストからプロキシが応答するか、プロキシが認証情報を受け入れるか、そしてプロキシ証明書が選択したスキームに対して有効であるかを確認します。チェックが失敗した場合、インストーラーは停止し、原因を明示します。このチェックでは、クラスタノードがプロキシに到達できるかどうかはテストされません。
+
++
+
+NOTE: インストールには約30分かかります。タイムアウトや再試行が発生する場合がありますが、これは正常な動作です。
+
+. プロキシパラメータをすべて渡していない場合は、プロキシのプロンプトに回答してください。<<interactive-setup-multi-node,インタラクティブなガイド付きセットアップ>>を参照してください。
+. インストールを続行するには、インストーラの確認プロンプトに回答します。
++
+** インストーラーには、kubeconfigで選択されたKubernetesクラスターが表示されます。これには、コンテキスト、クラスター名、APIサーバーが含まれます。それが使用予定のクラスターである場合にのみ、「yes」と回答してください。クラスターが間違っている場合は、インストーラーを停止し、正しいkubeconfigコンテキストを選択して、インストーラーを再度実行してください。
+** インストーラーは、マルチノード展開の前提条件が完了していることを確認するよう求めます。続行するには「yes」と回答します。
+** インストーラは、AI Data Engine NGINXイングレスを実行するノードのIPアドレスを検出し、確認を求めます。表示されているアドレスをそのまま使用する場合はEnterキーを押すか、別のアドレスを入力してください。クラスタ外部からアクセス可能なアドレスを使用してください。検出されたアドレスが内部クラスタアドレスの場合は、代わりに到達可能なアドレスを入力してください。Consoleエージェントのアドレスは入力しないでください。
+
+
+. 成功画面が表示され、AIDEのインストールが完了したことが確認されるまで、進行状況画面を監視します。
+
+
+.結果
+AI Data Engineマルチノード環境が導入され、NetApp Consoleに接続されました。これで、link:../data-sources/connect-data-source.html["データソースを接続する"]してスキャンを開始できます。
+
+
+
+[[check-the-proxy-after-installation]]
+[[check-proxy-multi-node]]
+== インストール後にプロキシを確認してください
+
+AI Data Engineオペレーターは、使用するプロキシをログに記録します。ログにはパスワードは一切含まれません。プロキシを確認するには、クラスターにアクセスできるホストから次のコマンドを実行してください。 `<kubeconfig>`をkubeconfigファイルのパスに置き換えます：
+
+[source, bash]
+----
+kubectl --kubeconfig <kubeconfig> -n aide logs deploy/aide-operator -c chart-fetcher | grep -m1 'proxy enabled'
+----
+ `kubectl`が `PATH`にない場合、インストーラはそれをツールディレクトリにダウンロードしています。代わりに `<tools-dir>/kubectl`を実行してください。デフォルトのツールディレクトリは `/opt/netapp/aide/.aide-installer-tools`です。
+
+この行には、プロキシのエンドポイント、認証が有効になっているかどうか、およびCA証明書がマウントされているかどうかが表示されます。
+
+
+
+[[related-information]]
+== 関連情報
+
+* link:configure-proxy.html["AI Data Engineのプロキシについて"]
+* link:multi-node-prerequisites.html["AIDEマルチノード展開の前提条件"]
+* link:aide-requirements.html["AIDEの要件"]
+* link:deploy-aide-multi-node.html["AI Data Engineをマルチノード展開として展開する"]
+

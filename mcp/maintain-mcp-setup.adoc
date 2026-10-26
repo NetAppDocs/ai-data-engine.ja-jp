@@ -1,0 +1,180 @@
+---
+sidebar: sidebar 
+permalink: mcp/maintain-mcp-setup.html 
+keywords: mcp, governed ai access, maintain, update, edit collection, identity provider, user scopes, mcp settings, aide cluster host name, mcp host name, enable connection to mcp, validate access 
+summary: 要件の変更に応じて、MCPコレクション、IDプロバイダー、アクセススコープ、およびサーバー設定を見直して更新し、その後、AIクライアントからのアクセスを検証してください。 
+---
+= AI Data Engineで管理されるAIアクセス設定の維持
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Model Context Protocol（MCP）コレクション、IDプロバイダー、アクセススコープ、サーバー設定を見直して更新し、AIクライアントからのアクセスを検証することで、AI Data Engine（AIDE）における管理されたAIアクセスをお客様の要件に合致した状態に保ちます。
+
+
+
+[[before-you-begin]]
+== 開始する前に
+
+* MCPコレクションを設定し、AIクライアントを接続しました。link:quick-start-mcp.html["AI Data Engineを使用したガバナンスされたAIアクセスのクイックスタート"]を参照してください。
+* *AI Data Engine管理者* ロールを持っています。
+
+
+変更はすぐには反映されません。Microsoft Entra IDアプリのロールやスコープを変更した場合、ユーザーが更新されたアクセス権を受け取るのは、AIクライアントが新しいアクセストークンを取得した後になります。これには最大で約1時間かかる場合があります。ユーザーは再度サインインすることで、より早く新しいトークンを取得できます。コレクションにデータを追加した場合、AI Data Engineがファイルをスキャンしてインデックスを作成した後にのみ、ファイルが検索可能になります。
+
+
+
+[[review-mcp-server-and-collection-status]]
+== MCPサーバーとコレクションのステータスを確認する
+
+MCPサーバーと、AIクライアントが使用するコレクションの状態を確認し、設定に関する警告があれば対処してください。
+
+.手順
+. NetApp Consoleで、*AIデータハブ* > *AI Data Engine* > *設定* > *MCPコレクション* に移動します。
+. MCPサーバーのステータスを確認してください：
++
+** *実行中*：MCPサーバーが実行中です。*MCPへの接続を有効にする*がオンになっている場合、AIクライアントは接続できます。
+** *劣化状態*：MCPサーバーは稼働していますが、前提条件が満たされていないか、正常に動作していません。例えば、IDプロバイダーが設定されていない、メタデータカタログからの応答が遅いなどです。AIクライアントは、認証やコレクションの取得ができない場合があります。
+** *オフライン*：MCPサーバーが停止、無効化されているか、またはアクセスできません。AIクライアントは接続できません。MCPへの接続がオフになっている場合は、<<enable-or-disable-the-connection-to-mcp,MCPへの接続を有効または無効にする>>を参照してください。
+
+
+. コレクション一覧で、AIクライアントが使用する各コレクションのステータスを確認してください。ステータスが*Enabled*のコレクションは、AIクライアントで利用可能です。コレクション内のボリュームがまだスキャン中の場合は、インデックス作成が完了するまで待ってから新しいファイルを検索してください。
+. 設定に関する警告に対処してください：
++
+** IDプロバイダーが不足している場合は、*設定* > *IDプロバイダー* で追加してください。link:connect-entra-id-aide-mcp.html#set-up-an-identity-provider["IDプロバイダーを設定する"] を参照してください。IDプロバイダーの *接続状態* が *接続済み* であることを確認してください。
+** コレクションに「構成準備完了」と表示されている場合は、その「アクション」メニューを開き、「MCP の構成」を選択して、ID プロバイダーとユーザースコープを選択します。link:manage-data-collections.html#configure-a-collection-for-mcp["MCP 用のコレクションを設定する"] を参照してください。
+** コレクション内のボリュームにスキャンエラーが表示される場合は、link:../data-sources/manage-data-sources.html#view-scan-status-and-details["スキャン状況と詳細を表示する"]を参照してください。
+
+
+
+
+
+
+[[edit-a-data-collection]]
+== データコレクションを編集する
+
+MCPコレクションの名前、説明、またはデータリソースを更新します。
+
+.手順
+. NetApp Consoleで、*AIデータハブ* > *AI Data Engine* > *設定* > *MCPコレクション* に移動します。
+. コレクションの*アクション*メニューを開き、*編集*を選択します。
+. 必要に応じて名前または説明を更新してください。
+. コレクションを更新するには、データリソースを選択またはクリアしてください。
+. *MCPコレクションを保存*を選択します。
+
+
+*すべてのファイル*コレクションは、編集、名前変更、削除できません。MCP向けに設定できます。<<update-identity-providers-or-user-scopes-for-a-collection,コレクションのIDプロバイダーまたはユーザースコープを更新する>>を参照してください。
+
+
+
+[[update-an-identity-provider]]
+== IDプロバイダーを更新する
+
+プロバイダー構成が変更された場合は、IDプロバイダーを更新してください。
+
+.手順
+. NetApp Consoleで、*AIデータハブ* > *AI Data Engine* > *設定* > *IDプロバイダー* に移動します。
+. IDプロバイダーを開いて編集します。
+. 必要に応じて、テナントID、アプリケーション（クライアント）ID、または名前を更新してください。
+. *保存*を選択します。
+
+
+管理者アクセスが必要な場合は、管理者にIDプロバイダーの更新を依頼してください。
+
+
+
+[[update-the-identity-providers-or-user-scopes-for-a-collection]]
+[[update-identity-providers-or-user-scopes-for-a-collection]]
+== コレクションのIDプロバイダーまたはユーザースコープを更新する
+
+コレクションへのアクセスを許可するIDプロバイダー、またはそれらに含まれるユーザー スコープを変更し、更新された接続の詳細をコピーします。
+
+.開始する前に
+必要なIDプロバイダーが一覧にない場合は、まず「IDプロバイダー」から接続してください。link:connect-entra-id-aide-mcp.html#set-up-an-identity-provider["IDプロバイダーを設定する"]を参照してください。
+
+.手順
+. NetApp Consoleで、*AIデータハブ* > *AI Data Engine* > *設定* > *MCPコレクション* に移動します。
+. コレクションの「アクション」メニューを開き、「MCP 用の設定」を選択します。
+. コレクションへのアクセスを許可するIDプロバイダーを選択してください。
+. 選択した各IDプロバイダーについて、*含めるユーザースコープ*を確認してください。*すべてのユーザースコープ*を保持するか、特定のスコープを選択して*スコープを追加*を選択します。
+. *Generate MCP code snippet*を選択します。
+. 更新された *MCP サーバーの URL* または AI クライアントの設定スニペットをコピーし、*閉じる* を選択します。
+
+
+.結果
+このコレクションは、お客様が選択したIDプロバイダーとユーザースコープを使用します。MCPサーバーのURLまたは設定スニペットが変更された場合は、影響を受ける各AIクライアントを更新してください。<<update-ai-client-connections-and-validate-access,AIクライアント接続を更新し、アクセスを検証する>>を参照してください。
+
+このタスクの詳細については、link:manage-data-collections.html#configure-a-collection-for-mcp["MCP 用のコレクションを設定する"]を参照してください。
+
+
+
+[[enable-or-disable-the-connection-to-mcp]]
+== MCPへの接続を有効または無効にする
+
+AIクライアントがMCPコレクションに接続できるようにするには、「MCPへの接続を有効にする」をオンにしてください。接続はデフォルトでは無効になっています。MCPサーバーの設定後、AIクライアント用のMCPコードスニペットを生成する前に、この機能を有効にしてください。後でオフにした場合、再びオンにするまでAIクライアントはブロックされたままになります。
+
+.手順
+. NetApp Consoleで、*AIデータハブ* > *AI Data Engine* > *設定* > *MCPコレクション* に移動します。
+. *MCP設定*を選択します。
+. *MCPサーバー接続*を展開します。
+. *MCPへの接続を有効にする*トグルを使用して、接続をオンまたはオフにします。
++
+
+CAUTION: MCPサーバーへの接続を無効にすると、コレクションの設定に関係なく、AIクライアントからすべてのMCPコレクションへのすべてのリクエストがブロックされます。既に接続されているAIクライアントは、次回のリクエスト時にアクセス権を失います。サーバーへのアクセスを一時停止する場合にのみ、接続を無効にしてください。
+
+. 接続を有効にした後、MCPサーバーのステータスが*Running*であることを確認してください。<<review-mcp-server-and-collection-status,MCPサーバーとコレクションのステータスを確認する>>を参照してください。
+
+
+
+
+[[review-mcp-server-settings]]
+== MCPサーバーの設定を確認する
+
+AIクライアントがMCPサーバーに接続できるかどうかを確認し、AIDEクラスターのホスト名を確認します。
+
+.手順
+. NetApp Consoleで、*AIデータハブ* > *AI Data Engine* > *設定* > *MCPコレクション* に移動します。
+. *MCP設定*を選択します。
+. 「MCPサーバー接続」の項目で、「MCPへの接続を有効にする」を確認してください。接続をオンまたはオフにするには、<<enable-or-disable-the-connection-to-mcp,MCPへの接続を有効または無効にする>>を参照してください。
+. *MCPホスト名* で、AIDEクラスタのホスト名を確認します。変更が必要な場合は、更新後のホスト名を入力し、*Configure* を選択します。
++
+
+CAUTION: AIDEクラスターのホスト名を変更すると、MCPサーバーのURLが変更されます。以前のURLを使用しているAIクライアントは、接続設定を更新するまで接続できません。新しいホスト名は、Entra IDテナントで確認済みのドメイン上にある必要があります。アプリケーションIDのURIとスコープはホスト名から構築されるため、Entra IDでもそれらを更新する必要があります。<<update-ai-client-connections-and-validate-access,AIクライアント接続を更新し、アクセスを検証する>>を参照してください。
+
++
+
+NOTE: MCPサーバーをHTTPSで保護するには、SSL/TLS証明書が必要です。NetApp Consoleは証明書を管理しません。イングレススクリプトは、証明書とAIDEクラスタのホスト名を設定します。ホスト名は、Entra IDテナントで確認済みのドメインに属している必要があります。link:prepare-mcp-host.html["MCPホストを準備する"]を参照してください。
+
+. 「閉じる」を選択します。
+
+
+
+
+[[update-ai-client-connections-and-validate-access]]
+== AIクライアント接続を更新し、アクセスを検証する
+
+コレクション、IDプロバイダー、ユーザースコープ、またはサーバー設定を変更した後は、AIクライアントが引き続き接続できること、およびアクセス権限が意図した権限と一致していることを確認してください。
+
+.手順
+. MCPサーバーのURLまたは生成された構成スニペットが変更された場合は、影響を受ける各AIクライアントの接続設定を更新してください。link:connect-ai-clients-mcp.html["AI クライアントの接続"]を参照してください。
+. 影響を受ける各AIクライアントにおいて、クライアントが接続および認証できることを確認してください。
+. 代表的な検索リクエストを実行してください。
+. 想定されるコレクションコンテンツにアクセス可能であること、およびアクセス権限が意図した権限と一致していることを確認してください。
+
+
+.結果
+MCPの設定は変更内容を反映しており、影響を受けるAIクライアントは接続でき、アクセス権限は意図した権限と一致しています。
+
+
+
+[[related-information]]
+== 関連情報
+
+* link:manage-data-collections.html["データコレクションを管理する"]
+* link:configure-entra-id-mcp.html["管理されたAIアクセス用にMicrosoft Entra IDを構成する"]
+* link:connect-entra-id-aide-mcp.html["AI Data EngineをMicrosoft Entra IDに接続する"]
+* link:connect-ai-clients-mcp.html["AIクライアントをAI Data Engine MCPサーバーに接続します"]
+* link:../release-notes/known-limitations.html["既知の制限事項"]
+

@@ -1,0 +1,149 @@
+---
+sidebar: sidebar 
+permalink: administer/configure-ad-nfs.html 
+keywords: active directory, nfs, uidNumber, gidNumber, global catalog, identity mapping, file owner, ldap, general settings 
+summary: NFSユーザーIDとグループIDのActive Directoryマッピングを設定します。AI Data Engineは、解決済みのユーザーIDを使用して、NFSデータのファイル所有者名を表示します。 
+---
+= AI Data Engine で NFS の Active Directory ID マッピングを構成する
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+NFSファイルの所有者を、数値IDではなく名前で識別します。AI Data Engine（AIDE）は、NFSファイル内の数値ユーザID（UID）とグループID（GID）をActive DirectoryのIDにマッピングでき、解決されたユーザIDを使用してファイル所有者名を表示します。
+
+このマッピングは、AI Data EngineをNFSストレージに対して認証するものではありません。AI Data Engineがスキャン中に検出したIDをActive Directory名に変換します。
+
+
+
+[[before-you-begin]]
+== 開始する前に
+
+.権限とアクセス
+* _AI Data Engine管理者_ 権限を持っています。
+
+
+.AI Data Engine構成
+* AI Data EngineからActive Directoryドメイン コントローラへのlink:../deploy/aide-requirements.html#networking-requirements["必要なポートを開放しました"]があります。
+* link:configure-settings.html#find-access-risks-with-permission-scanning["権限スキャンを有効にしました"]があります。
+
+
+.Active Directory
+* AI Data Engineがユーザーおよびグループの属性を照会するために使用できるActive Directoryアカウントを用意します。そのユーザー名とパスワードをAI Data Engineに入力します。
+* Active Directoryドメイン名と、DNSサーバのIPアドレス、またはLDAPサーバのIPアドレスおよびポートを用意していること。
+* お使いのディレクトリにセキュアなLDAP接続が必要かどうかは、お客様にてご確認ください。
+* AI Data Engineがグローバルカタログにクエリを実行した際に、属性がまだレプリケートされていない場合、スキーマ変更を行うには、お客様またはActive Directory管理者が_Schema Admins_ロールを持っている必要があります。
+
+
+
+
+[[prepare-active-directory]]
+== Active Directory を準備する
+
+AI Data Engine がファイル所有者を解決できるように、Active Directory の UID および GID 属性を NFS ストレージで使用される数値 ID に一致させてください。
+
+AI Data Engineは以下のActive Directory属性を読み取ります：
+
+[cols="1,2,1"]
+|===
+| 属性 | 目的 | 必須 
+
+
+| `uidNumber` | ユーザーの数値UID。NFSストレージ上でユーザーが持つUIDと一致している必要があります。 | はい 
+
+
+| `gidNumber` | グループの数値GID。NFSストレージ上でグループに割り当てられているGIDと一致している必要があります。 | はい 
+
+
+| `mail` | ファイル所有者のメールアドレス。この属性が設定されていない場合、所有者のメールアドレスは*Not Available*と表示されます。 | × 
+|===
+AI Data Engineに解決させたいユーザーに `uidNumber`を、グループに `gidNumber`を設定します。
+
+
+NOTE: グループオブジェクトに `gidNumber`を設定します。ユーザオブジェクトの `gidNumber`は、そのユーザのプライマリグループを識別します。AI Data Engineがこの検索に使用するのは、このグループ属性ではありません。
+
+.手順
+. 解決するすべてのユーザーに `uidNumber`値があり、すべてのグループに `gidNumber`値があることを確認してください。各UIDはユーザー間で一意である必要があり、各GIDはグループ間で一意である必要があります。ユーザーとグループは、同じ数値を持つことができます。
+. AI Data Engineがグローバルカタログを照会し、属性がまだレプリケートされていない場合は、 `uidNumber`および `gidNumber`属性をグローバルカタログにレプリケートしてください。このレプリケーションは、フォレスト全体に対する1回限りの変更です。_Schema Admins_グループのメンバーである必要があります。
++
+.. ドメイン コントローラで、Active Directoryスキーマスナップインを開きます。
+..  `uidNumber`属性のプロパティを開きます。
+.. *この属性をグローバル カタログにレプリケートする* を選択します。
+..  `gidNumber`属性についても繰り返します。
+
+
+
+
+
+CAUTION: AI Data Engineがグローバルカタログにクエリを実行する場合、そこに複製されていない属性はID検索では返されません。対応するIDは未解決のままです。
+
+
+
+[[enable-active-directory-for-nfs]]
+== NFS用にActive Directoryを有効にする
+
+AI Data Engineを、一致するUIDおよびGID属性を含むActive Directoryドメインに接続し、IDマッピングを有効にして、スキャンされたNFSファイルに解決済みの所有者名が表示されるようにします。
+
+.手順
+. AI Data Engine UIで*設定*を選択します。
+. *一般設定*を選択します。
+. ページ上で *Active Directory* を探し、 *有効* を選択します。
+. Active Directoryドメインの接続情報を入力してください。*DNSサーバのIPアドレス*オプション、または*LDAPサーバのIPアドレス*オプションのいずれかを選択してください。
++
+
+NOTE: ここに入力する認証情報は、ディレクトリ統合のためのものです。これらは、SMBアーカイブ保存先に指定する認証情報とは異なります。link:../investigate/take-actions.html["データに対してアクションを実行する"]を参照してください。
+
++
+[cols="1,3"]
+|===
+| フィールド | 説明 
+
+
+| ユーザー名 | AI Data Engineがユーザーおよびグループの属性を照会するために使用するActive Directoryアカウントです。名前は `domain\user`または `user@domain`の形式で入力してください。 
+
+
+| *パスワード* | アカウントのパスワード。 
+
+
+| *DNSサーバのIPアドレス* | Active Directoryドメインを解決するDNSサーバのIPアドレス。例えば、 `10.0.1.50`。「LDAPサーバのIPアドレス」の代わりに、このオプションを選択してください。 
+
+
+| *ドメイン名* | Active Directoryドメインの完全修飾名。例えば、 `corp.example.com`。この項目は、DNSオプションとLDAPオプションの両方で必須です。 
+
+
+| *LDAPサーバのIPアドレス* | ドメイン コントローラであるLDAPサーバのIPアドレス。たとえば、 `10.0.1.50`。*DNSサーバのIPアドレス*の代わりに、このオプションを選択します。 
+
+
+| *LDAPサーバポート* | LDAPサーバのポート。デフォルトは `389`です。 
+
+
+| *LDAPセキュア接続* | 安全な接続でLDAPサーバに接続するには、このオプションを選択してください。DNSとLDAPの両方のオプションで使用できます。 
+|===
+. 必要に応じて、*NFS IDマッピングを有効にする*をオンにします。
++
+NFS IDマッピングを有効にすると、AIDEはNFSファイル所有者の数値IDをActive Directoryの所有者名に解決できるようになります。このオプションは、Active DirectoryにNFS環境で使用されるUnixのUID/GID属性が含まれている場合にのみ有効にしてください。
+
++
+.. *UID番号属性*と*GID番号属性*（ `uidNumber`や `gidNumber`など）を入力します。NFS IDマッピングが有効な場合、両方のフィールドが必須です。所有者情報はバックグラウンドで解決されます。
+
+
+. 変更を保存します。
+
+
+.結果
+AI Data EngineはActive Directoryを使用して、スキャン対象のNFSファイルの所有者を解決します。
+
+AI Data EngineはIDを非同期的に解決します。Active Directoryでマッピングを有効にしたり属性を更新したりしても、所有者名がすぐに表示されない場合があります。
+
+結果を確認するには、link:../investigate/investigate-unstructured.html["調査"] ビューでファイルの詳細を開き、ファイルの所有者にActive Directoryユーザー名が表示されていることを確認します。
+
+
+
+[[related-information]]
+== 関連情報
+
+* link:../deploy/aide-requirements.html["AI Data Engine の要件"]
+* link:configure-kerberos-smb.html["AI Data EngineでのSMB/CIFS共有のKerberos認証"]
+* link:configure-settings.html["データ分類の閾値を設定する"]
+

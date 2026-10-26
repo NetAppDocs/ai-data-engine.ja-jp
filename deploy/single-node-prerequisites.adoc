@@ -1,0 +1,172 @@
+---
+sidebar: sidebar 
+permalink: deploy/single-node-prerequisites.html 
+keywords: single-node, prerequisites, disk space, firewall, k3s, ports, host preparation, block storage 
+summary: アクセス、ディスク容量、ファイアウォールルール、およびオペレーティングシステムパッケージを検証して、AIDEシングルノード展開用のLinux VMを準備します。 
+---
+= AI Data Engineシングルノード展開の前提条件
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+AI Data Engine（AIDE）のシングルノード展開では、Linux VMを用意します。インストーラはk3sをインストールし、AIDEのconfig volumeにローカルのhostPathストレージを使用し、カーネルパラメータ、ホストディレクトリ、およびKubernetesリソースを構成します。インストールコマンドを実行する前に、アクセスとツール、空きディスク容量、ファイアウォールルール、およびオペレーティングシステムパッケージを確認して、VMを準備してください。
+
+インストールコマンドを実行する前に、VMが以下のセクションに記載されている要件を満たしている必要があります。VMのサイジング、サポートされているオペレーティングシステム、およびネットワークポートについては、link:aide-requirements.html["AIDEの要件"]を参照してください。
+
+
+
+[[access-and-tools]]
+== アクセスとツール
+
+* インストーラーを実行するには、対象の仮想マシン上でroot権限またはsudo権限が必要です。
+* 対象ホストには、bash 4.0以降、curl、およびtarがインストールされている必要があります。macOSはbash 3.2が標準搭載されているため、サポート対象外です。
+* curlまたはtarがインストールされていない場合は、RHELベースのディストリビューションでは `dnf install curl tar`を、Ubuntuでは `apt-get install curl tar`を使用してインストールしてください。
+* インストーラは、 `k3s`、 `helm`、 `kubectl`、および `jq`を自動的にダウンロードしてブートストラップします。これらのツールをVMにインストールする必要はありません。インストーラは常に `kubectl`の独自のコピーを `/opt/netapp/aide/.aide-installer-tools`にダウンロードし、お客様の `PATH`には追加しません。
+
+
+
+
+[[storage-type]]
+== ストレージ タイプ
+
+AIDEデータボリュームには、NFSではなくブロックストレージを使用してください。NFSベースのストレージは、パフォーマンス低下の原因となる可能性があります。あらゆる規模の導入において、NVMe SSDまたはその他のソリッドステートストレージが推奨されます。また、ストレージは、link:aide-requirements.html#single-node-vm-sizes["AIDEの要件"] に記載されているお客様の規模に応じたIOPSとスループットを満たす必要があります。
+
+
+
+[[disk-space]]
+[[single-node-disk-space]]
+== ディスク スペース
+
+以下の表に示すパスを格納する各ファイルシステムには、空き容量が必要です。ディスクを共有するパスは、1つの空き領域プールを共有するため、それぞれの最小値を合計します。
+
+1つのディスクにすべてをホストする場合、最小空き容量は65 GBに構成のAIDEデータボリュームサイズを加えたものになります。65 GBの固定フロアには `/var/run`は含まれません。これは通常 `tmpfs`であり、この合計には加算されません：
+
+[cols="1,1"]
+|===
+| サイズ | 単一ディスク上の最小空き容量 
+
+
+| 小規模 | 565 GB 
+
+
+| 中 | 2,065 GB 
+
+
+| 大規模 | 6,065 GB 
+|===
+パスが別々のマウント上にある場合、各マウントは、ホストするパスの最小要件を満たす必要があります。 `--k3s-data-dir`インストーラオプションを使用してk3sデータディレクトリを移動する場合、k3sの最小要件が新しい場所に適用されます。
+
+[cols="2,1,1,3"]
+|===
+| パス | 最小 | 推奨 | 目的 
+
+
+| `/var/lib/rancher/k3s` | 20 GB | 20 GB | コンテナイメージ、containerdスナップショット、および組み込みデータベース 
+
+
+| `/var/lib/kubelet` | 10 GB | 15 GB | Kubeletの状態、Podのエフェメラルストレージ、および `emptyDir`ボリューム 
+
+
+| `/var/log` | 10 GB | 10 GB | コンテナ出力とk3sシステムログ 
+
+
+| `/` | 25 GB | 50 GB | オペレーティングシステムパッケージ、k3sバイナリ、およびインストーラツール 
+
+
+| `/var/run` | 1 GB | 2 GB | ソケットとプロセスID（通常 `tmpfs`、単一ディスクの合計には加算されません） 
+
+
+| `/var/lib/netapp/aide` | 小：500 GB、中：2,000 GB、大：6,000 GB | 最小と同じ | AIDEデータボリューム 
+|===
+最小サイズを下回るマウントは使用しないでください。推奨サイズを下回るマウント、または85%以上使用されているマウントは、空き容量が少なくなるとkubeletがポッドをエビクトする可能性があるため、推奨されません。
+
+例えば、k3sデータ、ログ、およびAIDEデータにそれぞれ専用のディスクがある場合は、それらのマウントにそれぞれ少なくとも20 GB、10 GB、および構成に必要なAIDEデータの最小容量を割り当ててください。また、オペレーティングシステムとバイナリ用に `/`に少なくとも25 GBの空き容量を確保し、kubeletファイルシステムが `/`でない場合は、そこに少なくとも10 GBの空き容量を確保してください。
+
+
+
+[[firewall]]
+[[single-node-firewall]]
+== ファイアウォール
+
+* インストーラは、k3sを `\https://get.k3s.io`から、Helmを `\https://get.helm.sh`からダウンロードします。必要なすべての発信エンドポイントについては、link:aide-requirements.html#outbound-internet-access["AIDEの要件"]の発信インターネットアクセスセクションを参照してください。
+* ホストは最低1GbEのネットワーク接続が必要です（大規模展開の場合は10GbEを推奨）。
+* 環境でAI Data Engineエンドポイントに到達するためにアウトバウンドプロキシが必要な場合は、link:configure-proxy.html["AI Data Engineのプロキシについて"]を参照してください。プロキシを使用してデプロイするには、link:deploy-aide-single-node-proxy.html["プロキシを使用したシングルノード展開としてAI Data Engineを展開します"]に従ってください。
+* インストーラホストは、AIDEコンテナイメージとHelmチャートをプルするために、 `582244788873.dkr.ecr.us-west-2.amazonaws.com`にあるNetAppコンテナレジストリへのアウトバウンドアクセスが必要です。イメージのプル元を制限している場合は、このレジストリも許可してください。必要なレジストリエンドポイントについては、link:aide-requirements.html#outbound-internet-access["AIDEの要件"]を参照してください。
+
+
+インストーラーの起動前に、以下の表に示すk3sポートがホスト上で空いている必要があります。ホストファイアウォールが有効になっている場合は、インストーラーを実行する前に、これらのポートとpodおよびサービスのCIDRも許可する必要があります。そうしないと、podネットワークが機能しません。これらのポートはk3sの内部のものであり、link:aide-requirements.html#networking-requirements["AIDEの要件"]のポートとは異なります。
+
+[cols="1,1,3"]
+|===
+| ポート | Protocol | 使用者 
+
+
+| 6443 | TCP | k3s / kubectl、オペレーター、およびクラスタコンポーネント用のKubernetes APIサーバーおよびコントロールプレーンエンドポイント 
+
+
+| 10250 | TCP | ポッドのログ、exec/attach、およびmetrics-serverに使用されるKubelet API 
+
+
+| 8472 | UDP | ポッド間ネットワーク向けFlannel VXLAN 
+|===
+デフォルトのポッドCIDRは `10.44.0.0/16`、デフォルトのサービスCIDRは `10.45.0.0/16`です。ファイアウォールルールではこれらのCIDRを許可しているため、CoreDNSやその他のサービスを含むクラスタ内のトラフィックがドロップされることはありません。 `--k3s-cluster-cidr`および `--k3s-service-cidr`インストーラオプションでデフォルトを上書きする場合は、以下のコマンドでお客様の値を使用してください。
+
+.RHEL、Rocky Linux、AlmaLinux、および CentOS（firewalld）
+[source, bash]
+----
+sudo firewall-cmd --permanent --add-port=6443/tcp
+sudo firewall-cmd --permanent --add-port=10250/tcp
+sudo firewall-cmd --permanent --add-port=8472/udp
+sudo firewall-cmd --permanent --zone=trusted --add-source=10.44.0.0/16
+sudo firewall-cmd --permanent --zone=trusted --add-source=10.45.0.0/16
+sudo firewall-cmd --reload
+----
+.Ubuntu （ufw）
+[source, bash]
+----
+sudo ufw allow 6443/tcp
+sudo ufw allow 10250/tcp
+sudo ufw allow 8472/udp
+sudo ufw allow from 10.44.0.0/16
+sudo ufw allow from 10.45.0.0/16
+sudo ufw reload
+----
+firewalldとは異なり、ufwには信頼済みゾーンがありません。ポッドとサービスCIDRを許可するには、 `ufw allow from <cidr>`を使用します。 `--zone`引数はありません。
+
+開いておく必要があるアプリケーションポートについては、link:aide-requirements.html#networking-requirements["AIDEの要件"]を参照してください。
+
+
+
+[[operating-system-packages]]
+== オペレーティングシステムパッケージ
+
+インストーラーは、以下の表に記載されているパッケージをインストールします。お使いの環境でプロキシ設定が必要な場合は、パッケージマネージャーに適切なプロキシ設定がされていることを確認してください。
+
+[cols="3,3,3,3"]
+|===
+| パッケージ | 必要な場合 | どこから来るのか | お客様の責任 
+
+
+| `cifs-utils` |  `cifs.upcall`がすでにインストールされている場合を除き、接続されたすべてのインストール。KerberosベースのCIFS/SMBスキャンに必要です。 | VM自身のリポジトリ。 | パッケージをそれらのリポジトリから入手できるようにしてください。 
+
+
+| `container-selinux`、 `policycoreutils`、 `libselinux-utils`、 `selinux-policy-targeted` | SELinuxが無効になっている場合でも、ホスト上にSELinuxファイルが存在する場合のRHEL、Rocky Linux、またはAlmaLinux 8または9。これらのディストリビューションには、デフォルトでSELinuxが含まれています。これらのパッケージはUbuntuでは使用されません。 | VM自身のリポジトリ。 | それらのリポジトリからパッケージを入手できるようにしてください。 
+
+
+| `k3s-selinux` | 前の行と同じRHELファミリーのホストです。 | `rpm.rancher.io`、プロキシを使用する場合はAI Data Engineプロキシ経由となります。リポジトリで既に提供されている場合、インストーラーはそのコピーを使用します。 | プロキシ上で `rpm.rancher.io`を許可します。このパッケージをご自身で用意する必要はありません。 
+|===
+
+NOTE: NetAppは、SELinuxを搭載したホストでのAI Data Engineの検証を行っていません。インストーラーは、SELinuxファイルがホスト上に存在する場合、SELinuxが無効になっている場合でも、この表に記載されているSELinuxパッケージをダウンロードします。
+
+
+
+[[related-information]]
+== 関連情報
+
+* link:aide-requirements.html["AIDEの要件"]
+* link:deploy-aide-single-node.html["AI Data Engineをシングルノード展開として展開する"]
+* link:configure-proxy.html["AI Data Engineのプロキシについて"]
+* link:deploy-aide-single-node-proxy.html["プロキシを使用したシングルノード展開としてAI Data Engineを展開します"]
+

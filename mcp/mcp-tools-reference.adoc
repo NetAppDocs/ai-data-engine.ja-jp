@@ -1,0 +1,81 @@
+---
+sidebar: sidebar 
+permalink: mcp/mcp-tools-reference.html 
+keywords: mcp, governed ai access, tools, get_collection, search, list_tags, create_tag, tag_document, power users, tags 
+summary: AIクライアントがAI Data Engine MCPサーバーを介して使用できるツール、必要なアクセス権限、および検索とタグ付けの動作について確認します。 
+---
+= AI Data Engineが管理するAIアクセス用MCPツール
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+接続されたAIクライアントは、AI Data Engine（AIDE）用のモデルコンテキストプロトコル（MCP）サーバーを介して一連のツールを使用し、コレクション内のファイルを検索してタグ付けすることができます。この情報を使用して、各ツールの機能とツールに必要なアクセス権限について理解してください。
+
+
+
+[[access-requirements]]
+== アクセス要件
+
+AIクライアントは、パワーユーザーセッションでツールを使用します。ユーザーがパワーユーザーセッションを取得できるのは、以下の両方の条件が満たされている場合のみです：
+
+* ユーザーは、Microsoft Entra IDで `AIDEPowerUsers`アプリロールを保持しています。
+* AIクライアントは `power_users`スコープを要求します。
+
+
+link:configure-entra-id-mcp.html#create-and-assign-the-power-user-app-role["パワーユーザーアプリロールを作成して割り当てる"]を参照してください。
+
+接続は、MCPサーバーのURLで指定されたコレクションに限定されます。別のコレクションを操作する場合は、そのコレクションの接続情報を使用してください。
+
+
+
+[[tools]]
+== Tools
+
+[cols="1,3"]
+|===
+| ツール | 説明 
+
+
+| `get_collection` | 接続が制限されているコレクションを返します。 
+
+
+| `search` | コレクション内のファイルメタデータを、名前の接頭辞、ファイルの種類、または所有者に基づいてページング機能付きで検索します。パワーユーザーセッションでは、検索はファイルレベルのアクセス許可でフィルタリングされず、コレクション内の一致するすべてのファイルが返されます。結果には、各ファイルの名前、パス、種類、サイズ、最終更新日時、および所有者が含まれます。 
+
+
+| `list_tags` | テナントに定義されているタグと、各タグが付与されているファイルの数を一覧表示します。 
+
+
+| `create_tag` | テナントのタグを作成し、そのIDと名前を返します。 
+
+
+| `tag_document` | ファイルにタグを追加したり、ファイルからタグを削除したりします。タグが存在しない場合、ツールはまずそのタグを作成します。AIクライアントは一度に1つのファイルを処理します。 
+|===
+
+
+[[how-tags-work]]
+== タグの仕組み
+
+* タグは1つのコレクションだけでなく、AI Data Engine全体に適用されます。AIクライアントを通じて作成または適用したタグは、調査ビューでも利用できます。
+* タグ名のスペルを間違えると、新しいタグが作成されます。タグ名は大文字と小文字が区別されるため、 `Finance`と `finance`は異なるタグになります。
+* タグは作成後に削除したり名前を変更したりすることはできません。タグ名の制限については、link:../release-notes/known-limitations.html["既知の制限事項"]を参照してください。
+* AIクライアントは、タグが付いているファイルを一覧表示できません。
+
+
+
+
+[[what-ai-clients-cant-do]]
+== AIクライアントができないこと
+
+AIクライアントは、ファイルの内容を取得したり、ファイルを追加したり、ファイルを削除したり、ファイルを変更したり、データソースを変更したり、コレクションを作成したりすることはできません。
+
+
+
+[[related-information]]
+== 関連情報
+
+* link:connect-ai-clients-mcp.html["AIクライアントをAI Data Engine MCPサーバーに接続します"]
+* link:learn-about-mcp.html["ガバナンスされたAIアクセスについて学ぶ"]
+* link:../release-notes/known-limitations.html["既知の制限事項"]
+

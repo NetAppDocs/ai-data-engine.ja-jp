@@ -1,0 +1,45 @@
+---
+sidebar: sidebar 
+permalink: mcp/quick-start-mcp.html 
+keywords: quick start, mcp, governed ai access, identity provider, data collection, ai client, entra id 
+summary: Microsoft Entra IDを準備し、それをAI Data Engineに接続し、MCP用のデータ収集を構成し、AIクライアントを接続して検証することで、AI Data Engineを使用した管理されたAIアクセスを設定します。 
+---
+= AI Data Engineを使用したガバナンスされたAIアクセスのクイックスタート
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+AIクライアントがモデルコンテキストプロトコル（MCP）を介してデータコレクションを検索し、ファイルにタグを付けられるように、AI Data Engine（AIDE）を使用して管理されたAIアクセスを設定します。MCPホストとMicrosoft Entra IDを準備し、MCP用のデータコレクションを設定して、AIクライアントを接続します。
+
+このクイックスタートでは、すでにlink:../data-sources/connect-data-source.html["データソースを接続しました"]を実行し、AI Data Engineがそのスキャンとインデックス作成を完了していることを前提としています。MCPサーバーはAI Data Engineとともに展開されます。Microsoft Entra IDテナントで検証済みの、登録済みのDNSドメインが必要です。使用するAIDEクラスタのホスト名は、そのドメイン上にある必要があります。また、Microsoft Entra IDでアプリケーションを登録して同意を与える権限が必要になります。または、Entra ID管理者にEntra IDの手順を完了してもらう必要があります。
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-1.png["1"] link:prepare-mcp-host.html["MCPホストを準備する"]
+[role="quick-margin-para"]
+AI Data Engineインストーラをダウンロードしたシステムで、link:prepare-mcp-host.html#run-the-ingress-script["イングレススクリプト"] を実行して証明書とAIDEクラスタのホスト名を設定します。ホスト名は、Entra IDテナントで確認済みのドメインに属している必要があります。次に、link:prepare-mcp-host.html#verify-the-host["ホストを確認する"]。
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-2.png["2"] link:configure-entra-id-mcp.html["Microsoft Entra ID の設定（Entra ID 管理者）"]
+[role="quick-margin-para"]
+Microsoft Entra 管理センターで、このAI Data Engineインスタンス用にlink:configure-entra-id-mcp.html#register-the-ai-data-engine-application["アプリケーションを登録する"]し、そのアプリケーションID URIとスコープを定義します。次に、link:configure-entra-id-mcp.html#create-and-assign-the-power-user-app-role["パワーユーザーアプリロールを作成する"]してユーザーに割り当て、AIクライアント用にlink:configure-entra-id-mcp.html#add-redirect-uris-for-ai-clients["リダイレクトURIを追加する"]します。テナントIDとアプリケーション（クライアント）IDを記録します。
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-3.png["3つ"] link:connect-entra-id-aide-mcp.html#set-up-an-identity-provider["Entra ID を AI Data Engine に接続する（AI Data Engine 管理者）"]
+[role="quick-margin-para"]
+NetApp Consoleで、テナントIDとアプリケーション（クライアント）IDを使用して、AI Data EngineにIDプロバイダとしてMicrosoft Entra IDを追加します。プロバイダが接続されていることを確認します。
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-4.png["4"] link:manage-data-collections.html#create-a-data-collection["オプション：データコレクションを作成する"]
+[role="quick-margin-para"]
+*All files*コレクションはデフォルトで存在し、スキャンされたすべてのファイルが含まれます。NetApp Consoleで、MCPサーバーを介して特定のボリュームをAIクライアントが利用できるように、コレクションをさらに作成します。
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-5.png["五"] link:manage-data-collections.html#configure-a-collection-for-mcp["MCP 用にコレクションを設定する"]
+[role="quick-margin-para"]
+NetApp Consoleで、link:maintain-mcp-setup.html#enable-or-disable-the-connection-to-mcp["MCPへの接続を有効にする"] MCPサーバーが稼働していることを確認します。接続はデフォルトでは無効になっています。次に、IDプロバイダーとパワーユーザースコープを選択してMCP用のコレクションを構成し、AIクライアント用のMCPコードスニペットを生成します。
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-6.png["六"] link:connect-ai-clients-mcp.html["AIクライアントを接続し、接続を確認します"]
+[role="quick-margin-para"]
+AIクライアントで、スニペットを追加し、Microsoft Entra IDでサインインしてください。AIクライアントが接続できない場合は、link:maintain-mcp-setup.html#enable-or-disable-the-connection-to-mcp["*MCPへの接続を有効にする*"]がオンになっていることを確認してください。AI Data Engineツールが利用可能であることを確認し、link:connect-ai-clients-mcp.html#sample-prompts["サンプルプロンプトを試してみてください"]。
+
+Entra ID、NetApp Console、およびAIクライアントに入力する値は、完全に一致している必要があります。確認する項目の完全なリストについては、link:connect-entra-id-aide-mcp.html#verify-your-configuration["構成の確認"]を参照してください。
+
+.次の手順
+link:maintain-mcp-setup.html["コレクション、IDプロバイダー、コレクションにアクセスできるスコープ、またはMCPサーバー設定を更新します"]。link:mcp-tools-reference.html["AI Data Engineが管理するAIアクセス用MCPツール"]とlink:../release-notes/known-limitations.html["既知の制限事項"]を確認します。

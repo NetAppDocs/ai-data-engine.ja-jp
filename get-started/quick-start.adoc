@@ -1,8 +1,8 @@
 ---
 sidebar: sidebar 
 permalink: get-started/quick-start.html 
-keywords: quick start, deploy, connect, investigate, policies 
-summary: AI Data Engine を導入し、ストレージシステムを接続して最初の調査を開始することで、サービスを起動および実行できます。 
+keywords: quick start, deploy, connect, investigate, policies, governed ai access, mcp 
+summary: サービスを展開し、データソースを接続し、最初の調査を開始して、AI Data Engineの運用を開始します。必要に応じて、AIクライアント向けに管理されたAIアクセスを設定します。 
 ---
 = AI Data Engineのクイックスタート
 :allow-uri-read: 
@@ -11,24 +11,28 @@ summary: AI Data Engine を導入し、ストレージシステムを接続し�
 
 
 [role="lead"]
-AI Data Engine を導入し、ストレージシステムを接続して最初の調査を開始することで、サービスを起動および実行できます。
+サービスをデプロイし、データソースを接続し、最初の調査を開始して、AI Data Engine（AIDE）を稼働させます。また、管理されたAIアクセスを通じて、AIクライアントにメタデータの検索を許可することもできます。
 
-.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-1.png["1"]要件の確認
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-1.png["1"] link:../deploy/aide-requirements.html["要件を確認し、展開タイプを選択してください"]
 [role="quick-margin-para"]
-link:../deploy/aide-requirements.html["AIDEの要件"]とlink:../deploy/deployment-overview.html["デプロイメントモードの詳細"]を確認して、AIDE Lite または AIDE Enterprise のどちらをインストールするかを決定してください。
+要件を確認し、link:../deploy/deployment-overview.html["デプロイメントの種類について学ぶ"]AIDEのシングルノード構成とマルチノード構成のどちらをインストールするかを決定してください。
 
-.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-2.png["2"] AI Data Engineの展開
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-2.png["2"] link:../deploy/deployment-overview.html["AI Data Engineの展開"]
 [role="quick-margin-para"]
-NetApp Consoleからlink:../deploy/deploy-aide-lite.html["AIDE Lite"]またはlink:../deploy/deploy-enterprise.html["AIDE Enterprise"]をデプロイします。セットアップ ページでは、インストール場所と構成サイズの選択、およびインストール コマンドの実行手順を案内します。
+NetApp Consoleからlink:../deploy/deploy-aide-single-node.html["AIDEシングルノード展開"]またはlink:../deploy/deploy-aide-multi-node.html["AIDEマルチノード展開"]を展開します。セットアップページでは、インストール場所と構成サイズを選択し、インストールコマンドを実行する手順が案内されます。ホストまたはクラスタがプロキシ経由でのみインターネットにアクセスする場合は、代わりにlink:../deploy/configure-proxy.html["プロキシを使用してデプロイする"]。
 
-.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-3.png["3つ"]データソースを接続する
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-3.png["3つ"] link:../data-sources/connect-data-source.html["データソースを接続する"]
 [role="quick-margin-para"]
-link:../data-sources/connect-data-source.html["データソースを接続する"]をクリックしてスキャンを開始します。AI Data Engineは、指定したストレージシステムからファイルシステムメタデータをカタログ化します。
+スキャンを開始するには、データソースを接続してください。AI Data Engineは、接続したデータソースのメタデータをカタログ化します。
 
-.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-4.png["4"]データを確認する
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-4.png["4"] link:../investigate/understand-dashboard.html["データを調べる"]
 [role="quick-margin-para"]
-link:../investigate/understand-dashboard.html["ダッシュボード"]を開いてストレージ最適化のインサイトを確認するか、link:../investigate/investigate-data.html["調査"]でメタデータを直接検索およびフィルタリングしてください。
+ダッシュボードを開いてストレージ最適化のインサイトを確認するか、link:../investigate/investigate-data.html["調査"]に移動してメタデータを直接検索およびフィルタリングします。
 
-.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-5.png["五"]ポリシーを作成する
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-5.png["五"] link:../policies/create-policy.html["ポリシーを作成します。"]
 [role="quick-margin-para"]
-link:../policies/create-policy.html["調査フィルターをポリシーとして保存する"]同じ条件に一致するファイルを、一定期間にわたって監視します。通知の送信、一致するファイルの完全削除、または結果の追跡を行うポリシーを設定できます。
+調査フィルターをポリシーとして保存すると、同じ条件に一致するファイルを継続的に監視できます。通知を送信したり、一致するファイルを完全に削除したり、結果を追跡したりするポリシーを設定できます。
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-6.png["六"] link:../mcp/quick-start-mcp.html["オプション：管理されたAIアクセスを設定する"]
+[role="quick-margin-para"]
+AIクライアントが、選択したコレクション内のメタデータを検索できるようにします。パワーユーザーはメタデータを検索し、データに対してアクションを実行できます。

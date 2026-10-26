@@ -1,0 +1,201 @@
+---
+sidebar: sidebar 
+permalink: mcp/configure-entra-id-mcp.html 
+keywords: mcp, governed ai access, microsoft entra id, entra, app registration, application per aide instance, scopes, app roles, redirect uri, authentication, token, entra administrator 
+summary: Microsoft Entra ID管理者として、Microsoft Entra IDで各AI Data Engineインスタンス専用のアプリケーションを登録し、Application ID URIとサポートされるスコープを定義し、アプリロールを作成して割り当て、AIクライアント用のリダイレクトURIを追加します。 
+---
+= AI Data Engineが管理するAIアクセス用にMicrosoft Entra IDを構成する
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+AI Data Engine（AIDE）における管理されたAIアクセスは、Microsoft Entra IDを使用してユーザーを認証します。Microsoft Entra ID管理者として、Microsoft Entra admin centerにAI Data Engineを登録し、スコープとアプリロールを定義し、AIクライアントにリダイレクトURIを追加することで、ユーザーがサインインして承認されたコレクションを操作できるようにします。
+
+完了したら、記録した値をAI Data Engine管理者に提供してください。管理者はNetApp ConsoleでAI Data EngineをEntra IDに接続します。link:connect-entra-id-aide-mcp.html["AI Data EngineをMicrosoft Entra IDに接続する"]を参照してください。
+
+
+
+[[before-you-begin]]
+== 開始する前に
+
+* Microsoft Entra IDテナントと、そのテナント内でアプリケーションを登録して同意を付与できるロール（アプリケーション管理者やクラウドアプリケーション管理者など）を持っていること。
+* AI Data Engine管理者がlink:prepare-mcp-host.html["MCPホストを準備する"]で設定したAIDEクラスタのホスト名が必要です。ホスト名は、お客様のEntra IDテナントで検証された登録済みDNSドメイン上にある必要があります。
+
+
+
+
+[[how-mcp-access-works]]
+== MCPアクセスの仕組み
+
+AI Data Engineはトークンを発行せず、シークレットも保持しません。AIクライアントが提示するEntra IDアクセストークンを検証します。ユーザーがAIクライアントを接続すると、ユーザーはMicrosoft Entra IDでサインインし、Entra IDはAI Data Engineアプリケーション用のアクセストークンを発行します。AI Data Engineはトークンをお客様のEntra IDテナントと照合し、付与されたスコープが一致するコレクションのみをクライアントが操作できるようにします。
+
+各AI Data Engineインスタンスに対して、Entra IDに専用のアプリケーションを1つ登録します。複数のAI Data Engineインストールがある場合は、Application ID URIがそのインスタンスのホスト名から構築されるため、それぞれに個別のアプリケーションを登録してください。アプリケーションはApplication ID URI、スコープ、およびアプリロールを定義します。そのApplication（クライアント）IDは、AI Data Engine管理者がNetApp Consoleに入力し、ユーザーがAIクライアントに入力するクライアントIDです。
+
+Microsoft Entra IDは、AIDEの管理されたAIアクセスがサポートする唯一のIDプロバイダです。
+
+NetApp Consoleでは、Entra IDアプリの登録情報を作成または変更することはできません。このトピックで説明するEntra ID関連のタスクはすべて、Microsoft Entra管理センターで手動で実行します。
+
+
+
+[[register-the-ai-data-engine-application-and-define-its-scope]]
+[[register-the-ai-data-engine-application]]
+== AI Data Engineアプリケーションを登録し、その範囲を定義します
+
+AI Data Engineインスタンス専用のアプリケーションを登録し、アプリケーションID URIを設定して、 `power_users`スコープを定義します。このタスクは、各AI Data Engineインスタンスにつき1回実行してください。インスタンスが複数ある場合は、インスタンスごとに個別のアプリケーションを登録し、インスタンスを識別できる名前を使用してください。
+
+AI Data Engineは `power_users`委任されたスコープを認識します。Entra IDでのアプリケーション登録時に、スコープを定義します。スコープはNetApp Consoleのロールにはマッピングされません。また、スコープ名は複数形を含めて完全に一致する必要があります。
+
+ `power_users`スコープはパワーユーザーセッションを要求します。パワーユーザーセッションでは、スコープアクセス権限を付与したコレクション内のファイルメタデータを検索したり、タグを一覧表示したり、タグを作成したり、ファイルにタグを追加したり、ファイルからタグを削除したりできます。AI Data Engineは、ユーザーが `AIDEPowerUsers`アプリロールも保持している場合にのみ、パワーユーザーセッションを許可します。<<create-and-assign-the-power-user-app-role,パワーユーザーアプリロールを作成して割り当てる>>を参照してください。
+
+AIクライアントが要求する完全なスコープ値は、Application ID URIに `/power_users`： `\https://<host>/mcp/tools/power_users`を追加したものです。AIクライアントは、この正確な値を要求する必要があります。
+
+
+NOTE: MicrosoftはMicrosoft Entra IDのUIを変更する可能性があるため、これらの手順は実際に表示されるものと異なる場合があります。基本的な構成は変わりません。
+
+.手順
+. Microsoft Entra 管理センターで、*アプリの登録*に移動し、*新規登録*を選択します。
+. 名前を入力し（例： `NetApp AI Data Engine MCP - <instance>`）、*シングルテナントのみ*を選択して、*登録*を選択します。このAI Data Engineインスタンス専用のアプリケーションを使用してください。
+. *概要*ページで、*アプリケーション（クライアント）ID*と*ディレクトリ（テナント）ID*を記録します。AI Data Engine管理者はNetApp Consoleに両方の値を入力し、ユーザーはAIクライアントのクライアントIDとしてアプリケーション（クライアント）IDを入力します。
+. *Manifest*を開き、 `requestedAccessTokenVersion`を `2`に設定して保存します。AI Data Engineは、v2.0アクセストークンのみを受け付けます。
+. 「API を公開する」を開き、「アプリケーション ID URI」の横にある「追加」を選択します。 `\https://<host>/mcp/tools`を入力して保存します。ここで、 `<host>`はlink:prepare-mcp-host.html["MCPホストを準備する"]で設定したAIDEクラスタのホスト名です。このURIを記録してください。AIクライアントはこれを使用して、要求するスコープを構築します。
++
+ホスト名のドメインは、Entra IDテナント内で検証する必要があります。Entra IDは、検証済みのドメイン上のアプリケーションID URIのみを受け付けます。
+
++
+
+NOTE: Entra ID がエラー `Failed to add identifier URI`で URI を拒否した場合は、 `requestedAccessTokenVersion`が `2`に設定されていること、およびテナントでドメインが検証されていることを確認してから、もう一度お試しください。
+
+. *API を公開する* で、*スコープを追加* を選択し、 `power_users` スコープを追加します：
++
+** *同意できる人*：*管理者とユーザー*、または同意を制限する場合は*管理者のみ*
+** *管理者同意表示名*： `Access AIDE as a Power User`
+** *管理者同意の説明*： `Allows the app to access NetApp AI Data Engine as a power user on behalf of the signed-in user.`
+** *ユーザー同意表示名*と*ユーザー同意説明*：*管理者とユーザー*を選択した場合は、ユーザーが同意したときに表示されるテキストを入力します。
+** *状態*：*有効*
+** *スコープの追加*を選択します。
+
+
+. オプション：ユーザーの同意プロンプトをスキップするには、「承認済みクライアントアプリケーション」で「クライアントアプリケーションの追加」を選択し、このアプリケーションのアプリケーション（クライアント）IDを入力して、 `power_users`スコープを選択し、「アプリケーションの追加」を選択します。
+
+
+
+
+[[create-and-assign-the-power-user-app-role]]
+== パワーユーザーアプリロールを作成して割り当てる
+
+AI Data Engineアプリケーションでパワーユーザーアプリロールを作成し、管理されたAIアクセスを使用するユーザーまたはグループに割り当てます。アプリロール名は、複数形も含めて完全に一致する必要があります。
+
+.手順
+. *アプリのロール*を開き、*アプリのロールの作成*を選択します：
++
+** *表示名*： `AIDE Power Users`
+** *許可されるメンバーの種類*：*ユーザー/グループ*
+** *値*： `AIDEPowerUsers`
+** *概要*： `Grants power-user sessions in AI Data Engine.`
+** *このアプリ ロールを有効にしますか？*を選択し、次に*適用*を選択します。
+
+
+. *Entra ID* > *エンタープライズアプリ* > *すべてのアプリケーション* に移動し、AI Data Engineアプリケーションを開き、*ユーザーとグループ* > *ユーザー/グループの追加* を選択します。管理されたAIアクセスを使用するユーザーまたはグループを選択し、 `AIDE Power Users` ロールを選択して、*割り当て* を選択します。
+
+
+アプリ ロールを個々のユーザーではなくグループに割り当てるには、テナントにMicrosoft Entra ID P1またはP2が必要です。グループへの割り当ては、ネストされたグループのメンバーには適用されません。
+
+
+IMPORTANT: アプリの役割を定義するだけでなく、割り当てることも必要です。アプリの役割を持たないユーザーは、パワーユーザーセッションを取得できません。
+
+.パワーユーザーセッションの仕組み
+ユーザーがパワーユーザーセッションを取得できるのは、以下の両方の条件が満たされている場合のみです：
+
+* ユーザーは `AIDEPowerUsers`アプリロールを保持しています。
+* AIクライアントは `power_users`スコープを要求します。
+
+
+クライアントが、そのロールを持たないユーザーに対して `power_users`を要求した場合、AI Data Engineはそのユーザーのパワーユーザーセッションを開始しません。
+
+
+
+[[add-redirect-uris-for-your-ai-clients]]
+[[add-redirect-uris-for-ai-clients]]
+== AIクライアントのリダイレクトURIを追加する
+
+AIクライアントが使用するリダイレクトURIをAI Data Engineアプリケーションに追加し、パブリッククライアントフローを許可します。AIクライアントは、AI Data Engineアプリケーションのアプリケーション（クライアント）IDを使用してサインインします。PKCEを使用するため、クライアントシークレットを作成する必要はありません。
+
+.手順
+. Microsoft Entra管理センターで、AI Data Engineアプリケーションを開き、*認証*に移動します。
+. *プラットフォームを追加* > *モバイルとデスクトップアプリケーション*を選択し、使用するAIクライアントのリダイレクトURIを追加します。クライアントが使用するコールバックごとにURIを1つ追加してください：
++
+[cols="1,2"]
+|===
+| クライアント | リダイレクトURI 
+
+
+| Claude Desktop | `\http://localhost:6491/oauth/callback` 
+
+
+| Claude Code | `\http://localhost:8080/callback` 
+
+
+| カーソル | `\http://localhost:8787/callback` 
+
+
+| OpenCode | `\http://127.0.0.1:19876/callback` 
+|===
+. オプション：ユーザーが Web 上の Cursor または Cursor エージェントからもサインインする場合は、*プラットフォームを追加* > *Web* を選択し、追加します `\https://www.cursor.com/agents/mcp/oauth/callback`。
+. *設定*タブで、*パブリッククライアントフローを許可する*を*はい*に設定し、保存します。
+. *API アクセス許可* で、クライアントがユーザーに再度サインインを求めることなくトークンを更新できるように、Microsoft Graphの委任されたアクセス許可 `offline_access`を追加します。
+. テナントに管理者の承認が必要な場合は、「管理者の承認を与える」を選択してください。
+
+
+サインインがエラー `AADSTS50011`で失敗した場合、AIクライアントのコールバックURIは登録されていません。エラーには追加する正確なURIが表示されます。それを*モバイルおよびデスクトップアプリケーション*の下に追加し、ここで登録したものと同じポートをクライアント構成で使用してください。
+
+
+
+[[token-expectations]]
+== トークンの期待値
+
+AIクライアントは、各リクエストの `Authorization: Bearer`ヘッダーでEntra IDアクセストークンを送信する必要があります。AI Data Engineは、リクエストごとにトークンを検証します。トークンを受け入れるのは、以下のすべての条件が満たされている場合のみです：
+
+* 署名は有効であり、トークンはEntra IDテナント（発行者）が発行したv2.0トークンです。
+* そのオーディエンス(`aud`）は、AI Data Engineアプリケーションのアプリケーション（クライアント）IDと一致します。
+* 有効期限は切れていません。Entra IDのアクセストークンは通常約1時間有効です。 `offline_access`をリクエストするクライアントは、ユーザーに再度サインインを求めることなく、トークンを更新できます。
+
+
+パワーユーザーセッションのトークンは、 `power_users`スコープを `scp`クレームに、 `AIDEPowerUsers`アプリロールを `roles`クレームに保持します。
+
+トークンが欠落している、期限切れ、または無効な場合、AI Data Engineは `401 Unauthorized`を返します。サインイン後の `401`応答は通常、Entra IDがv1トークンを発行したか、AI Data EngineのテナントIDまたはアプリケーション（クライアント）IDがお客様のEntra IDアプリケーションと一致していないことを意味します。 `requestedAccessTokenVersion`が `2`に設定されていること、およびNetApp ConsoleのIDプロバイダの値が一致していることを確認してください。
+
+AI Data Engineがユーザーの身元やスコープを確認できない場合、コレクションからデータは返されません。
+
+AI Data Engine がトークンを受け入れるために、Entra ID でオプションのクレームを設定する必要はありません。
+
+
+
+[[give-the-values-to-the-ai-data-engine-administrator]]
+[[give-values-to-the-aide-administrator]]
+== 値をAI Data Engine管理者に渡します
+
+AI Data Engine管理者に以下の値を提供してください。管理者がAI Data EngineをEntra IDに接続し、MCPのコレクションを設定するために、これらの値が必要になります：
+
+* ディレクトリ（テナント）ID
+* アプリケーション（クライアント）ID
+* アプリケーションID URI、 `\https://<host>/mcp/tools`
+* フルスコープ値、 `\https://<host>/mcp/tools/power_users`
+
+
+.次の手順
+AI Data Engine管理者link:connect-entra-id-aide-mcp.html["AI Data EngineをMicrosoft Entra IDに接続します"]。
+
+
+
+[[related-information]]
+== 関連情報
+
+* link:connect-entra-id-aide-mcp.html["AI Data EngineをMicrosoft Entra IDに接続する"]
+* link:learn-about-mcp.html["ガバナンスされたAIアクセスについて学ぶ"]
+* link:prepare-mcp-host.html["MCPホストを準備する"]
+* link:connect-ai-clients-mcp.html["AIクライアントをAI Data Engine MCPサーバーに接続します"]
+* link:mcp-tools-reference.html["AI Data Engineが管理するAIアクセス用MCPツール"]
+* link:../release-notes/known-limitations.html["既知の制限事項"]
+

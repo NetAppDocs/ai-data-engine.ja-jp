@@ -1,0 +1,363 @@
+---
+sidebar: sidebar 
+permalink: mcp/connect-ai-clients-mcp.html 
+keywords: mcp, governed ai access, claude code, claude desktop, cursor, opencode, ai client, mcp server, prompts, tags 
+summary: Claude Code、Claude Desktop、Cursor、またはOpenCodeをAI Data Engine MCPサーバーに接続し、サンプルプロンプトを使用してファイルメタデータを検索したり、コレクション内のファイルにタグを付けたりします。 
+---
+= AIクライアントをAI Data Engine MCPサーバーに接続します
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Claude Code、Claude Desktop、Cursor、またはOpenCodeをAI Data Engine（AIDE）用のModel Context Protocol（MCP）サーバーに接続して、アクセス権のあるコレクション内のファイルメタデータを検索したり、ファイルにタグを付けたりできるようにします。
+
+
+
+[[before-you-begin]]
+== 開始する前に
+
+.管理者設定
+* 管理者は、link:configure-entra-id-mcp.html["管理されたAIアクセス用にMicrosoft Entra IDを構成する"]およびlink:connect-entra-id-aide-mcp.html["AI Data EngineをMicrosoft Entra IDに接続する"]でのセットアップを完了しています（以下を含みます）：
++
+** お客様に `AIDE Power Users`アプリロールを割り当てます。
+** お客様を含むスコープでMCPのコレクションを設定します。link:manage-data-collections.html#configure-a-collection-for-mcp["MCP 用のコレクションを設定する"]を参照してください。
+** *MCP設定*で*MCPへの接続を有効にする*をオンにします。接続がオフになっている場合、AIクライアントはどのコレクションにも接続できません。
+** AIクライアントのリダイレクトURIをAI Data Engineアプリケーションに追加し、パブリッククライアントフローを許可します。AIクライアントはパブリッククライアントとしてサインインするため、クライアントシークレットは必要ありません。
+
+
+
+
+.MCPクライアント設定
+* 管理者からMCPクライアント構成を受け取っている必要があります。管理者は、NetApp ConsoleでMCP用のコレクションを構成してこれを生成し、*Generate MCP code snippet*ステップからMCPサーバーのURLまたはクライアント固有のスニペットをコピーして、お客様と共有します。これには次の内容が含まれます：
++
+** MCPサーバーのURLは `\https://<mcp-server-host>/mcp/tools`の形式です。
+** Microsoft Entra ID テナント ID。
+** クライアントIDは、Entra IDのAI Data Engineアプリケーションのアプリケーション（クライアント）IDです。
+** AIクライアントが要求するスコープ：
++
+*** `\https://<mcp-server-host>/mcp/tools/power_users`。これはApplication ID URIに `/power_users`を追加したものです。
+*** `offline_access`これにより、クライアントは再度サインインを求めることなくトークンを更新できます。
+
+
+** 操作対象となるコレクションのID。
+
+
+
+
+.ネットワーク アクセス
+* お使いのデバイスは、ポート443でHTTPS経由でMCPサーバーにアクセスできます。MCPサーバーはお客様のネットワーク上で動作するため、社内ネットワークまたはVPN経由で接続してください。お使いのデバイスは、以下の機能も備えている必要があります：
++
+** DNS経由でAIDEクラスタのホスト名を解決します。
+** ホストが提示する証明書を信頼してください。証明書が自己署名証明書の場合は、それをデバイスに信頼できる証明書としてインストールしてください。
+** Microsoft Entra IDサインインにアクセスします(`login.microsoftonline.com`）。
+
+
+
+
+.AIクライアント
+* お使いのAIクライアントは、サポートされているバージョンです。
+
+
+
+
+[[validated-ai-clients]]
+== 検証済みのAIクライアント
+
+このページの手順では、NetAppが検証したAIクライアント：Claude Code、Claude Desktop、Cursor、およびOpenCodeについて説明します。詳細については、link:learn-about-mcp.html#validated-ai-clients["検証済みのAIクライアント"]を参照してください。
+
+クラウド プロバイダのサービスからネットワークに接続するAIクライアントはサポートされていません。たとえば、AIクライアントに組み込まれ、プロバイダのクラウドから呼び出されるカスタムコネクタは、ネットワーク内のMCPサーバーに到達できません。代わりに、このページに記載されている設定手順を使用してください。
+
+
+
+[[check-your-configuration-before-you-paste-it]]
+== 貼り付ける前に設定を確認してください
+
+AIクライアントにスニペットを貼り付ける前に、以下の点を確認してください：
+
+* ホストはAIDEクラスタのホスト名であり、クラスタやサービスのIPアドレスではありません。
+* URLは `/mcp/tools`で終わり、操作するコレクションの `collection_id`が含まれます。
+* スコープは `\https://<mcp-server-host>/mcp/tools/power_users`です。これは、アプリケーションID URIに `/power_users`を追加したものです。
+* クライアントIDは、Entra IDのAI Data Engineアプリケーションのアプリケーション（クライアント）IDです。
+
+
+
+
+[[connect-claude-desktop]]
+== Claudeデスクトップに接続
+
+
+NOTE: NetApp Consoleで接続の詳細を生成しても、AIクライアントの接続や検証は行われません。AIクライアントでこれらのタスクを完了してください。
+
+Claude Desktopは、お客様のコンピュータ上で動作する小さなヘルパーである `mcp-remote`を介して、AI Data Engine MCPサーバーに接続します。
+
+.開始する前に
+お使いのコンピューターにNode.jsをインストールしてください。 `mcp-remote`ヘルパーはNode.jsで動作します。
+
+.手順
+. Claude Desktopで設定ファイルを開きます `claude_desktop_config.json`。デフォルトでは、ファイルは以下のいずれかの場所に保存されます：
++
+** macOS： `~/Library/Application Support/Claude/claude_desktop_config.json`
+** Windows： `%APPDATA%\Claude\claude_desktop_config.json`
+
+
+. AI Data Engine MCPサーバーを `mcpServers`の下に追加します。プレースホルダーを管理者から提供された値に置き換えてください：
++
+[source, json]
+----
+{
+  "mcpServers": {
+    "netapp-ai-data-engine": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote@<tested version>",
+        "https://<mcp-server-host>/mcp/tools?collection_id=<collection-id>",
+        "--static-oauth-client-info",
+        "{\"client_id\": \"<application-client-id>\"}",
+        "--static-oauth-client-metadata",
+        "{\"scope\": \"https://<mcp-server-host>/mcp/tools/power_users offline_access\"}",
+        "--disable-resource-parameter"
+      ]
+    }
+  }
+}
+----
++
+
+NOTE:  `--disable-resource-parameter` 引数は保持してください。これがないと、Microsoft Entra ID はエラー `AADSTS9010010`でサインイン要求を拒否します。
+
+. ファイルを保存して、Claude Desktopを再起動してください。
+. ブラウザが開いたら、Microsoft Entra IDアカウントでサインインし、同意を求めるプロンプトが表示された場合は承認してください。
+. Claude Desktopで*Connectors*を開き、AI Data Engineサーバーがそのツールとともに一覧表示されていることを確認します。
+
+
+
+
+[[connect-claude-code]]
+== Claude Codeに接続
+
+Claude CodeはAI Data Engine MCPサーバーに直接接続します。
+
+.手順
+. AI Data Engine MCPサーバーを追加します。プレースホルダーを管理者から提供された値に置き換えます：
++
+[source, bash]
+----
+claude mcp add --transport http \
+  --client-id <application-client-id> \
+  --callback-port 8080 \
+  --scope user \
+  netapp-ai-data-engine "https://<mcp-server-host>/mcp/tools?collection_id=<collection-id>"
+----
++
+
+NOTE: 渡さないでください `--client-secret`。クライアントアプリケーションはパブリッククライアントです。
+
+. AI Data Engineスコープをリクエストするには、Claude Code設定ファイルを開き、 `netapp-ai-data-engine`エントリを編集します。ユーザースコープのエントリは `~/.claude.json`にあります。プロジェクトスコープのエントリは `.mcp.json`にあります。
++
+[source, json]
+----
+{
+  "mcpServers": {
+    "netapp-ai-data-engine": {
+      "type": "http",
+      "url": "https://<mcp-server-host>/mcp/tools?collection_id=<collection-id>",
+      "oauth": {
+        "clientId": "<application-client-id>",
+        "callbackPort": 8080,
+        "scopes": "https://<mcp-server-host>/mcp/tools/power_users offline_access",
+        "authServerMetadataUrl": "https://login.microsoftonline.com/<tenant-id>/v2.0/.well-known/openid-configuration"
+      }
+    }
+  }
+}
+----
+. Claude Codeで `/mcp`を実行し、Microsoft Entra IDアカウントでサインインします。または、シェルから `claude mcp login netapp-ai-data-engine`を実行します。
+.  `claude mcp list`を実行し、AI Data Engineサーバーが接続済みと表示されることを確認します。
+
+
+
+
+[[connect-cursor]]
+== カーソルを接続する
+
+CursorはAI Data Engine MCPサーバーに直接接続します。
+
+.手順
+. Cursorで、MCP構成ファイル `mcp.json`を開きます。すべてのプロジェクトでサーバーを使用するには、 `~/.cursor/mcp.json`を開きます。現在のプロジェクトでのみ使用するには、 `.cursor/mcp.json`を開きます。
+. AI Data Engine MCPサーバーを追加します。プレースホルダーを管理者から提供された値に置き換えます：
++
+[source, json]
+----
+{
+  "mcpServers": {
+    "netapp-ai-data-engine": {
+      "url": "https://<mcp-server-host>/mcp/tools?collection_id=<collection-id>",
+      "auth": {
+        "CLIENT_ID": "<application-client-id>",
+        "scopes": [
+          "https://<mcp-server-host>/mcp/tools/power_users",
+          "offline_access"
+        ]
+      }
+    }
+  }
+}
+----
++
+
+NOTE: このファイルにベアラートークンを貼り付けないでください。CursorはクライアントIDを使用してログインします。
+
+. ファイルを保存してから、Cursorを再読み込みしてください。
+. *カーソル設定* > *MCP* で、AI Data Engine サーバーの *接続* を選択します。
+. ブラウザが開いたら、Microsoft Entra IDアカウントでサインインし、同意を求めるプロンプトが表示された場合は承認してください。
+. *カーソル設定* > *MCP*で、AI Data Engineサーバーが有効になっており、そのツールが一覧表示されていることを確認してください。そうでない場合は、*出力* > *MCPログ*を確認してください。
+
+
+
+
+[[connect-opencode]]
+== OpenCodeに接続
+
+OpenCodeはAI Data Engine MCPサーバーに直接接続します。
+
+.手順
+. AI Data Engine MCPサーバーを追加します。プレースホルダーを管理者から提供された値に置き換えます：
++
+[source, bash]
+----
+opencode mcp add netapp-ai-data-engine --global --url "https://<mcp-server-host>/mcp/tools?collection_id=<collection-id>"
+----
+. クライアントアプリケーションを追加するには、プロジェクト内の `~/.config/opencode/opencode.json`または `opencode.json`ファイルを開き、 `netapp-ai-data-engine`エントリを編集します：
++
+[source, json]
+----
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "servers": {
+      "netapp-ai-data-engine": {
+        "type": "remote",
+        "url": "https://<mcp-server-host>/mcp/tools?collection_id=<collection-id>",
+        "oauth": {
+          "client_id": "<application-client-id>",
+          "scope": "https://<mcp-server-host>/mcp/tools/power_users offline_access"
+        }
+      }
+    }
+  }
+}
+----
++
+
+NOTE:  `oauth`を `false`に設定しないでください。また、このファイルにクライアントシークレットを追加しないでください。
+
+. OpenCodeで `/mcps`を実行し、AI Data Engineサーバーを選択して、ブラウザが開いたらMicrosoft Entra IDアカウントでサインインしてください。
+.  `opencode mcp list` を実行し、AI Data Engineサーバーが接続済みと表示されることを確認します。
++
+ステータスが `needs authentication`の場合は、OpenCode が設定を保存したものの、サインインが完了していないことを意味します。
+
+
+
+
+
+[[what-you-can-do]]
+== 実行できること
+
+接続後、AIクライアントは5つのツールを使用できます： `get_collection`、 `search`、 `list_tags`、 `create_tag`、および `tag_document`。接続は、MCPサーバーURLのコレクションに限定されます。別のコレクションを操作する場合は、そのコレクションの接続情報を使用してください。各ツールの機能については、link:mcp-tools-reference.html["AI Data Engineが管理するAIアクセス用MCPツール"]を参照してください。
+
+ツールはパワーユーザーセッションで利用できます。これには、 `AIDEPowerUsers`アプリロールと `power_users`スコープが必要です。
+
+
+NOTE: スキャンされたすべてのシステムとボリュームを検索するには、*All files*コレクションの接続情報を使用してください。
+
+AIクライアントでは、ファイルの内容を取得したり、ファイルを追加、削除、変更したり、データソースを変更したり、コレクションを作成したりすることはできません。
+
+タグは1つのコレクションだけでなく、AI Data Engine全体に適用されます。タグ名のスペルを間違えると新しいタグが作成されます。タグ名は大文字と小文字が区別されます。たとえば、 `Finance`と `finance`は異なるタグです。タグは作成後に名前を変更することはできません。タグ名の制限については、link:../release-notes/known-limitations.html["既知の制限事項"]を参照してください。
+
+
+
+[[sample-prompts]]
+== サンプルプロンプト
+
+プレースホルダーを環境内の値に置き換えてください。
+
+
+
+[[search-metadata]]
+=== 検索メタデータ
+
+* 「検索可能なデータコレクションを一覧表示してください。」
+* 「<collection name>コレクションから、すべてのPDFファイルを検索します。」
+* 「<collection name>コレクションで、名前が `<prefix>`で始まるファイルを検索します。」
+* 「<collection name>コレクションで、<owner>が所有するファイルを一覧表示します。」
+* 「<file type> ファイルは <collection name> コレクションにいくつありますか？」
+* 「 `<prefix>`という名前のファイルのパス、サイズ、および最終更新日を<collection name>コレクションに表示します。」
+
+
+
+TIP: ファイル名の接頭辞、ファイルの種類、所有者で検索フィルターを適用します。ファイルのサイズ、日付、またはフォルダを指定してファイルを検索すると、AIクライアントは多数の結果をページングする必要があるため、回答が不完全になる可能性があります。
+
+
+
+[[tag-files]]
+=== タグファイル
+
+* 「使用されているタグと、それぞれのタグが付いているファイルの数を一覧表示してください。」
+* 「タグ <tag name> を作成し、<file name> に適用します。」
+* 「前回の検索で見つかったファイルにタグ <tag name> を適用する。」
+* 「<collection name>コレクションの<file name>からタグ<tag name>を削除します。」
+
+
+
+
+[[troubleshoot-connection-problems]]
+== 接続の問題をトラブルシューティングする
+
+[cols="1,2"]
+|===
+| 問題 | 解決策 
+
+
+| ブラウザのサインインが、エラー `AADSTS50011`または別のリダイレクトURIエラーで失敗します。 | 管理者に依頼して、エラーに表示される正確なリダイレクトURIを、Entra IDのAI Data Engineアプリケーションの *モバイルとデスクトップアプリケーション* の下にある *認証* 設定に追加してもらってください。クライアント設定のポートは、登録されたURIと一致している必要があります。 
+
+
+| サインインがエラーで失敗します `AADSTS65001`。 | 同意が付与されていないか、クライアントが許可されていません。管理者に同意を付与してもらうか、アプリケーション（クライアント）IDを `power_users`スコープの許可されたクライアントアプリケーションとして追加するように依頼してください。 
+
+
+| サインインがエラー `AADSTS70011`で失敗します。 | スコープ文字列が一致しません。アプリケーションID URIに `/power_users`を正確に追加して使用してください（例： `\https://<mcp-server-host>/mcp/tools/power_users`）。 
+
+
+| Claude CodeまたはOpenCodeは `needs authentication`を表示します。 | サインインします。Claude Codeで、 `/mcp`を実行します。OpenCodeで、 `/mcps`を実行します。 
+
+
+| Claude Desktopのサインインがエラー `AADSTS9010010`で失敗します。 |  `mcp-remote`引数に `--disable-resource-parameter`が含まれていることを確認してください。 
+
+
+| AIクライアントは、サインイン直後に `401 Unauthorized`を受信します。 | Entra IDがv1トークンを発行したか、テナントIDまたはクライアントIDが一致していない可能性があります。アプリケーションマニフェストで `requestedAccessTokenVersion`が `2`に設定されていること、およびAI Data EngineのテナントIDとアプリケーション（クライアント）IDが正しいことを管理者に確認してもらってください。 
+
+
+| AIクライアントは `401 Unauthorized`を受信します。 | 新しいトークンを取得するには、再度サインインしてください。エラーが続く場合は、AIクライアントが `power_users`スコープを要求していること、およびトークンオーディエンスがAI Data Engineアプリケーションのアプリケーション（クライアント）IDであることを確認するよう管理者に依頼してください。 
+
+
+| AIクライアントにツールが表示されないか、タグ付けが拒否されます。 | お客様が `AIDEPowerUsers`アプリロールを保持していること、およびAIクライアントが `power_users`スコープを要求していることを管理者に確認してください。パワーユーザーセッションには両方が必要です。 
+
+
+| AIクライアントがTLSエラーまたは接続エラーを報告しました。 | デバイスがAIDEクラスタのホスト名を名前解決し、ホストが提示する証明書を信頼することを確認してください。証明書が自己署名の場合は、信頼できる証明書としてデバイスにインストールしてください。link:prepare-mcp-host.html#make-the-host-reachable["クライアントマシンからホストにアクセスできるようにする"]を参照してください。 
+|===
+
+
+[[related-information]]
+== 関連情報
+
+* link:learn-about-mcp.html["ガバナンスされたAIアクセスについて学ぶ"]
+* link:mcp-tools-reference.html["AI Data Engineが管理するAIアクセス用MCPツール"]
+* link:prepare-mcp-host.html["MCPホストを準備する"]
+* link:manage-data-collections.html["データコレクションを管理する"]
+* link:maintain-mcp-setup.html["MCP設定の維持"]
+* link:configure-entra-id-mcp.html["管理されたAIアクセス用にMicrosoft Entra IDを構成する"]
+* link:connect-entra-id-aide-mcp.html["AI Data EngineをMicrosoft Entra IDに接続する"]
+* link:../release-notes/known-limitations.html["既知の制限事項"]
+

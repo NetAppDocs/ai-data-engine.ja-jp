@@ -1,8 +1,8 @@
 ---
 sidebar: sidebar 
 permalink: data-sources/connect-data-source.html 
-keywords: connect, data source, storage system, scanned systems, configuration, scan, NFS, CIFS, StorageGRID, database, file shares, console agent, scope, content intelligence, activate 
-summary: データソースのオンボーディングウィザードを完了してストレージシステムをAI Data Engineに接続し、スキャンを有効化してメタデータの収集を開始します。 
+keywords: connect, data source, storage system, add system, scan, NFS, CIFS, SMB, StorageGRID, database, file shares, console agent, scope, activate, Kerberos 
+summary: データソースをAI Data Engineに接続し、スキャンするデータリソースを設定します。 
 ---
 = データソースをAI Data Engineに接続する
 :allow-uri-read: 
@@ -11,70 +11,137 @@ summary: データソースのオンボーディングウィザードを完了�
 
 
 [role="lead"]
-AI Data Engine はストレージシステムをスキャンして、メタデータを収集・分析します。データソースを追加するには、オンボーディングウィザードを完了してください。ウィザードは、接続の詳細、スキャン範囲、およびソースタイプの設定を収集します。システムを追加したら、スキャンを有効にしてメタデータの収集を開始してください。
+AI Data Engine（AIDE）に分析させるデータソースを接続し、スキャンするデータリソースを選択します。AI Data Engineは接続されたデータソースをスキャンしてメタデータを収集します。接続手順はソースの種類によって異なります。
 
-.開始する前に
-* AI Data Engine でデータソースに接続して構成するには、_AI Data Engine 管理者_ 権限が必要です。
-* ストレージ システムを AI Data Engine に追加する前に、Console Agent を使用して NetApp Console で検出します。これは、オンプレミスの ONTAP クラスター、Cloud Volumes ONTAP、Amazon FSx for NetApp ONTAP、Google Cloud NetApp Volumes、Azure NetApp Files など、サポートされているすべてのストレージ タイプに適用されます。オンプレミスの ONTAP クラスターについては、NetApp Console ドキュメントのlink:https://docs.netapp.com/us-en/storage-management-ontap-onprem/task-discovering-ontap.html["オンプレミス ONTAP クラスターの検出"]を参照してください。直接検出では、AI Data Engine などのデータ サービスは有効になりません。
+
+
+[[before-you-begin]]
+== 開始する前に
+
+* データソースに接続して構成するには、_AI Data Engine管理者_権限が必要です。
+* NetApp Consoleの検出機能を通じて接続されたシステムの場合、AI Data Engineに追加する前に、Consoleエージェントを使用してNetApp Consoleでストレージシステムを検出してください。これは、オンプレミスのONTAPクラスタ、Cloud Volumes ONTAP、Amazon FSx for NetApp ONTAP、Google Cloud NetApp Volumes、Azure NetApp Filesなど、サポートされているすべてのストレージタイプに適用されます。オンプレミスのONTAPクラスタについては、NetApp Consoleのドキュメントのlink:https://docs.netapp.com/us-en/storage-management-ontap-onprem/task-discovering-ontap.html["オンプレミス ONTAP クラスターの検出"]を参照してください。直接検出では、AI Data Engineなどのデータサービスは有効になりません。
 * AI Data Engine がデータソースに接続するために必要なネットワーク接続が開いていることを確認してください。link:../deploy/aide-requirements.html["AI Data Engine の要件"]を参照してください。
+* Kerberos認証を使用してSMB/CIFS共有をスキャンするには、まず link:../administer/configure-kerberos-smb.html["AI Data EngineでのSMB/CIFS共有のKerberos認証"] で展開タイプに応じた手順を完了してください。
 
 
 
 
 [[add-a-data-source]]
+[[add-data-source]]
 == データソースを追加する
 
-.手順
-. AI Data Engine UIで*設定*を選択します。
-. 「スキャン済みシステム」タブで、「システムの追加」を選択します。
-. ソースの種類を選択してください：
-+
-[cols="1,2"]
-|===
-| ソース タイプ | 説明 
-
-
-| *ファイル共有グループ* | クラウドまたはオンプレミスのNFSまたはSMB/CIFSファイル共有を名前付きグループとして追加します。 
-
-
-| *データベース* | 選択したスキーマをスキャンするデータベース サーバを追加します。 
-
-
-| *StorageGRID* | S3プロトコルを使用してNetApp StorageGRIDのデータをスキャンします。 
-|===
-. ソースタイプの接続情報を入力してください：
-+
-[cols="1,3"]
-|===
-| ソース タイプ | 必須項目 
-
-
-| *ファイル共有グループ* | 共有グループの名前、続いて共有ホストとパスの詳細を指定します。 
-
-
-| *データベース* | データベースの種類、ホスト、ポート、認証クレデンシャル。 
-
-
-| *StorageGRID* | システム名、S3エンドポイントURL、S3アクセスキーおよびシークレットキー。 
-|===
-. 選択内容を確認し、*確認*を選択してデータソースを追加してください。
+データをAI Data Engineに取り込み、分析できるようにします。*データソース* ページの *システムの追加* を使用して、ファイル共有グループ、データベース サーバ、またはStorageGRIDシステムを接続します。データソースを追加したら、スキャンを設定し、メタデータを収集するためにAI Data Engineがスキャンするリソースを指定します。<<configure-scanning>>を参照してください。
 
 
 
+[[add-a-file-shares-group]]
+[[add-file-shares-group]]
+=== ファイル共有グループを追加する
 
-[[activate-scanning]]
-== スキャンを有効にする
+NFSまたはSMB共有を1つの名前付きシステムとしてAI Data Engineに取り込み、まとめて管理できるようにします。グループを作成して共有を追加し、スキャンする共有を設定します。
 
-データソースを設定しても、スキャンは自動的に開始されません。各システムごとにスキャンを有効にする必要があります。
+[[add-file-shares-group-prerequisites]]
+.開始する前に
+* グループ名、各共有のホスト名とパスを指定します。
+* AI Data Engineデプロイメントが共有サーバに到達できることを確認します。
+* NFSの場合は、AI Data Engineが必要とするエクスポートアクセスを構成します。
+* SMBの場合、認証方法と共有フォルダを読み取るために必要なアクセス権限を準備してください。
+
 
 .手順
-. AI Data Engine UIで*設定*を選択します。
-. 「スキャン済みシステム」タブで、スキャンするシステムを探します。
-. 「スキャンを有効にする」を選択します。
+. AI Data Engine UIから、*データソース*を選択します。
+. *システムの追加*を選択し、次に*ファイル共有グループの追加*を選択します。
+. グループ名を入力して続行してください。
+. 追加する共有のプロトコルを選択します。
+. 追加する共有を入力して送信してください。
++
 
+NOTE: Kerberos認証を使用するSMB/CIFS共有の場合、共有パスをFQDNの後に共有名を続けて入力し（例： `filer.corp.example.com/sharename`）、認証情報は空のままにしてください。link:../administer/configure-kerberos-smb.html["AI Data EngineでのSMB/CIFS共有のKerberos認証"]を参照してください。
+
+. 各共有の結果を確認してください。失敗した共有をすべて解決してから、再度追加してください。
+. グループに対するスキャンを設定します。<<configure-scanning>>を参照してください。
+
+
+
+
+[[add-a-database-server]]
+[[add-database]]
+=== データベース サーバを追加
+
+スキャンできるように、データベース サーバ内のデータをAI Data Engineに取り込みます。データベース サーバに接続し、スキャンするスキーマを選択します。
+
+.開始する前に
+* データベースの種類、サーバのホスト名またはIPアドレス、ポート、およびスキャンアカウントの認証情報を把握してください。
+* アカウントが、スキャンするスキーマとテーブルを読み取れることを確認してください。
+* AI Data Engineがデータベース サーバに到達できることを確認します。
+
+
+.手順
+. AI Data Engine UIから、*データソース*を選択します。
+. 「システムの追加」を選択し、次に「データベース サーバの追加」を選択します。
+. データベースの種類を選択し、接続情報を入力してください。
+. 接続情報を送信してください。
+. データベース サーバのスキャンを設定します。<<configure-scanning>>を参照してください。
+
+
+
+
+[[add-storagegrid]]
+=== StorageGRIDの追加
+
+StorageGRIDのオブジェクトデータをS3エンドポイント経由でAI Data Engineに取り込み、スキャンできるようにします。StorageGRIDを接続し、スキャンするバケットを選択します。
+
+.開始する前に
+* システム名、StorageGRID S3エンドポイントURL、およびS3アクセスキーとシークレットキーを準備します。
+* AI Data Engineがエンドポイントに到達できることを確認します。
+
+
+.手順
+. AI Data Engine UIから、*データソース*を選択します。
+. *システムの追加*を選択し、次に*StorageGRIDの追加*を選択します。
+. システム名、S3エンドポイントURL、アクセスキー、およびシークレットキーを入力してください。
+. 接続情報を送信してください。
+. StorageGRIDシステムのスキャンを設定します。<<configure-scanning>>を参照してください。
+
+
+
+
+[[configure-scanning]]
+== スキャンの設定
+
+システムを接続したら、メタデータ収集が分析に必要なデータを網羅するように、AI Data Engineがスキャンするデータリソースを選択します。以下のいずれかの方法を選択してください：
+
+* *データソース*ページで、システム全体の自動スキャンを有効にしてください。AI Data Engineは、システム内の既存および将来のすべてのリソースをスキャンします。
+* システムの「詳細を表示」ページで、個々のボリューム、共有、バケット、またはスキーマのスキャンを有効にします。
+
+
+.手順
+* システムの自動スキャンを有効にする：
++
+.. AI Data Engine UIから、*データソース*を選択します。
+.. システムを見つけて、自動スキャンスイッチを切り替えて自動スキャンを有効にします。
++
+
+NOTE: 個々のリソースのスキャンを管理するには、自動スキャンをオフにする必要があります。
+
+
+
+* 個々のリソースのスキャンを有効にする：
++
+.. AI Data Engine UIから、*データソース*を選択します。
+.. システムを見つけて、*詳細を表示*を選択します。
+.. データリソース一覧で、含めたいボリューム、共有、バケット、またはスキーマのスキャンを有効にします。
+.. 「データソース」に戻り、システムを見つけて「スキャンを有効にする」を選択します。
+
+
+
+
+リソースレベルの手順の詳細については、link:manage-data-sources.html["データソースの管理"]を参照してください。
 
 .結果
-「スキャン済みシステム」タブのシステムステータスが更新され、スキャンが実行中であることが示されます。スキャンの進行状況を監視し、AI Data Engine がデータリソースのインデックスを作成していることを確認するには、link:manage-data-sources.html["データソースの管理"] および link:monitor-scanning-health.html["スキャン状態を監視する"] を参照してください。
+「データソース」ページのシステムステータスが更新され、スキャンが実行中であることが示されます。このページには、各リソースのスキャン状況が表示されます。
+
+スキャンが予期せず停止または一時停止した場合は、link:../administer/monitor-deployment-health.html["デプロイメントの状態を監視し、問題を調査する"]を参照してください。
 
 
 
@@ -83,6 +150,7 @@ AI Data Engine はストレージシステムをスキャンして、メタデ�
 
 * link:manage-data-sources.html["データソースの管理"]
 * link:../deploy/aide-requirements.html["AI Data Engine の要件"]
+* link:../administer/configure-kerberos-smb.html["AI Data EngineでのSMB/CIFS共有のKerberos認証"]
 * link:../investigate/understand-dashboard.html["ダッシュボードからストレージの使用状況を評価する"]
-* link:monitor-scanning-health.html["スキャン状態を監視する"]
+* link:../administer/monitor-deployment-health.html["デプロイメントの状態を監視し、問題を調査する"]
 

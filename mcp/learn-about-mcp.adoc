@@ -1,0 +1,136 @@
+---
+sidebar: sidebar 
+permalink: mcp/learn-about-mcp.html 
+keywords: governed ai access, mcp, model context protocol, ai clients, collections, entra id, claude code, claude desktop, cursor, opencode 
+summary: ガバナンスされたAIアクセスにより、AIクライアントは、NetApp Consoleで制御するアクセスを使用して、Model Context Protocol（MCP）を介して、選択したAI Data Engineコレクション内のメタデータを検索できます。 
+---
+= AI Data Engineを使用したガバナンスされたAIアクセスについて
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ガバナンスされたAIアクセスにより、AIクライアントはモデル コンテキスト プロトコル（MCP）を使用して、お客様が選択したAI Data Engine（AIDE）コレクション内のメタデータを検索できます。AIクライアントが検索できるlink:manage-data-collections.html#about-data-collections["コレクション"]と、それらを使用できるユーザーは、お客様が決定します。AIアシスタントは、お客様が設定した範囲内で、カタログ化されたメタデータに基づいて動作します。
+
+
+
+[[what-governed-ai-access-does]]
+== 管理されたAIアクセスの機能
+
+Model Context Protocol（MCP）は、AIクライアントが外部のデータソースやツールに接続できるようにするオープン スタンダードです。AI Data Engineは、AIクライアントがお客様のストレージシステムに直接アクセスするのではなく、AI Data Engineメタデータカタログにクエリを実行できるように、Governed Access Gatewayと呼ばれるMCPサーバーを提供します。
+
+MCPを通じて、接続されたAIクライアントは以下のことが可能になります：
+
+* AIアクセスを有効にしたコレクション内のファイルのメタデータを検索します。
+* これらのファイルに対して、タグの一覧表示、タグの作成、タグの追加、タグの削除を行います。タグが存在しない場合は、ファイルにタグを追加して作成します。タグ操作はパワーユーザーセッションで利用可能であり、これにはMicrosoft Entra IDアプリのロールとスコープが必要です。link:configure-entra-id-mcp.html#create-and-assign-the-power-user-app-role["パワーユーザーアプリロールを作成して割り当てる"]を参照してください。AIクライアントが使用できるツールについては、link:mcp-tools-reference.html["AI Data Engineが管理するAIアクセス用MCPツール"]を参照してください。
+
+
+
+
+[[governed-ai-access-and-the-investigation-view]]
+== 管理されたAIアクセスと調査ビュー
+
+管理されたAIアクセスは、AI Data Engineで行う調査作業に代わる、AIベースの代替手段を提供します。UIのlink:../investigate/investigate-data.html["調査ビュー"]でフィルタを構築してタグ付けするファイルを選択する代わりに、Claude DesktopなどのAIクライアントで質問したり指示を出したりします。
+
+[cols="1,2,2"]
+|===
+| Task | AI Data Engineで | AIクライアントを通じて 
+
+
+| メタデータからファイルを検索する | link:../investigate/investigate-unstructured.html["調査ビュー"] でメタデータフィルターを適用します。 | AIクライアントに、ファイル名の接頭辞、ファイルの種類、または所有者に基づいてコレクションを検索するように依頼します。 
+
+
+| ファイルの詳細を確認する | ファイルの詳細パネルを開くと、そのファイルのシステム、ストレージリポジトリ、所有者、および適用されているタグを確認できます。 | AIクライアントに、結果に含まれるファイルのパス、種類、サイズ、最終更新日時、および所有者を問い合わせてください。 
+
+
+| タグファイル | 調査結果でファイルを選択し、link:../investigate/take-actions.html#tag-files["タグアクション"]を使用します。 | AIクライアントにタグの作成、ファイルへのタグの追加、またはファイルからのタグの削除を依頼します。 
+|===
+両方の場所で、同じカタログメタデータとタグが利用可能です。調査ビューまたはAIクライアントを通じて、タグの作成、追加、削除を行うことができます。各インターフェースは、もう一方のインターフェースで行った変更を反映するため、タグに基づく検索結果は一貫性を保ちます。
+
+AIクライアントは、AIアクセスが有効になっているコレクション内でのみ動作します。検索オプションと例については、link:connect-ai-clients-mcp.html#search-metadata["検索メタデータ"]を参照してください。
+
+サンプルプロンプトについては、link:connect-ai-clients-mcp.html#sample-prompts["AI クライアントの接続"]を参照してください。
+
+
+
+[[how-governed-ai-access-works]]
+== ガバナンスされたAIアクセスの仕組み
+
+Microsoft Entra IDおよびNetApp Consoleで、管理されたAIアクセスを構成します。タスクは、AI Data Engine管理者とMicrosoft Entra ID管理者の間で分担されます（同一人物である場合もあります）：
+
+. AI Data Engine管理者：イングレススクリプトを実行してlink:prepare-mcp-host.html["MCPホストを準備する"]Microsoft Entra IDで検証済みのドメイン上のAIDEクラスタホスト名を使用します。
+. Entra ID 管理者：専用アプリケーションを各 AI Data Engine インスタンスに登録し、Application ID URI と link:configure-entra-id-mcp.html["Microsoft Entra ID の設定"] スコープを定義し、power-user アプリ ロールを作成して割り当て、AI クライアント用のリダイレクト URI を追加することで、 `power_users` を設定します。
+. AI Data Engine管理者：AI Data Engineのlink:connect-entra-id-aide-mcp.html["Microsoft Entra IDをIDプロバイダーとして設定する"]。
+. オプション：選択したボリュームからデータコレクションを作成します。*All files*コレクションはデフォルトで存在し、スキャンされたすべてのファイルが含まれます。
+. *MCP設定*でMCPへの接続を有効にし、MCPサーバーが稼働していることを確認してください。接続はデフォルトでは無効になっています。
+. 各コレクションをMCP用に構成するには、IDプロバイダーとユーザースコープを選択します。含めるスコープによって、AIクライアントが検索できる範囲が決まります。
+. NetApp Consoleで生成したMCPサーバーのURLまたはクライアント固有のスニペットを使用して、AIクライアントを接続します。
+
+
+設定が完了すると、ユーザーはEntra IDを使用してAIクライアントにサインインします。クライアントは、ユーザーのEntra IDスコープがアクセスを許可されているコレクションのみを検索できます。
+
+アクセスはコレクションレベルでのみ許可されます。個々のファイルやディレクトリへのアクセス権を付与することはできません。
+
+
+
+[[how-ai-clients-sign-in]]
+== AIクライアントのサインイン方法
+
+Microsoft Entra IDはユーザー認証を行います。AI Data Engine MCPサーバーはトークンを発行せず、機密情報を一切保持しません。お客様のEntra IDテナントが発行したトークンのみを検証します。
+
+ユーザーがAIクライアントを接続すると、次のことが起こります：
+
+. AIクライアントは、トークンなしで `/mcp/tools`のMCPサーバーに最初の要求を送信します。サーバーは `401 Unauthorized`で応答し、そのOAuthメタデータを示します。
+. AIクライアントはメタデータを読み取り、Entra IDの発行者とサポートされているスコープを確認します。
+. ブラウザがEntra IDのサインインページを開きます。ユーザーがサインインして同意すると、Entra IDは登録済みのコールバックURIにリダイレクトします。
+. Entra IDは、アプリケーション用にv2.0トークンを発行します。トークンのオーディエンスはアプリケーション（クライアント）IDであり、 `scp`クレームは `power_users`、 `roles`クレームには `AIDEPowerUsers`が含まれます。
+. MCPサーバーは、リクエストごとにトークンの署名、発行者、対象者、有効期限をEntra IDテナントと照合して検証します。
+
+
+トークンの要件については、link:configure-entra-id-mcp.html#token-expectations["トークンの期待値"]を参照してください。
+
+
+
+[[validated-ai-clients]]
+== 検証済みのAIクライアント
+
+NetAppは、以下のAIクライアントを使用して、ガバナンスされたAIアクセス設定のテストと検証を実施しました：
+
+* Claude Code
+* Claude Desktop
+* カーソル
+* OpenCode
+
+
+NetAppは他のMCPクライアントについてはテストしていません。接続できるように設定できれば動作するかもしれませんが、検証はされていません。
+
+
+
+[[what-isnt-available-through-mcp]]
+== MCPで利用できないもの
+
+管理されたAIアクセスは、コレクション内のメタデータ検索とタグ付け操作に限定されます。MCPを通じて、AIクライアントは以下のことができません：
+
+* ファイルの内容を取得します。
+* ファイルの追加、削除、または変更を行います。
+* データソースの設定を変更します。
+
+
+制限事項の完全なリストについては、link:../release-notes/known-limitations.html["既知の制限事項"]を参照してください。
+
+
+
+[[related-information]]
+== 関連情報
+
+* link:manage-data-collections.html["データコレクションを管理する"]
+* link:maintain-mcp-setup.html["MCP設定の維持"]
+* link:quick-start-mcp.html["AI Data Engineを使用したガバナンスされたAIアクセスのクイックスタート"]
+* link:prepare-mcp-host.html["MCPホストを準備する"]
+* link:configure-entra-id-mcp.html["管理されたAIアクセス用にMicrosoft Entra IDを構成する"]
+* link:connect-entra-id-aide-mcp.html["AI Data EngineをMicrosoft Entra IDに接続する"]
+* link:connect-ai-clients-mcp.html["AIクライアントをAI Data Engine MCPサーバーに接続します"]
+* link:mcp-tools-reference.html["AI Data Engineが管理するAIアクセス用MCPツール"]
+* link:../release-notes/known-limitations.html["既知の制限事項"]
+

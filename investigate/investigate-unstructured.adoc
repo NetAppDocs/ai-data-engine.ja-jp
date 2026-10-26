@@ -1,8 +1,8 @@
 ---
 sidebar: sidebar 
 permalink: investigate/investigate-unstructured.html 
-keywords: investigate, unstructured, cold data, stale data, last accessed, file size, file owner, reclaimable storage, NFS, SMB, CIFS 
-summary: メタデータフィルタを使用して、NFSおよびSMB/CIFSボリューム全体でファイルをコールド、古い、または大容量として検索および分類し、結果を確認して適切な措置を講じるか、フィルタ条件を再利用可能なポリシーとして保存します。 
+keywords: investigate, unstructured, cold data, stale data, last accessed, file size, file owner, reclaimable storage, NFS, SMB, CIFS, duplicates, duplicate files, file hash 
+summary: メタデータフィルタを使用して、NFSおよびSMBボリューム全体でファイルを「コールドファイル」「古いファイル」「大容量ファイル」「重複ファイル」として検索および分類し、結果を確認して適切な措置を講じるか、フィルタ条件を再利用可能なポリシーとして保存します。 
 ---
 = AI Data Engine で非構造化データを調査する
 :allow-uri-read: 
@@ -13,8 +13,12 @@ summary: メタデータフィルタを使用して、NFSおよびSMB/CIFSボリ
 [role="lead"]
 ファイルベースのストレージが予期せず増加している場合は、最終アクセス時刻、ファイルサイズ、所有者でフィルタリングして、どのファイルが容量を消費しているかを特定します。例えば、ストレージ管理者は、1年以上アクセスされていないテラバイト規模のVMスナップショットを特定し、それらをアーカイブするか、削除するか、または保持するかを評価できます。
 
-.開始する前に
-* 少なくとも1つのデータソースが接続され、スキャンを実行している必要があります。link:../data-sources/connect-data-source.html["データソースを接続する"]を参照してください。
+
+
+[[before-you-begin]]
+== 開始する前に
+
+* 少なくとも1つのデータソースが接続され、スキャンが実行されています。link:../data-sources/connect-data-source.html["データソースを接続する"] を参照してください。
 
 
 
@@ -22,7 +26,7 @@ summary: メタデータフィルタを使用して、NFSおよびSMB/CIFSボリ
 [[find-cold-or-stale-files-by-last-access-time]]
 == 最終アクセス時刻に基づいて、使用頻度の低いファイルや古いファイルを検索する
 
-日付ベースのフィルターを使用して、組織が設定したアクセス頻度の低いデータや古いデータのしきい値内でアクセスされていないファイルを特定します。しきい値は *Configuration* > *Settings* で設定できます。link:../administer/configure-settings.html["コールドデータと古いデータのしきい値を設定する"]を参照してください。
+日付ベースのフィルターを使用して、組織が設定したアクセス頻度の低いデータや古いデータのしきい値を超えてアクセスされていないファイルを見つけ出します。これらの閾値は、それぞれが使用するタイムスタンプを含め、データ分類設定で定義します。link:../administer/configure-settings.html["データ分類のしきい値とアクセススキャンを設定します"]を参照してください。
 
 .手順
 . AI Data Engine の UI で「調査」を選択します。
@@ -36,8 +40,6 @@ summary: メタデータフィルタを使用して、NFSおよびSMB/CIFSボリ
 適用されたフィルターは、フィルターバーの下にタグとして表示されます。フィルターを追加するたびに、結果テーブルとアイテム数が更新されます。
 
 
-
-利用可能なフィルターの完全なリストについては、link:use-filters.html["フィルターを操作する"]を参照してください。
 
 
 
@@ -59,9 +61,30 @@ summary: メタデータフィルタを使用して、NFSおよびSMB/CIFSボリ
 [[review-file-details]]
 == ファイルの詳細を確認する
 
-いずれかのファイル行を選択すると詳細パネルが開きますので、操作を行う前にファイルが意図した範囲と一致していることを確認してください。
+操作を行う前に、ファイルが意図した範囲と一致していることを確認してください。詳細パネルを開くには、いずれかのファイル行を選択してください。
 
-詳細パネルには、ファイルのシステム、ストレージリポジトリ、ファイル所有者、および適用されているタグやポリシーが表示されます。アーカイブまたは削除する前に、システムと所有者を確認してください。
+詳細パネルには、ファイルのシステム、ストレージリポジトリ、パス、サイズ、タイムスタンプ、アクセス情報、ファイル所有者、および適用されているタグやポリシーが表示されます。*Duplicates*フィールドには、ファイルの重複コピーの数が表示されます。アーカイブまたは削除する前に、システムと所有者を確認してください。
+
+
+
+[[find-duplicate-files]]
+== 重複ファイルを検索する
+
+重複ファイルの削除対象を決定する前に、重複ファイルがどれほど広範囲に分布しているかを確認してください。*Duplicates*フィルターは、カタログ内の他の場所に1つ以上の同一のコピーが存在するすべてのファイルを一覧表示します。
+
+.手順
+. AI Data Engine の UI で「調査」を選択します。
++
+「非構造化データ」タブがデフォルトで選択されています。
+
+. *フィルターを追加*を選択し、次に*重複*を選択します。
++
+結果表には、重複コピーが存在するファイルが一覧表示されます。
+
+. 特定のファイルのすべてのコピーとその場所を表示するには、ファイル名を選択し、*重複ファイル*の横にある*詳細を表示*を選択します。
+
+
+コピーを確認してクリーンアップするには、link:take-actions.html["重複ファイルの調査と削除"]を参照してください。
 
 
 
@@ -81,9 +104,9 @@ summary: メタデータフィルタを使用して、NFSおよびSMB/CIFSボリ
 [[related-information]]
 == 関連情報
 
-* link:use-filters.html["フィルターを操作する"]
 * link:take-actions.html["データに対してアクションを実行する"]
 * link:../policies/create-policy.html["ポリシーを作成します。"]
+* link:../administer/configure-settings.html["データ分類のしきい値とアクセススキャンを設定します"]
 * link:../get-started/storage-optimization-workflows.html["ストレージ最適化ワークフローを探索する"]
 * link:understand-dashboard.html["ダッシュボードからストレージの使用状況を評価する"]
 

@@ -4,5 +4,15 @@ title: 管理
 entries:
 - title: ユーザーとロールを管理する
   url: "/administer/manage-users-roles.html"
-- title: データしきい値を設定する
+- title: データ分類のしきい値とアクセススキャンを設定します
   url: "/administer/configure-settings.html"
+- title: SMB/CIFS共有用のKerberos
+  url: "/administer/configure-kerberos-smb.html"
+- title: 単一ノードでKerberosを設定する
+  url: "/administer/configure-kerberos-smb-single-node.html"
+- title: 複数のノードでKerberosを設定する
+  url: "/administer/configure-kerberos-smb-multi-node.html"
+- title: NFS 用の Active Directory ID マッピングを構成する
+  url: "/administer/configure-ad-nfs.html"
+- title: デプロイメントの状態を監視する
+  url: "/administer/monitor-deployment-health.html"

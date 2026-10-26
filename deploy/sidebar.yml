@@ -5,8 +5,22 @@ entries:
 - title: AIDEのデプロイメントについて
   url: "/deploy/deployment-overview.html"
 - title: AIDEの要件
-  url: "/deploy/aide-requirements.html"
-- title: AIDE Lite のデプロイ
-  url: "/deploy/deploy-aide-lite.html"
-- title: AIDE Enterprise のデプロイ
-  url: "/deploy/deploy-enterprise.html"
+  entries:
+  - title: AIDE展開要件
+    url: "/deploy/aide-requirements.html"
+  - title: AIDEシングルノード展開の前提条件
+    url: "/deploy/single-node-prerequisites.html"
+  - title: AIDEマルチノード展開の前提条件
+    url: "/deploy/multi-node-prerequisites.html"
+- title: AIDEをシングルノード展開として展開する
+  url: "/deploy/deploy-aide-single-node.html"
+- title: AIDEをマルチノード展開として展開する
+  url: "/deploy/deploy-aide-multi-node.html"
+- title: プロキシを使用したAIDEの展開
+  entries:
+  - title: AIDEのプロキシについて
+    url: "/deploy/configure-proxy.html"
+  - title: プロキシを使用したシングルノード展開としてAIDEを展開する
+    url: "/deploy/deploy-aide-single-node-proxy.html"
+  - title: プロキシを使用したマルチノード展開としてAIDEを展開する
+    url: "/deploy/deploy-aide-multi-node-proxy.html"

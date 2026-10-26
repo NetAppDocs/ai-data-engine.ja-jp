@@ -1,12 +1,12 @@
 ---
 indexpage:
   title: AI Data Engineドキュメント
-  summary: AI Data Engine のドキュメントでは、デプロイ方法、データソースの接続方法、およびストレージの最適化、メタデータの調査、データ ガバナンスのための
-    AI Data Engine の使用方法について説明しています。
+  summary: AI Data Engineのドキュメントでは、デプロイ方法、データソースの接続方法、およびストレージの最適化、メタデータの調査、データ ガバナンス、MCPを通じた管理されたAIアクセスのためのAI
+    Data Engineの使用方法について説明しています。
   keywords: ai data engine, aide, storage optimization, investigation, policies, data
-    governance, NetApp Console
-  lead: AI Data Engine は、NetApp Console を通じて管理されるメタデータインテリジェンスサービスであり、接続されたシステムをスキャンし、メタデータカタログを構築し、ストレージの最適化と大規模なデータ
-    ガバナンスを実現するための可視性とツールを提供します。
+    governance, NetApp Console, governed ai access, mcp, model context protocol
+  lead: AI Data Engineは、NetApp Consoleを通じて管理されるメタデータインテリジェンスサービスです。接続されたシステムをスキャンしてメタデータカタログを構築し、ストレージを最適化して大規模なデータガバナンスを行うための可視性とツールを提供します。ガバナンスが適用されたAIアクセスにより、AIクライアントはModel
+    Context Protocol（MCP）を通じてそのメタデータを検索できます。
   tiles:
   - title: はじめに
     links:
@@ -18,16 +18,22 @@ indexpage:
       url: "/get-started/quick-start.html"
     - title: ストレージ最適化ワークフローを探索する
       url: "/get-started/storage-optimization-workflows.html"
+    - title: 新機能
+      url: "/release-notes/whats-new.html"
+    - title: 既知の制限事項
+      url: "/release-notes/known-limitations.html"
   - title: 導入
     links:
     - title: 導入概要
       url: "/deploy/deployment-overview.html"
     - title: AIDEの要件
       url: "/deploy/aide-requirements.html"
-    - title: AIDE Lite のデプロイ
-      url: "/deploy/deploy-aide-lite.html"
-    - title: AIDE Enterprise のデプロイ
-      url: "/deploy/deploy-enterprise.html"
+    - title: AIDEをシングルノード展開として展開する
+      url: "/deploy/deploy-aide-single-node.html"
+    - title: AIDEをマルチノード展開として展開する
+      url: "/deploy/deploy-aide-multi-node.html"
+    - title: AIDEのプロキシについて
+      url: "/deploy/configure-proxy.html"
   - title: データを調べる
     links:
     - title: データソースを接続する
@@ -38,8 +44,6 @@ indexpage:
       url: "/investigate/understand-dashboard.html"
     - title: データを調査する
       url: "/investigate/investigate-data.html"
-    - title: フィルターを使用する
-      url: "/investigate/use-filters.html"
     - title: データに基づいて行動を起こす
       url: "/investigate/take-actions.html"
   - title: ポリシーとアクション
@@ -48,13 +52,17 @@ indexpage:
       url: "/policies/create-policy.html"
     - title: ポリシーの管理
       url: "/policies/manage-policies.html"
+  - title: 統制されたAIアクセス（MCP）
+    links:
+    - title: ガバナンスされたAIアクセスについて学ぶ
+      url: "/mcp/learn-about-mcp.html"
+    - title: ガバナンスされたAIアクセスのクイックスタート
+      url: "/mcp/quick-start-mcp.html"
+    - title: MCP設定の維持
+      url: "/mcp/maintain-mcp-setup.html"
   - title: 管理
     links:
     - title: ユーザーとロールを管理する
       url: "/administer/manage-users-roles.html"
-    - title: データしきい値を設定する
+    - title: データ分類のしきい値とアクセススキャンを設定します
       url: "/administer/configure-settings.html"
-    - title: 新機能
-      url: "/release-notes/whats-new.html"
-    - title: 既知の制限事項
-      url: "/release-notes/known-limitations.html"

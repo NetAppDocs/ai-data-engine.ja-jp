@@ -27,7 +27,7 @@ summary: 調査ビューを使用して、接続されているシステム全�
 | Tab | 使用する場合 | 詳細情報 
 
 
-| *非構造化* | NFSおよびSMB/CIFSボリューム全体で、コールドデータ、古いデータ、または重複したファイルベースのデータを検索します。 | link:investigate-unstructured.html["非構造化データを調査する"] 
+| *非構造化* | NFSおよびSMBボリューム全体で、コールドデータ、古いデータ、または重複したファイルベースのデータを見つけます | link:investigate-unstructured.html["非構造化データを調査する"] 
 
 
 | *構造化* | ストレージを消費している、サイズが大きすぎる、または使用されていないデータベーステーブルを特定します。 | link:investigate-structured.html["構造化データを調査する"] 
@@ -45,6 +45,5 @@ summary: 調査ビューを使用して、接続されているシステム全�
 * link:investigate-unstructured.html["非構造化データを調査する"]
 * link:investigate-structured.html["構造化データを調査する"]
 * link:investigate-directories.html["ディレクトリを調査する"]
-* link:use-filters.html["フィルターを操作する"]
 * link:take-actions.html["データに対してアクションを実行する"]
 

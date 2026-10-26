@@ -1,8 +1,8 @@
 ---
 sidebar: sidebar 
 permalink: deploy/deployment-overview.html 
-keywords: deployment, aide lite, aide enterprise, kubernetes, vm, deployment modes, sizing 
-summary: AI Data Engine を AIDE Lite としてデプロイするか、Kubernetes ベースの高可用性が必要な環境では AIDE Enterprise としてデプロイしてください。 
+keywords: deployment, aide single-node, aide multi-node, single node, multi node, kubernetes, vm, deployment types, sizing 
+summary: AI Data Engineを、インストーラが自動的に設定するLinux VM上のAIDEシングルノード展開として、またはお客様が提供するKubernetesクラスタ上のAIDEマルチノード展開として展開します。 
 ---
 = AI Data Engine のデプロイメントについて
 :allow-uri-read: 
@@ -11,59 +11,91 @@ summary: AI Data Engine を AIDE Lite としてデプロイするか、Kubernete
 
 
 [role="lead"]
-AI Data Engine を AIDE Lite（シングル VM インストール）としてデプロイします。環境が大規模な Kubernetes ベースの高可用性を必要とする場合は、代わりに AIDE Enterprise をデプロイできます。
+AI Data Engine（AIDE）をAIDEシングルノード環境として展開します。この場合、お客様が用意した単一のLinux VM上にインストーラがすべてをセットアップします。環境で大規模なKubernetesベースの高可用性が必要な場合は、お客様が用意したKubernetesクラスタ上にAIDEマルチノード環境を展開できます。
 
 
 
-[[aide-lite]]
-== AIDE Lite
+[[aide-single-node-deployment]]
+== AIDEシングルノード展開
 
-AIDE Liteは単一のLinux VMにインストールされます。インストーラーがk3sを自動的にプロビジョニングするため、Kubernetesの専門知識は必要ありません。
+AIDEシングルノード展開は、お客様が提供する単一のLinux VMにインストールされます。インストーラは、k3s、Kubernetesランタイム、AI Data Engineが必要とするサポートツールやホスト構成など、その他のすべてを自動的にプロビジョニングします。Kubernetesをインストールしたり管理したりする必要はなく、Kubernetesの専門知識も必要ありません。
 
-AIDE Lite は Small、Medium、Large の 3 つのサイズで提供されており、それぞれ最大約 2 億、10 億、30 億のファイルに対応する環境向けに設計されています。VM のサイジングと OS の要件の詳細については、link:aide-requirements.html["AIDEの要件"]を参照してください。これらのサイズは推奨される基準値であり、厳密な制限ではありません。サイジングを決定する要因とさらなるスケールアウト方法については、link:aide-requirements.html#flexible-sizing-lite["柔軟なサイズガイドライン"]を参照してください。
+AIDEシングルノード展開は、Small、Medium、Largeの3つのサイズで提供され、それぞれ最大約2億、10億、30億のファイル環境に対応します。VMの完全なサイジングとOSの要件については、link:aide-requirements.html["AIDEの要件"]を参照してください。これらのサイズは推奨されるベースラインであり、厳密な制限ではありません。サイジングの要因と、サイズを超過した場合の対処法については、link:aide-requirements.html#flexible-sizing-single-node["柔軟なサイズガイドライン"]を参照してください。
 
 
 
-[[aide-enterprise]]
-== AIDE Enterprise
+[[aide-multi-node-deployment]]
+== AIDEマルチノード展開
 
-お客様の環境で高可用性、耐障害性、ローリングアップグレード、または AIDE Lite の最大サイズを超える水平スケーリングが必要な場合は、AIDE Enterprise をデプロイしてください。AIDE Enterprise は、お客様がプロビジョニングおよび管理する RKE2 クラスタ上に、マルチノード Kubernetes クラスタとしてデプロイされます。
+環境で高可用性、耐障害性、ローリングアップグレード、または最大規模のシングルノード展開サイズを超える容量が必要な場合は、AIDEマルチノード展開をデプロイします。AIDEマルチノード展開は、既存のKubernetesクラスタにデプロイされます。独自のKubernetesクラスタ（RKE2、OpenShift、またはAKS）を用意する必要があります。クラスタはお客様自身でプロビジョニングおよび管理し、他のワークロードと共有することも、AI Data Engine専用にすることもできます。インストーラはクラスタの作成や管理を行いません。インストーラを実行するマシンは軽量の管理ホストであり、AI Data Engineワークロードは実行しません。
 
-AIDE Enterprise版は、Small、Medium、Largeの3つのサイズがあり、それぞれ最大約10億、30億、60億のファイルに対応する環境向けに設計されています。ノードのサイジングとクラスタの要件の詳細については、link:aide-requirements.html["AIDEの要件"]を参照してください。これらのサイズは推奨される基準値であり、厳密な制限ではありません。60億ファイルを超える環境は、水平方向のスケールアウトによりサポートされます。詳細については、link:aide-requirements.html#flexible-sizing-enterprise["柔軟なサイズガイドライン"]を参照してください。
+AIDEマルチノード展開は、Small、Medium、Largeの3つのサイズで提供され、それぞれ最大約10億、30億、60億ファイルの環境に対応します。ノードの完全なサイジングとクラスタの要件については、link:aide-requirements.html["AIDEの要件"]を参照してください。これらのサイズは推奨されるベースラインであり、厳密な制限ではありません：60億ファイルを超える環境では、NetAppによるカスタムサイジングが必要です。詳細については、link:aide-requirements.html#flexible-sizing-multi-node["柔軟なサイズガイドライン"]を参照してください。
 
+
+
+[[compare-deployment-types]]
+== デプロイメントの種類を比較する
+
+[cols="1h,2,2"]
+|===
+|  | AIDEシングルノード展開 | AIDEマルチノード展開 
+
+
+| デプロイメントタイプ | お客様が提供する単一のLinux仮想マシン。インストーラーはk3sを自動的にプロビジョニングします。 | マルチノードKubernetesクラスタ。お客様ご自身のRKE2、OpenShift、またはAKSクラスタをご用意ください。 
+
+
+| ノード | 1台のLinux VM | 3～9ノード（小規模～大規模） 
+
+
+| スキャンレート | 1日あたり5000万～10億ファイル、サイズによって異なります | 1日あたり250 million～2 billionファイル、サイズによって異なります 
+
+
+| おおよそのファイル数（小～大） | 200 millionから3 billion | 1 billionから6 billion 
+
+
+| コンピューティング | 16～96個のvCPU、64～192GBのRAM | ノードあたり32～64 vCPU、128～256 GB RAM 
+
+
+| ストレージ | 500 GB～6 TBのSSDブロックストレージ、8,000～16,000 IOPS、1,000～2,000 MB/sのスループット | クラスタ総容量4～24TB、ノードあたり8,000～16,000IOPS、ノードあたり1,000～2,000MB/sのスループット 
+
+
+| Network | 1 GbE（大規模には10 GbEを推奨） | 1～10 GbE 
+
+
+| 高可用性 | サポート対象外 | ノード間でサポートされています 
+
+
+| いつ選ぶべきか | サイトは1つだけで、迅速な起動を希望し、高可用性は必要としない場合 | 本番規模またはHAは必須です 
+|===
 
 
 [[deployment-process]]
 == 展開プロセス
 
-NetApp Console は AI Data Engine のインフラストラクチャをプロビジョニングしません。要件を満たす Linux マシンまたはクラスターを準備し、NetApp Console から事前に生成されたインストールコマンドをコピーして、対象ホスト上で実行します。このコマンドはランタイムをブートストラップし、AI Data Engine スタックを自動的にデプロイします。インストール中、インストーラーはインストールを続行する前に、対象ホストの IP アドレスとユーザー ID を確認するよう求めます。
+AI Data Engineは、NetApp Consoleから直接展開できます。*AI data hub > AI Data Engine*に移動して、AI Data Engineを展開します。ウィザードを使用して展開タイプを選択し、link:aide-requirements.html["AIDEの要件"]を満たす環境でインストールコマンドを実行します。
 
-AIDE Liteのインストールは、通常45分以内に完了します。AIDE Enterpriseのインストールは、通常30分以内に完了します。インストーラーには、コンポーネントの起動中に発生する一時的な問題に対処するためのタイムアウト機能と再試行機能が組み込まれています。
+NetApp ConsoleはAI Data Engineのインフラストラクチャをプロビジョニングしません。シングルノード展開の場合、Linux VMを準備すると、インストーラが残りの設定を行います。マルチノード展開の場合、Kubernetesクラスタを準備します。いずれの場合も、インフラストラクチャは要件を満たす必要があります。次に、NetApp Consoleから事前に生成されたインストールコマンドをコピーし、ターゲットホストで実行します。このコマンドはランタイムをブートストラップし、AI Data Engineスタックを自動的に展開します。
 
+シングルノードのデプロイは通常45分以内に完了します。マルチノードのデプロイは通常30分以内に完了します。インストーラには、コンポーネントの起動中に発生する一時的な問題に対処するためのタイムアウト機能と再試行機能が組み込まれています。
 
-
-[[deployment-mode-reference]]
-== 展開モードリファレンス
-
-[cols="1h,2,2"]
-|===
-|  | AIDE Lite | AIDE Enterprise 
+詳しい手順については、link:deploy-aide-single-node.html["AI Data Engineをシングルノード展開として展開する"]およびlink:deploy-aide-multi-node.html["AI Data Engineをマルチノード展開として展開する"]を参照してください。
 
 
-| 展開モデル | 単一のLinux VM | マルチノードKubernetesクラスター（顧客がプロビジョニングしたRKE2） 
 
+[[deployment-with-a-proxy]]
+== プロキシを使用したデプロイメント
 
-| スキャンレート | 1日あたり5000万～10億ファイル（サイズによって異なる） | 1日あたり2億5000万～20億ファイル（サイズによって異なる） 
+ホストまたはクラスタがアウトバウンドプロキシ経由でのみインターネットにアクセスする場合は、プロキシを使用してAI Data Engineをデプロイしてください。プロキシの手順はデプロイメントの種類ごとに異なるため、各種類には標準のデプロイメントトピックに代わる独自の完全なトピックが用意されています。
 
+完全な手順については、サポートされているプロキシのタイプについては link:configure-proxy.html["AI Data Engineのプロキシについて"] を、プロキシで許可するエンドポイントについては link:aide-requirements.html#outbound-internet-access["アウトバウンドインターネットアクセス"] を参照してください。
 
-| 最大ファイル数（大容量） | 約30億 | 約60億 
-|===
 
 
 [[related-information]]
 == 関連情報
 
 * link:aide-requirements.html["AIDEの要件"]
-* link:deploy-aide-lite.html["AI Data Engine のデプロイ — Lite"]
-* link:deploy-enterprise.html["AI Data Engine のデプロイ — エンタープライズ"]
+* link:single-node-prerequisites.html["AIDEシングルノード展開の前提条件"]
+* link:multi-node-prerequisites.html["AIDEマルチノード展開の前提条件"]
+* link:configure-proxy.html["AI Data Engineのプロキシについて"]
 

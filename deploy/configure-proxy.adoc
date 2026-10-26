@@ -1,0 +1,139 @@
+---
+sidebar: sidebar 
+permalink: deploy/configure-proxy.html 
+keywords: proxy, outbound proxy, forward proxy, HTTPS proxy, proxy certificate, proxy authentication, install, proxy host, proxy port, allowlist, CONNECT, installer download, container runtime 
+summary: AI Data Engineがフォワード プロキシとどのように連携するか、およびサポートするプロキシの種類とパラメータについて説明します。 
+---
+= AI Data Engineのプロキシについて
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+AI Data Engine（AIDE）ホストまたはクラスタがインターネットに直接アクセスできない場合は、インストーラとAI Data Engineがコンポーネントをダウンロードし、コンテナイメージをプルして、NetApp Consoleに登録できるように、フォワード プロキシを設定します。プロキシのオプションは、シングルノード構成とマルチノード構成で同じです。インストールの準備と実行の手順は異なるため、展開タイプごとに独自のワークフローがあります。
+
+プロキシ設定はk3sランタイムとAI Data Engineにのみ適用され、ホストシステムには適用されません。
+
+
+
+[[deploy-ai-data-engine-with-a-proxy]]
+== プロキシを使用したAI Data Engineの展開
+
+各導入タイプごとに専用のトピックがあり、環境準備からインストーラーの実行まで、手順全体が詳しく説明されています。
+
+* link:deploy-aide-single-node-proxy.html["プロキシを使用したシングルノード展開としてAI Data Engineを展開します"]：インストーラは、k3sランタイムおよびAI Data Engineのプロキシ（トラストストアを含む）を設定します。
+* link:deploy-aide-multi-node-proxy.html["プロキシを使用したマルチノード展開としてAI Data Engineを展開する"]：インストーラーを実行する前に、各ノードでコンテナランタイムプロキシとCA証明書の信頼関係を設定します。
+
+
+
+
+[[what-goes-through-the-proxy]]
+== プロキシを通過するもの
+
+インターネット宛てのトラフィックのみがプロキシを使用します。AI Data Engine のインターネット宛先はすべて、ポート 443 で HTTPS を使用するため、プロキシは `CONNECT`がlink:aide-requirements.html#outbound-internet-access["アウトバウンドインターネットアクセス"]内の各エンドポイントのポート 443 へ接続することを許可する必要があります。
+
+ネットワーク上のトラフィックは直接接続され、プロキシなしでもアクセス可能である必要があります：
+
+* Consoleエージェント(`--cm-host`）
+* NFS、CIFS/SMB、ONTAP、およびStorageGRIDデータソース
+* Active DirectoryとLDAP
+* Kubernetes APIサーバーとクラスターの内部ネットワーク
+
+
+
+
+[[supported-proxy-configurations]]
+== サポートされているプロキシ構成
+
+[cols="2,3,2"]
+|===
+| 構成 | 説明 | 認証 
+
+
+| プロキシなし | インターネットに直接接続します。プロキシは使用しません。 | None 
+
+
+| HTTPフォワード プロキシ | AI Data EngineはHTTP経由でプロキシに接続し、 `CONNECT`を使用してHTTPSの宛先をトンネリングします。 | なし、またはHTTPベーシック認証（ユーザー名とパスワード） 
+
+
+| HTTPSフォワード プロキシ | AI Data EngineはTLS経由でプロキシに接続します。プライベート認証局（CA）がプロキシ証明書に署名している場合は、CA証明書を提供します。 | なし、またはHTTPベーシック認証（ユーザー名とパスワード） 
+|===
+プロキシにはホスト名またはIPv4アドレスでアクセスできます。
+
+
+IMPORTANT: AI Data Engineは、HTTPSの宛先を含む、HTTP `CONNECT`で接続をトンネリングする標準的なフォワード プロキシをサポートしています。プロキシがTLSトラフィックを検査する場合は、インストーラのダウンロードホストを含め、link:aide-requirements.html#outbound-internet-access["アウトバウンドインターネットアクセス"]内のエンドポイントを検査から除外してください。TLS検査プロキシおよびその他の一部のプロキシ機能はサポートされていません。link:../release-notes/known-limitations.html["既知の制限事項"]を参照してください。
+
+インストーラは、すべてのインターネットの宛先とすべてのAI Data Engineコンポーネントに対して1つのプロキシを使用します。プロキシ設定はインストール時に設定されます。
+
+
+
+[[proxy-configuration-parameters]]
+[[proxy-parameters]]
+== プロキシ設定パラメータ
+
+[cols="2,1,3"]
+|===
+| パラメータ | デフォルト | 説明 
+
+
+| `--proxy-host <host[:port]>` | None | フォワード プロキシのホスト名またはIPv4アドレス（ `http://`または `https://`なし）。プロキシ設定を有効にします。インラインポートを受け入れます(`host:port`）。 `--proxy-host`のポートは `--proxy-port`よりも優先されます。 
+
+
+| `--proxy-port <port>` | `80` HTTPの場合、 `443` HTTPSの場合 | プロキシがリッスンするポート。 `--proxy-host` にポートがすでに含まれている場合は無視されます。 
+
+
+| `--proxy-scheme <http|https>` | `https` | プロキシ サーバ自体への接続に使用されるプロトコル。これは、プロキシが到達する宛先のスキームではありません。ほとんどのフォワード プロキシはプレーンなHTTPでリッスンするため、それらには `--proxy-scheme http`を渡します。 
+
+
+| `--proxy-ca-cert <path>` | None | プロキシ証明書に署名したCA証明書を含むPEMファイル、または `.crt`および `.pem`ファイルのフラットディレクトリへのパスです。インストーラは、サブディレクトリを再帰的に検索することなくディレクトリを読み込み、ファイルを1つのバンドルに統合します。プライベートCAが署名した証明書を使用するHTTPSプロキシで必要です。HTTPプロキシでは使用しません。 
+
+
+| `--proxy-user <user>` | None | ベーシック認証のユーザー名。HTTPプロキシを使用する場合、インストーラは認証情報が暗号化されずにプロキシに送信されることを警告します。パスワードが必要です。 `--proxy-password-file`で指定するか、プロンプトで入力します。 
+
+
+| `--proxy-password-file <path>` | None | プロキシパスワードのみを含むローカルファイルへのパス。権限は `0600`または `0400`に設定します。省略した場合、インストーラは非表示の入力でパスワードの入力を求めます。 
+
+
+| `--proxy-type <r>` | `r` | プロキシの種類。 `r`は通常のフォワード プロキシであり、これがデフォルトです。変更しないでください。TLS検査プロキシはサポートされていません。 
+
+
+| `--no-proxy` | — | プロキシ設定を明示的に無効にし、プロキシプロンプトをスキップします。ホストがインターネットに直接アクセスできる場合にのみ使用してください。 
+|===
+
+NOTE: インストーラは `--proxy-password`や `PROXY_PASSWORD`環境変数を受け付けません。代わりに `--proxy-password-file`またはインタラクティブなプロンプトを使用してください。
+
+
+
+[[the-installer-download]]
+== インストーラーのダウンロード
+
+NetApp Consoleからコピーしたインストールコマンドは、コンテンツ配信ネットワーク（CDN）からインストーラをダウンロードし、1つのステップで実行します。ダウンロードにはプロキシは使用されません。対象ホストがプロキシ経由でのみインターネットに接続できる場合は、お客様ご自身でインストーラをダウンロードし、展開したインストーラからインストールコマンドを実行します。導入に関するトピックでは、これらの手順について説明しています。
+
+
+
+[[proxy-verification]]
+== プロキシ検証
+
+インストーラは、何かをダウンロードする前に、インストーラホストからチェックを実行します。このチェックにより、プロキシが応答すること、プロキシが認証情報を受け入れること、およびプロキシ証明書が選択したスキームに対して有効であることが確認されます。チェックが失敗した場合、インストーラは停止し、原因（たとえば、誤ったポート、誤ったスキーム、パスワードの拒否（HTTP 407）など）を示します。
+
+マルチノード構成の場合、チェック対象はプロキシのみです。クラスタノードがプロキシに到達できるかどうかはテストしません。
+
+
+
+[[change-proxy-settings-after-installation]]
+== インストール後にプロキシ設定を変更する
+
+プロキシ設定はインストール時に設定されます。インストール済みのクラスターでは、インストーラーは再度実行されません。インストール後にプロキシホスト、ポート、認証情報、またはCA証明書を変更するには、NetAppサポートにお問い合わせください。
+
+
+
+[[related-information]]
+== 関連情報
+
+* link:aide-requirements.html["AIDEの要件"]
+* link:single-node-prerequisites.html["AIDEシングルノード展開の前提条件"]
+* link:multi-node-prerequisites.html["AIDEマルチノード展開の前提条件"]
+* link:deploy-aide-single-node-proxy.html["プロキシを使用したシングルノード展開としてAI Data Engineを展開します"]
+* link:deploy-aide-multi-node-proxy.html["プロキシを使用したマルチノード展開としてAI Data Engineを展開する"]
+

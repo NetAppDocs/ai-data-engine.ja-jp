@@ -1,0 +1,78 @@
+---
+sidebar: sidebar 
+permalink: administer/configure-kerberos-smb.html 
+keywords: kerberos, smb, cifs, keytab, krb5.conf, ktutil, kdc, realm, fqdn, dns, authentication, active directory, scan service account 
+summary: AI Data Engineがデータソースにパスワードを保存せずにKerberosを使用してSMB/CIFS共有をスキャンする仕組みを理解し、シングルノードまたはマルチノード展開に応じた手順を選択してください。 
+---
+= AI Data EngineでのSMB/CIFS共有のKerberos認証
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+SMB/CIFS共有をスキャンする際は、Kerberos認証を使用することで、データソースにパスワードが保存されないようにします。AI Data Engine（AIDE）はKerberosクライアントとして機能します。スキャンサービスアカウントのキータブを使用して、既存のActive Directoryドメイン コントローラからKerberosチケットを取得します。
+
+Kerberos認証はSMB/CIFSデータソースに適用されます。NFSユーザーIDとグループIDをActive Directory名にマッピングするには、link:configure-ad-nfs.html["NFS 用の Active Directory ID マッピングを構成する"]を参照してください。
+
+
+
+[[how-kerberos-scanning-works]]
+== Kerberosスキャンの仕組み
+
+セットアップ後、AI Data EngineはKerberosチケットを自動的に取得および更新するため、スキャンごとに認証情報を管理する必要はありません。
+
+. Kerberos設定ファイル、スキャンサービスアカウントのキータブ、およびアカウント名を指定するプリンシパルファイルの3つのファイルを作成します。
+. AI Data Engineは、キータブを使用して、Kerberosキー配布センター（KDC）として機能するActive Directoryドメイン コントローラからKerberosチケットを取得します。AI Data Engineは、3時間ごとにチケットを更新します。
+. SMB/CIFS共有を追加し、認証方法としてKerberosを選択すると、AI Data Engineはチケットを使用して共有をスキャンします。
+
+
+AI Data Engineは、名前でドメイン コントローラとファイル サーバーを検出します。ホストまたはノードは、Active Directory名を解決できるDNSサーバーを使用して、両方の名前を解決する必要があります。ホストまたはノードでActive Directory DNSサーバーを指定する場合、そのサーバーは外部名も解決する必要があります。マルチノード構成の場合、各ノードで唯一のネーム サーバーである必要があります。
+
+セットアップ後にKerberos設定ファイルを置き換えた場合、影響を受けるサービスを再起動するまで、AI Data Engineは以前のファイルを引き続き使用します。手順については、単一ノード展開の場合はlink:configure-kerberos-smb-single-node.html#update-kerberos-configuration["Kerberos設定ファイルを更新します"]を、マルチノード展開の場合はlink:configure-kerberos-smb-multi-node.html#update-kerberos-configuration["Kerberos設定ファイルを更新します"]を参照してください。
+
+
+
+[[choose-a-procedure]]
+== 手順を選択してください
+
+Kerberosファイル、ホストパッケージ、および検証手順は、展開タイプによって異なります。
+
+[cols="1,2,2,2"]
+|===
+| 導入 | Kerberosファイルが保存されている場所 | パッケージ | 手順 
+
+
+| シングルノード | AI Data Engineホスト上。Kerberos設定ファイルは `/etc/krb5.conf`です。 | ホストにKerberosクライアントツールをインストールします。インストーラは `cifs-utils`をインストールします。 | link:configure-kerberos-smb-single-node.html["単一ノードのAI Data EngineデプロイメントでSMB/CIFS共有のKerberosを設定する"] 
+
+
+| マルチノード | AI Data Engine構成を保持する共有NFSエクスポート上。ノードは `/etc/krb5.conf`を使用しません。 | 1台の管理ホストにKerberosクライアントツールをインストールします。すべてのノードに `cifs-utils`をインストールします。 | link:configure-kerberos-smb-multi-node.html["マルチノードのAI Data EngineデプロイメントでSMB/CIFS共有のKerberosを設定する"] 
+|===
+
+
+[[what-you-need]]
+== 必要なもの
+
+スキャンしたいSMB/CIFS共有へのKerberosアクセスを設定するために、これらの詳細情報を収集してください。
+
+* スキャン対象のSMB/CIFS共有への読み取りアクセス権を持つ、Active Directory内のスキャンサービスアカウント。アカウントはAES256暗号化に対応している必要があります。
+* KDCとして機能するドメイン コントローラのIPアドレスとFQDN。
+* Active DirectoryドメインとKerberosレルム。レルムはドメインを大文字で表記したものです。
+* スキャンする各ファイルサーバのFQDNと共有名。Kerberos認証では、ファイルサーバのIPアドレスは受け付けられません。
+* シングルノード展開の場合は、AI Data Engineホストへのrootアクセス。マルチノード展開の場合は、すべてのノードと管理ホストへのrootアクセス、および管理ホストからのクラスタ管理者権限での `kubectl`アクセス。
+* マルチノード展開の場合、各ノードからTCPポート2049のNFSサーバへのアクセス。
+
+
+また、環境が、時刻同期、DNS、ホストパッケージなどのlink:../deploy/aide-requirements.html#networking-requirements["ネットワーク要件"]およびlink:../deploy/aide-requirements.html#kerberos-ad-requirements["KerberosおよびActive Directoryの要件"]を満たしていることを確認してください。
+
+
+
+[[related-information]]
+== 関連情報
+
+* link:configure-kerberos-smb-single-node.html["単一ノードのAI Data EngineデプロイメントでSMB/CIFS共有のKerberosを設定する"]
+* link:configure-kerberos-smb-multi-node.html["マルチノードのAI Data EngineデプロイメントでSMB/CIFS共有のKerberosを設定する"]
+* link:../deploy/aide-requirements.html#kerberos-ad-requirements["KerberosおよびActive Directoryの要件"]
+* link:../data-sources/connect-data-source.html["データソースをAI Data Engineに接続する"]
+* link:configure-ad-nfs.html["NFS 用の Active Directory ID マッピングを構成する"]
+

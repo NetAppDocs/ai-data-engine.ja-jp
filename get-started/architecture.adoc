@@ -1,8 +1,8 @@
 ---
 sidebar: sidebar 
 permalink: get-started/architecture.html 
-keywords: architecture, components, metadata engine, policy, deployment, data flow 
-summary: AI Data Engine のコンポーネントと、それらが連携してストレージシステムからメタデータをカタログ化する仕組みについて説明します。 
+keywords: architecture, components, metadata engine, console agent, mcp, governed ai access, deployment, data flow 
+summary: AI Data Engineのコンポーネントと、それらが連携してストレージシステムからメタデータをカタログ化し、AIクライアントに管理されたアクセスを提供する仕組みについて説明します。 
 ---
 = AI Data Engineアーキテクチャ
 :allow-uri-read: 
@@ -11,44 +11,57 @@ summary: AI Data Engine のコンポーネントと、それらが連携して�
 
 
 [role="lead"]
-AI Data Engine（AIDE）は、Metadata Engine とポリシーフレームワークで構成されています。これらの機能は連携して、ストレージシステムからメタデータを抽出し、検索可能なインデックスにカタログ化し、特定の条件に一致するファイルを識別して操作するための保存済みクエリを定義できるようにします。
+AI Data Engine（AIDE）は、お客様が提供するインフラストラクチャ上で動作します。Metadata Engineはストレージをスキャンして、検索可能なカタログを作成します。NetApp Consoleは、Consoleエージェントを通じてデプロイメントを管理します。Model Context Protocol（MCP）サーバーオプションを使用すると、AIクライアントはお客様が設定した範囲内でカタログを検索できます。
 
 
 
 [[components]]
 == [コンポーネント]
 
-AI Data Engine との主なやり取りは、ダッシュボード、調査、ポリシー、構成という4つの機能領域を通じて行われます。これらの機能領域は、以下の基盤となるコンポーネントによって支えられています。
+NetApp ConsoleのAI Data Engineダッシュボード、調査、およびポリシーはすべて、メタデータカタログに基づいて機能します。以下のコンポーネントは、カタログを構築してNetApp Consoleに接続し、AIクライアントに管理されたアクセスを提供します。
 
 
 
 [[metadata-engine]]
 === Metadata Engine
 
-Metadata EngineはAI Data Engineのコア機能です。接続されているストレージシステムをスキャンしてファイルシステムのメタデータを抽出し、そのメタデータを検索可能なカタログに保存します。Metadata Engineはスキャンサイクルごとにカタログを更新し、ストレージシステム全体にわたる追加、変更、削除を検出します。
+Metadata Engineは、AI Data Engineのコア機能です。接続したデータソースをスキャンし、メタデータを抽出して、検索可能なカタログに保存します。ファイルの内容を読み取ったり分類したりすることはありません。Metadata Engineは、スキャンサイクルごとにカタログを更新し、ストレージシステム全体にわたる追加、変更、削除を検出します。
 
 
 
 [[netapp-console-agent]]
 === NetApp Console エージェント
 
-AI Data Engineには、お客様の環境にデプロイされたNetApp Console Agentが必要です。Console Agentは汎用的なNetAppプラットフォームコンポーネントであり、オンプレミス環境とNetApp Console間の接続を維持します。サイトとAIDEサービス間の認証と通信を処理します。
+AI Data Engineには、お客様の環境にデプロイされたNetApp Consoleエージェントが必要です。Consoleエージェントは、お客様の環境とNetApp Console間の接続を維持する汎用的なNetAppプラットフォームコンポーネントです。これは、NetApp Consoleとお客様のAI Data Engine環境間の認証と通信を処理します。スキャンおよびカタログサービスは、Consoleエージェント上ではなく、AI Data Engine環境で実行されます。
 
 
-NOTE: コンソールエージェントは AI Data Engine 専用ではありません。他の NetApp サービス用にコンソールエージェントをすでにデプロイしている場合は、同じエージェントを使用できます。コンソールエージェントのデプロイ手順については、link:https://docs.netapp.com/us-en/console-setup-admin/concept-agents.html["NetApp Console Agentのドキュメント"] を参照してください。
+NOTE: コンソールエージェントはAI Data Engine専用ではありません。他のNetAppサービス用にコンソールエージェントをすでに展開している場合は、同じエージェントを使用できます。コンソールエージェントの展開手順については、link:https://docs.netapp.com/us-en/console-setup-admin/concept-agents.html["NetApp Consoleエージェントのドキュメント"]を参照してください。
 
 
 
-[[deployment-models]]
-== 展開モデル
+[[governed-access-gateway]]
+=== Governed Access Gateway
 
-AI Data Engineは2つのデプロイメントモデルをサポートしています：
+ガバナンスアクセスゲートウェイは、AI Data EngineのMCPサーバーです。これにより、AIクライアントはメタデータカタログを検索できるようになります。ゲートウェイはAI Data Engine環境で実行され、AIクライアントは社内ネットワークから、またはVPN経由でHTTPSを使用してゲートウェイに接続します。コンソールエージェントはMCPトラフィックを中継しません。
 
-AIDE Lite:: 小規模環境に適した、単一VM構成のデプロイメント。カタログ化するファイル数に応じて、Small、Medium、Largeの3つの構成が用意されています。
-AIDE Enterprise:: 高可用性が求められる大規模環境向けの、Kubernetesベースのマルチノードクラスタ構成。
+Microsoft Entra IDはユーザーを認証し、ゲートウェイは各AIクライアントが検索を許可されているコレクションのみにアクセスできるように制限します。このゲートウェイはメタデータの検索とタグ付けのみをサポートしており、ファイルにタグ付けできるのは上級ユーザーのみです。ファイルの内容は取得しません。
+
+link:../mcp/learn-about-mcp.html["ガバナンスされたAIアクセスについて詳しくはこちらをご覧ください"]。
 
 
-AIDE エンタープライズ版は、最大約10億個のファイルと1日あたり2億5,000万個のファイルをサポートする3ノード構成から、最大約60億個のファイルと1日あたり20億個のファイルをサポートする9ノード構成までスケールアウトできます。ノードのサイジングの詳細については、link:../deploy/aide-requirements.html["AIDEの要件"]を参照してください。ノードを追加することで、容量を60億ファイル以上に拡張できます。スケールアウトの詳細については、link:../deploy/aide-requirements.html#flexible-sizing-enterprise["柔軟なサイズガイドライン"]を参照してください。
+
+[[deployment-types]]
+== 構成タイプ
+
+AI Data Engineは2種類のデプロイメントタイプをサポートしています。どちらもKubernetes上でAI Data Engineサービスを実行します。
+
+AIDEシングルノード展開:: お客様が提供する単一のLinux VM上で動作します。インストーラーはk3sとサポートコンポーネントを自動的にプロビジョニングします。単一ノード構成では、高可用性や水平スケーリングは実現できません。
+AIDEマルチノード展開:: お客様が提供するKubernetesクラスター上で動作し、高可用性が求められる大規模環境向けに設計されています。
+
+
+サポート対象プラットフォーム、サイジング、インフラストラクチャ要件については、link:../deploy/aide-requirements.html["AIDEの要件"]を参照してください。
+
+各展開タイプには、アウトバウンドプロキシ経由でのみインターネットに接続する環境向けの個別の手順も用意されています。link:../deploy/configure-proxy.html["AI Data Engineのプロキシについて"] を参照してください。
 
 link:../deploy/deployment-overview.html["導入オプションの詳細はこちら"]。
 
@@ -57,17 +70,33 @@ link:../deploy/deployment-overview.html["導入オプションの詳細はこち
 [[data-flow]]
 == データフロー
 
-. AI Data Engineはオンプレミス環境にデプロイされます。
-. AIIDEがカタログ化するストレージシステムを*構成 > システム*で追加します。サポートされているシステムには、NetApp ONTAP、StorageGRID、データベースシステム、およびNFS、SMB/CIFS、またはS3プロトコルを公開するNASまたはオブジェクトストレージシステムが含まれます。
-. Metadata EngineはNFSおよびSMB/CIFSプロトコルを使用して共有フォルダをマウントし、ファイルシステムをスキャンしてファイルメタデータを抽出します。
-. メタデータはカタログに索引付けされています。
-. ダッシュボードには、カタログからストレージに関するインサイトが表示されます。
-. 調査機能を使用すると、メタデータフィルターを使用してカタログを直接検索できます。
-. 検索条件をポリシーとして保存し、それを再実行することで、一致するファイルを特定して処理することができます。
+AI Data Engineは2つの別々のパスを使用します：1つはカタログを構築してNetApp Consoleに提供するパス、もう1つはAIクライアントに提供するパスです。
 
 
 
-NOTE: Metadata Engineは、設定されているすべてのボリュームのスキャンが完了すると、すぐに新しいスキャンラウンドを開始し、ファイルシステムを再スキャンして追加、変更、削除を検出します。
+[[metadata-scanning-and-netapp-console-access]]
+=== メタデータスキャンとNetApp Consoleアクセス
+
+. お客様が管理するインフラストラクチャにAI Data Engineを導入し、NetApp Consoleエージェントに接続します。
+. AI Data Engineにカタログ化させるデータソースは、*データソース*で接続します。詳細については、link:../data-sources/connect-data-source.html["データソースを接続する"]を参照してください。
+. Metadata Engineは、データソースをスキャンしてメタデータを抽出し、カタログにインデックス化します。
+. NetApp Consoleでは、ダッシュボードにカタログからのストレージに関するインサイトが表示され、調査機能ではメタデータフィルターを使用してカタログを直接クエリできます。
+. 検索条件をポリシーとして保存し、再実行することで一致するファイルを特定できます。また、調査画面からファイルに対してアクションを実行することも可能です。
+
+
+
+NOTE: このカタログには、スキャン中に収集されたメタデータが反映されています。ソースファイルへの変更は、影響を受けるファイルとディレクトリが再スキャンされ、結果がインデックス化された後にカタログに反映されます。
+
+
+
+[[governed-ai-access]]
+=== 管理されたAIアクセス
+
+. Microsoft Entra IDを設定し、AIアクセス用のコレクションを有効にし、各コレクションを検索できるユーザーを選択します。
+. ユーザーはAIクライアントをGoverned Access GatewayのHTTPSエンドポイントに接続し、Microsoft Entra IDでサインインします。
+. ゲートウェイはユーザーのアクセスを確認し、承認されたリクエストをMetadata Engineに渡します。
+. AIクライアントは、ユーザーがアクセスして操作を実行できるコレクション内のメタデータを検索します。
+
 
 
 
@@ -76,4 +105,5 @@ NOTE: Metadata Engineは、設定されているすべてのボリュームの�
 
 * link:learn-about.html["AI Data Engineの詳細"]
 * link:../deploy/deployment-overview.html["AIDEのデプロイメントについて"]
+* link:../mcp/learn-about-mcp.html["ガバナンスされたAIアクセスについて学ぶ"]
 

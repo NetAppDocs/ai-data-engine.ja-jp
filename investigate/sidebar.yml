@@ -12,7 +12,5 @@ entries:
   url: "/investigate/investigate-structured.html"
 - title: ディレクトリを調査する
   url: "/investigate/investigate-directories.html"
-- title: フィルターを操作する
-  url: "/investigate/use-filters.html"
 - title: データに基づいて行動を起こす
   url: "/investigate/take-actions.html"

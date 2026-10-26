@@ -1,0 +1,83 @@
+---
+sidebar: sidebar 
+permalink: deploy/deploy-aide-multi-node.html 
+keywords: deploy, install, multi-node, multi node, wizard, NetApp Console, deployment wizard, kubernetes, RKE2, OpenShift, AKS 
+summary: デプロイメントウィザードを使用して、NetApp ConsoleからAIDEをマルチノード展開として展開します。 
+---
+= AI Data Engineをマルチノード展開として展開する
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+デプロイメントウィザードを使用して、NetApp ConsoleからAI Data Engine（AIDE）をマルチノード展開としてデプロイします。ウィザードは、インストール場所の選択、構成サイズの選択、Kubernetesクラスターに対するインストールコマンドの実行といった手順を案内します。
+
+
+IMPORTANT: クラスターノードまたはインストーラーホストがアウトバウンドプロキシ経由でのみインターネットにアクセスする場合は、代わりにlink:deploy-aide-multi-node-proxy.html["プロキシを使用したマルチノード展開としてAI Data Engineを展開する"]を使用してください。
+
+.開始する前に
+*権限とアクセス*
+
+* お客様はNetApp Consoleで_組織管理者_以上の権限を持っています。
+* 対象クラスタへのcluster-adminアクセス権を持つkubeconfigが必要です。 `kubectl`が `PATH`にない場合、インストーラはそれをtoolsディレクトリにダウンロードします。
+
+
+*Kubernetesクラスター*
+
+* Kubernetesクラスタは、link:multi-node-prerequisites.html["AIDEマルチノード展開の前提条件"]およびlink:aide-requirements.html["AIDEの要件"]に記載されているマルチノードの前提条件を満たしています。
+* インストールコマンドを実行する前に、 `aide`ネームスペースがクラスタ上に存在します。
+* AI Data Engineワークロードをスケジュールするノードには、link:multi-node-prerequisites.html#node-labels["ノードラベル"]で説明されているノードラベルがあります。
+* 構成されたStorageClass（デフォルト名： `aide-sc`）はクラスター上で利用可能で、AIDEのステートフルなバッキングサービスに使用されます。
+
+
+*ストレージおよびNetApp Console*
+
+* エクスポートされたパスを持つNFSサーバが利用可能で、AIDE設定ボリューム用にクラスターからアクセス可能です。
+* NetApp Consoleエージェント https://docs.netapp.com/us-en/console-setup-admin/concept-agent-install-options.html#agent-console-deploy["展開されています"^]クラスタノードからアクセス可能である必要があります。インストールコマンドを実行するには、ConsoleエージェントのIPが必要です。
+
+
+
+NOTE: インストーラは、AIDEの初回インストール時にのみ使用してください。AIDEのアップグレードには使用しないでください。インストール後は、AIDEオペレータがアップグレードを管理します。アップグレードの詳細については、NetAppサポートにお問い合わせください。
+
+.手順
+. NetApp Console で、*AI data hub* > *AI Data Engine* に移動します。
++
+AI Data Engineのランディングページが表示されます。
+
+. *AI Data Engine のデプロイ*を選択します。
+. 「マルチノード」デプロイメントオプションを選択し、「次へ」をクリックします。
+. 構成サイズを選択してください：
++
+** *小*：約10億ファイルまでの環境に推奨されます。
+** *中（デフォルト）*：約30億ファイルまでの環境に推奨されます。
+** *ラージ*：約60億ファイルまでの環境に推奨されます。
++
+これらのサイズは推奨される基準値であり、厳密な制限ではありません。60億ファイルを超える環境でのAIDEマルチノード展開には、NetAppによるカスタムサイジングが必要です。詳細については、link:aide-requirements.html#flexible-sizing-multi-node["柔軟なサイズガイドライン"]を参照してください。
+
+
+
+. ウィザードに表示されているインストールコマンドをエディタにコピーしてください。
++
+ウィザードは、選択した構成サイズに基づいてインストールコマンドを生成します。
+
+. Kubernetesクラスターにアクセスできるホストからインストールコマンドを実行してください。
++
+インストーラーがアウトバウンドプロキシを設定するかどうかを尋ねた場合は、 `n`を入力します。
+
++
+
+NOTE: インストールには約30分かかります。タイムアウトや再試行が発生する場合がありますが、これは正常な動作です。
+
+. インストールを続行するには、インストーラの確認プロンプトに回答します。
++
+** インストーラーには、kubeconfigで選択されたKubernetesクラスターが表示されます。これには、コンテキスト、クラスター名、APIサーバーが含まれます。それが使用予定のクラスターである場合にのみ、「yes」と回答してください。クラスターが間違っている場合は、インストーラーを停止し、正しいkubeconfigコンテキストを選択して、インストーラーを再度実行してください。
+** インストーラーは、マルチノード展開の前提条件が完了していることを確認するよう求めます。続行するには「yes」と回答します。
+** インストーラは、AI Data Engine NGINXイングレスを実行するノードのIPアドレスを検出し、確認を求めます。表示されているアドレスをそのまま使用する場合はEnterキーを押すか、別のアドレスを入力してください。クラスタ外部からアクセス可能なアドレスを使用してください。検出されたアドレスが内部クラスタアドレスの場合は、代わりに到達可能なアドレスを入力してください。Consoleエージェントのアドレスは入力しないでください。
+
+
+. 成功画面が表示され、AIDEのインストールが完了したことが確認されるまで、進行状況画面を監視します。
+
+
+.結果
+AI Data Engineマルチノード環境が導入され、NetApp Consoleに接続されました。これで、link:../data-sources/connect-data-source.html["データソースを接続する"]してスキャンを開始できます。

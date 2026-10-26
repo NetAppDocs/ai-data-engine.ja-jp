@@ -1,0 +1,66 @@
+---
+sidebar: sidebar 
+permalink: deploy/deploy-aide-single-node.html 
+keywords: deploy, install, single-node, single node, wizard, NetApp Console, deployment wizard, onboarding 
+summary: 展開ウィザードを使用して、NetApp ConsoleからAIDEを単一ノード展開として展開します。 
+---
+= AI Data Engineをシングルノード展開として展開する
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+デプロイメントウィザードを使用して、NetApp ConsoleからAI Data Engine（AIDE）をシングルノードとして展開します。ウィザードは、インストール場所の選択、構成サイズの選択、および対象ホストでのインストールコマンドの実行手順を案内します。
+
+
+IMPORTANT: ターゲットホストがアウトバウンドプロキシ経由でのみインターネットにアクセスする場合は、代わりにlink:deploy-aide-single-node-proxy.html["プロキシを使用したシングルノード展開としてAI Data Engineを展開します"]を使用してください。
+
+.開始する前に
+* お客様はNetApp Consoleで_組織管理者_以上の権限を持っています。
+* インストールコマンドを実行するには、対象ホスト上でsudoまたはroot権限が必要です。
+* お客様の環境は、link:single-node-prerequisites.html["AIDEシングルノード展開の前提条件"] および link:aide-requirements.html["AIDEの要件"] に記載されているすべての前提条件を満たしています。
+* NetApp Consoleエージェント https://docs.netapp.com/us-en/console-setup-admin/concept-agent-install-options.html#agent-console-deploy["展開されています"^]であり、AI Data Engineホストから到達可能であること。インストールコマンドを実行するには、ConsoleエージェントのIPが必要です。
+
+
+
+NOTE: インストーラは、AIDEの初回インストール時にのみ使用してください。AIDEのアップグレードには使用しないでください。インストール後は、AIDEオペレータがアップグレードを管理します。アップグレードの詳細については、NetAppサポートにお問い合わせください。
+
+.手順
+. NetApp Console で、*AI data hub* > *AI Data Engine* に移動します。
++
+AI Data Engineのランディングページが表示されます。
+
+. *AI Data Engine のデプロイ*を選択します。
+. *シングルノード*デプロイメントオプションを選択し、*次へ*を選択します。
+. 構成サイズを選択してください：
++
+** *小型*：約2億ファイルまでの環境に推奨されます。
+** *中（デフォルト）*：約10億ファイルまでの環境に推奨されます。
+** *ラージ*：約30億ファイルまでの環境に推奨されます。
++
+これらのサイズは推奨される基準値であり、厳密な制限ではありません。お客様の環境がこれらの範囲外である場合は、link:aide-requirements.html#flexible-sizing-single-node["柔軟なサイズガイドライン"]を参照してください。
+
+
+
+. ウィザードに表示されているインストールコマンドをエディタにコピーしてください。
++
+ウィザードは、選択した構成サイズに基づいてインストールコマンドを生成します。
+
+. 対象ホスト上でインストールコマンドを実行してください。
++
+インストーラーがアウトバウンドプロキシを設定するかどうかを尋ねた場合は、 `n`を入力します。
+
++
+
+NOTE: インストールには約45分かかります。タイムアウトや再試行は正常な動作です。
+
+. インストールを続行するには、インストーラの確認プロンプトに回答します。
++
+インストーラは、AI Data Engine NGINX Ingressを実行しているノードのIPアドレスを検出し、確認を求めます。表示されているアドレスをそのまま使用する場合はEnterキーを押すか、別のアドレスを入力してください。VMの外部からアクセス可能なアドレスを使用してください。Consoleエージェントのアドレスは入力しないでください。
+
+. 成功画面が表示され、AIDEのインストールが完了したことが確認されるまで、進行状況画面を監視します。
+
+
+.結果
+AI Data Engine がデプロイされ、NetApp Console に接続されました。これでlink:../data-sources/connect-data-source.html["データソースを接続する"]スキャンを開始できます。

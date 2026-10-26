@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: administer/manage-users-roles.html 
-keywords: roles, users, permissions, AI data engine administrator, AI data engine viewer 
+keywords: roles, users, permissions, ai data engine administrator, ai data engine viewer 
 summary: 各ユーザーに管理者または閲覧者のロールを割り当てることで、アクセスを制御します。2つのロールとその権限について説明します。 
 ---
 = AI Data Engine でユーザーとロールを管理する
@@ -11,7 +11,7 @@ summary: 各ユーザーに管理者または閲覧者のロールを割り当�
 
 
 [role="lead"]
-管理者または閲覧者のロールを割り当てることで、各ユーザーが AI Data Engine で閲覧および操作できる内容を制御します。チームが AI Data Engine の使用を開始する前に、各ユーザーに必要なアクセスレベルに合ったロールを割り当てます。
+管理者または閲覧者のロールを割り当てることで、各ユーザーがAI Data Engine（AIDE）で表示および実行できる内容を制御します。チームがAI Data Engineの使用を開始する前に、必要なアクセスレベルに応じたロールを各ユーザーに割り当てます。
 
 役割は、NetApp Console の組織設定から割り当てます。AI Data Engine は2つのロールをサポートしています。
 
@@ -74,8 +74,18 @@ AI Data Engine のビューアーロールでは、AI Data Engine へのアク�
 | 操作：アーカイブ、コピー、削除 | はい | - 
 
 
+| アクション：重複データの削除 | はい | - 
+
+
 | ビジネスタグを管理する | はい | はい 
 |===
+
+
+[[roles-and-governed-ai-access]]
+== ロールと管理されたAIアクセス
+
+NetApp Consoleのロールは、AI Data Engineで管理対象AIアクセスを設定できるユーザーを制御します。AIクライアントユーザーが検索できるコレクションを制御するものではありません。そのアクセスは、各コレクションに付与するMicrosoft Entra IDスコープによって制御されます。詳細については、link:../mcp/configure-entra-id-mcp.html["管理されたAIアクセス用にMicrosoft Entra IDを構成する"]を参照してください。
+
 
 
 [[assign-a-role-to-a-user]]
@@ -92,7 +102,7 @@ AI Data Engine のビューアーロールでは、AI Data Engine へのアク�
 
 
 . 組織、フォルダー、またはプロジェクトを選択し、次に「データサービス」カテゴリを選択します。
-. *AI data engine administrator*または*AI data engine viewer*の役割を割り当てます。
+. *AI Data Engine管理者*または*AI Data Engine閲覧者*ロールを割り当てます。
 . 変更を保存します。
 
 
@@ -105,4 +115,5 @@ AI Data Engine のビューアーロールでは、AI Data Engine へのアク�
 
 * link:../investigate/take-actions.html["データに対してアクションを実行する"]
 * link:../policies/create-policy.html["ポリシーを作成します。"]
+* link:../mcp/manage-data-collections.html["データコレクションを管理する"]
 

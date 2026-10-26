@@ -1,0 +1,371 @@
+---
+sidebar: sidebar 
+permalink: deploy/multi-node-prerequisites.html 
+keywords: multi-node, prerequisites, RKE2, OpenShift, AKS, kubernetes, cluster, NFS, StorageClass, namespace, kubectl, installer host 
+summary: RKE2、OpenShift、またはAKSでのAIDEマルチノード展開に向けて、Kubernetesクラスタ、インストーラホスト、ノード、NFSサーバ、およびストレージを準備します。 
+---
+= AI Data Engineマルチノード展開の前提条件
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+AI Data Engine（AIDE）のマルチノード環境では、独自のKubernetesクラスタを用意します。インストーラは既存のクラスタにAI Data Engineを導入しますが、クラスタのプロビジョニングや管理は行いません。インストールコマンドを実行する前に、クラスタ、ノード、ストレージ、およびインストーラホストを準備してください。
+
+インストールコマンドを実行する前に、お使いの環境が以下のセクションに記載されている要件を満たしていることを確認してください。ノードのサイズ設定、サポートされているKubernetesバージョン、およびネットワークポートについては、link:aide-requirements.html["AIDEの要件"]を参照してください。
+
+
+
+[[installer-host]]
+== インストーラーホスト
+
+インストーラーホストは軽量な管理マシンです。AI Data Engineワークロードは実行しません。bashがインストールされており、Kubernetes APIサーバーへのネットワーク アクセスが可能なLinuxマシンである必要があります。macOSはサポートされていません。このページでシェルコマンドを実行する前に、bashに切り替えてください。
+
+* 対象クラスタに対して有効なkubeconfigがあります。 `--kubeconfig`オプションまたは `KUBECONFIG`環境変数で指定します。指定しない場合は、インストーラが入力を求めます。現在のコンテキストは、デプロイ先のクラスタを指している必要があります。確認または変更するには、 `kubectl config current-context`または `kubectl config use-context <name>`を実行します。
+* kubeconfigユーザーは、対象クラスタに対してcluster-adminまたは同等の権限を持っている必要があります。最低限、ユーザーは以下の操作を行うことができます：
++
+** 名前空間、StorageClasses、およびノードを読み取ります。
+** カスタムリソースを適用します。
+** PersistentVolumes、PersistentVolumeClaims、シークレット、ConfigMaps、デプロイメント、サービス、StatefulSets、DaemonSets、CronJobs、およびジョブを作成します。
+** CustomResourceDefinitionsを作成および更新します。インストーラは、 `aidecomponents`、 `aideservices`、および `aideoperators`の定義をインストールします。
+** ClusterRoles と ClusterRoleBindings を作成します。
+**  `aide` ネームスペースに ServiceAccounts、Role、および RoleBindings を作成します。
+
+
+* インストーラホストはLinuxで動作し、bash 4.0以降、curl、およびtarがインストールされています。
+* インストーラは自動的に `helm`、 `kubectl`、および `jq`をtoolsディレクトリにダウンロードします。 `kubectl`がすでに `PATH`にある場合、インストーラはそのコピーを使用し、ダウンロードは行いません。これらのツールを事前にインストールしておく必要はありません。インストーラはそれらを `PATH`に追加しません。
+* デフォルトのツールディレクトリは `/opt/netapp/aide/.aide-installer-tools`です。インストーラはインストールログもそこに書き込みます。デフォルトディレクトリが書き込み可能な場合は、 `--tools-dir`オプションを省略できます。
++
+** デフォルトのディレクトリに書き込み権限がなく、ターミナルからインストーラを実行した場合、インストーラは別のディレクトリを求めます。Enterキーを押して `$HOME/.cache/netapp/aide`を使用します。
+** デフォルトディレクトリへの書き込み権限がなく、インストーラーに端末がない場合、インストールは停止します。 `--tools-dir`オプションを使用して、所有するディレクトリを指定します（例： `--tools-dir "$HOME/.aide-installer-tools"`）。
+
+
+* インストーラは、クラスタへのアクセス権を持つユーザとして実行します。
+
+
+マネージドクラスタのkubeconfigは、現在のユーザーのクラウドCLIログイン情報を読み取るexec認証情報プラグインを介して認証を行います。そのログイン情報を持つユーザーとしてインストーラを実行してください。AKS固有のガイダンスについては、<<aks-requirements,AKSの要件>>を参照してください。
+
+起動時に、インストーラは `kubectl config current-context`および `kubectl cluster-info`を実行し、いずれかのコマンドが失敗した場合は停止します。まず、インストーラで使用するのと同じユーザおよび同じ権限で、これらのコマンドを実行してください。また、インストーラは、次のセクションでノード、NFS、およびクラスタの準備が完了したことを確認するように求めます。
+
+
+
+[[kubernetes-cluster]]
+== Kubernetesクラスター
+
+* RKE2、OpenShift、またはAzure Kubernetes Service（AKS）を実行し、link:aide-requirements.html#supported-kubernetes["サポートされているKubernetesバージョン"]を満たすKubernetesクラスタを用意します。
+* AI Data Engineコンポーネントは、ラベル付けしたノード上で実行されます。<<node-labels,ノードラベル>>を参照してください。これらのノード上の他のワークロードは、ホストポート80および443を使用できません。
+* クラスタには、お客様の構成に十分な割り当て可能容量を備えたノードが少なくとも3つあります。link:aide-requirements.html#multi-node-sizes["ノードサイジング"] を参照してください。
+* すべてのノードには、NetAppコンテナレジストリへのアウトバウンドのネットワーク アクセスがあります。link:aide-requirements.html#outbound-internet-access["アウトバウンドインターネットアクセス"]を参照してください。イメージのプル元を制限している場合は、NetAppレジストリを許可してください。
+* お使いの環境でアウトバウンドプロキシが必要な場合は、link:configure-proxy.html["AI Data Engineのプロキシについて"]を参照してください。各ノードでコンテナランタイムプロキシとCA証明書の信頼を設定するなど、プロキシを使用してデプロイするには、link:deploy-aide-multi-node-proxy.html["プロキシを使用したマルチノード展開としてAI Data Engineを展開する"]に従ってください。
+
+
+
+
+[[node-preparation]]
+== ノードの準備
+
+AI Data Engineワークロードをスケジュールするすべてのノードで、これらの手順を完了してください。
+
+
+
+[[kernel-version]]
+=== カーネルバージョン
+
+共有構成ボリュームに必要なスループットを提供する `nconnect` NFSマウントオプションには、Linuxカーネル5.3以降が推奨されます。この推奨事項を満たすディストリビューションとバージョンについては、link:aide-requirements.html#multi-node-requirements["AIDEの要件"]のLinuxカーネルのガイダンスを参照してください。カーネルバージョンを確認するには、 `uname -r`を実行します。
+
+
+
+[[kernel-parameters]]
+=== カーネルパラメータ
+
+.  `net.core.somaxconn` の値を確認してください：
++
+[source, bash]
+----
+sysctl net.core.somaxconn
+----
++
+値が511以上の場合、何もする必要はありません。値が低い場合は、続行する前にNetAppサポートにお問い合わせください。
+
+.  `/etc/sysctl.conf`に以下の行を追加します：
++
+[source, ini]
+----
+vm.max_map_count=262144
+fs.inotify.max_user_instances=1280
+sunrpc.min_resvport=1000
+----
++
+ノードにすでに `vm.max_map_count`または `fs.inotify.max_user_instances`のより高い値が設定されている場合は、その高い値を維持してください。常に `sunrpc.min_resvport=1000`を設定してください。
+
+.  `sunrpc`モジュールをロードして永続化し、設定を適用します：
++
+[source, bash]
+----
+sudo modprobe sunrpc
+echo "sunrpc" | sudo tee /etc/modules-load.d/aide-sunrpc.conf
+sudo sysctl -p
+----
+. 各ノードの設定を確認します：
++
+[source, bash]
+----
+lsmod | grep sunrpc
+cat /etc/modules-load.d/aide-sunrpc.conf
+sysctl vm.max_map_count sunrpc.min_resvport
+----
++
+ `sunrpc`モジュールがロードされている必要があり、ファイルには `sunrpc`が含まれている必要があり、 `vm.max_map_count`は少なくとも262144でなければならず、 `sunrpc.min_resvport`は1000でなければなりません。 `sysctl -p`がキーに対して `cannot stat /proc/sys/...`を報告する場合は、その設定のカーネルモジュール（たとえば `sudo modprobe sunrpc`）をロードし、再度 `sudo sysctl -p`を実行します。
+
+
+
+
+
+[[host-directories]]
+=== ホストディレクトリ
+
+以下のディレクトリを作成し、それぞれの所有者とアクセス許可を設定してください：
+
+[source, bash]
+----
+sudo mkdir -p /var/lib/netapp/aide /var/lib/netapp/aide/filebeat /var/lib/netapp/aide/elasticsearch /var/log/netapp/aide
+sudo chown 4321:4321 /var/lib/netapp/aide /var/lib/netapp/aide/filebeat /var/lib/netapp/aide/elasticsearch /var/log/netapp/aide
+sudo chmod 775 /var/lib/netapp/aide /var/lib/netapp/aide/filebeat /var/lib/netapp/aide/elasticsearch /var/log/netapp/aide
+----
+
+
+[[kerberos-cifssmb-support-optional]]
+=== Kerberos CIFS/SMB サポート（オプション）
+
+ `cifs-utils` パッケージは、AI Data Engineワークロードをスケジュールするすべてのノードで、KerberosベースのCIFS/SMBスキャンにのみ必要です。NTLMのみのCIFSを使用している場合、またはSMB共有をスキャンしない場合は、この手順をスキップしてください。
+
+.RHEL
+[source, bash]
+----
+sudo dnf install -y cifs-utils
+----
+.Ubuntu
+[source, bash]
+----
+sudo apt-get update
+sudo apt-get install -y cifs-utils
+----
+
+
+[[nfs-server]]
+== NFS サーバ
+
+AI Data Engine設定ボリュームのバックエンドにはNFSが使用されます。インストーラを実行する前に、NFSサーバとエクスポートを用意する必要があります。これらがないと、インストールを続行できません。インストールコマンドを実行する際に、 `--nfs-server <host>`でNFSサーバのホスト名またはIPアドレスを、 `--nfs-data-share <path>`でエクスポートパスを指定します。
+
+デプロイメントのサイジングとストレージのパフォーマンス要件については、link:aide-requirements.html#multi-node-sizes["ノードサイジング"]を参照してください。
+
+[cols="1,2"]
+|===
+| 要件 | Value 
+
+
+| エクスポートアクセス | 読み書き可能、すべてのKubernetesノードIPアドレスからアクセス可能 
+
+
+| 所有者 | UID:GID 4321:4321 
+
+
+| 権限モード | 0770 
+
+
+| スクワッシュ | UID 4321を他のユーザーに再割り当てしないでください。UID 4321は、マウントされたエクスポートへの書き込みアクセス権を保持する必要があります。 
+|===
+エクスポートを準備するには、NFSサーバ、またはエクスポートがマウントされている任意のホストで次のコマンドを実行します：
+
+[source, bash]
+----
+sudo mkdir -p <nfs-data-share>
+sudo chown 4321:4321 <nfs-data-share>
+sudo chmod 0770 <nfs-data-share>
+----
+インストーラは、初回インストール時にエクスポートの下に必要なサブディレクトリを作成します。
+
+
+
+[[cluster-configuration]]
+== クラスタ構成
+
+
+
+[[namespace]]
+=== ネームスペース
+
+インストーラを実行する前に、 `aide` Kubernetes名前空間が存在している必要があります。インストーラはこれを作成しません。AI Data Engineは `aide`名前空間のみをサポートします。
+
+[source, bash]
+----
+kubectl create namespace aide
+----
+
+
+[[node-labels]]
+=== ノードラベル
+
+AI Data Engineは、ノードラベルを使用してコンポーネントをスケジュールします。AI Data Engineワークロードをスケジュールするノードに、以下のラベルを適用します。各ラベルは、少なくとも3つのノードに存在する必要があります。構成サイズによってはより多くのノードを使用するため、ワークロードをスケジュールするすべてのノードにラベルを適用してください。 `<node-name>`を各ノードの名前に置き換えます。
+
+インストーラーはこれらのラベルを適用したり、確認したりしません。インストーラーを実行する前に、ノードにラベルを付ける必要があります。ラベルが欠落している場合、AI Data Engineポッドは後で `Pending`状態のままになります。
+
+次のコマンドは、ノードにすべてのラベルを適用します：
+
+[source, bash]
+----
+kubectl label node <node-name> \
+  3rdparty-aide-nginx=true 3rdparty-aide-postgres=true \
+  3rdparty-aide-rabbitmq=true 3rdparty-aide-redis=true \
+  3rdparty-aide-es=true 3rdparty-aide-kafka=true \
+  3rdparty-aide-logstash=true 3rdparty-aide-filebeat=true \
+  3rdparty-aide-k8s-event-exporter=true 3rdparty-aide-telegraf=true \
+  microservices-aide=true --overwrite
+----
+
+
+[[taints-and-tolerations]]
+[[taints-tolerations]]
+=== テイントとトレレーション
+
+この手順は任意です。AI Data Engineが他のワークロードとクラスタを共有する場合にのみ実行してください。
+
+共有クラスターでは、通常、AI Data Engine用にノードを予約します。他のワークロードがそれらのノードで実行されないように、それらのノードにKubernetesのテイントを適用します。<<node-labels,ノードラベル>>で適用したラベルにより、AI Data Engineのポッドはそれらのノードに維持されます。すべてのAI Data Engineワークロードには、以下のテイントに対する組み込みのトレレーションが含まれているため、テイントが適用されたノードにポッドをスケジュールできます：
+
+[source, text]
+----
+netapp.com/aide=true:NoSchedule
+----
+テイントを使用しない場合、トレレーションは効果がなく、何も変更する必要はありません。
+
+[cols="2,1,2,3"]
+|===
+| 導入 | ノードにラベルを付ける | AI Data Engineノードのテイント | 結果 
+
+
+| 専用クラスター | はい | 不要 | 組み込みのTolerationは効果がありません。 
+
+
+| 共有クラスタ内の専用ノード | はい | `netapp.com/aide=true:NoSchedule` | AI Data Engine Podはこれらのノード上でのみ実行され、他のワークロードはこれらのノード上では実行されません。 
+|===
+
+NOTE: ノードにAI Data Engineポッドが許容しないテイントがある場合、ポッドは `Pending`状態のままになります。
+
+. 共有クラスタの場合、AI Data Engine用に予約した各ノードにテイントを設定します。 `<node-name>`をノード名に置き換えます：
++
+[source, bash]
+----
+kubectl taint node <node-name> netapp.com/aide=true:NoSchedule
+----
++
+AI Data Engine以外のポッドは、ノード上でスケジュールできません。AI Data Engineのポッドはテイントを許容します。
+
+. ノードに他のテイントがある場合は、インストールコマンドの末尾の、最後の既存のパラメータの後に `--extra-toleration`パラメータを追加します。追加のテイントごとにパラメータを繰り返します。
++
+** キーと値を一致させるには、 `--extra-toleration KEY=VALUE:EFFECT`を使用します。
+** キーのみを一致させるには、 `--extra-toleration KEY:EFFECT`を使用します。
++
+`EFFECT`は `NoSchedule`、 `PreferNoSchedule`、または `NoExecute`です。無効な効果を指定した場合、インストーラーは停止します。インストーラーは、追加のtolerationをすべてのAI Data Engineコンポーネントに適用します。
+
++
+たとえば、ノードもテイントされている場合は `dedicated=redis:NoSchedule`、次のパラメータを追加します：
+
++
+[source, bash]
+----
+--extra-toleration dedicated=redis:NoSchedule
+----
+
+
+
+
+
+
+[[ingress-ports]]
+=== 入力ポート
+
+AI Data Engineは、 `3rdparty-aide-nginx=true`ラベルを持つノードに、ホストポートTCP 80および443を使用するイングレスコントローラをデプロイします。これらのノード上のこれらのポートは、他のKubernetesワークロードが使用することはできません。Traefikなどの他のイングレスコントローラを削除または無効化するか、これらのノードから離れた場所にスケジュールするか、ホストポート80と443を使用しないように設定してください。
+
+既存のKubernetesホストポートクレームを確認するには、以下を実行します：
+
+[source, bash]
+----
+kubectl get pods -A -o json | jq -r '
+  .items[] | . as $pod
+  | .spec.containers[]?.ports[]?
+  | select(.hostPort == 80 or .hostPort == 443)
+  | "\($pod.spec.nodeName // "-")  \($pod.metadata.namespace)/\($pod.metadata.name)  hostPort=\(.hostPort)"
+'
+----
+
+
+[[storageclass]]
+=== StorageClass
+
+ステートフルコンポーネント（Elasticsearch、Kafka、PostgreSQL、RabbitMQ、Redis）用のStorageClassがクラスタ上に存在し、link:aide-requirements.html#multi-node-sizes["ノードサイジング"]のIOPSとスループットを満たしている必要があります。 `--storage-class <name>`を使用して、その名前をインストーラに渡します。デフォルト名は `aide-sc`です。指定されたStorageClassが存在しない場合、インストーラは停止し、利用可能なStorageClassesを一覧表示します。
+
+NVMeやiSCSIなどのブロックストレージを使用してください。共有ストレージのパフォーマンスは低くなります。
+
+StorageClassは、NFS構成ボリュームとは別です。
+
+マネージドKubernetesプラットフォームでは、StorageClassによってプロビジョニングされるディスクタイプは、ワーカーノードのインスタンスタイプにアタッチ可能である必要があります。インストーラーはこの互換性を事前に検証することはできません。ディスクとノードのタイプに互換性がない場合、Podはスケジュールできますが、デプロイ中にボリュームのアタッチが失敗します。
+
+
+
+[[cloud-specific-requirements]]
+== クラウド固有の要件
+
+
+
+[[aks]]
+[[aks-requirements]]
+=== AKS
+
+上記の要件に加えて、AKSクラスターは以下の要件を満たす必要があります。
+
+ノードのVMサイズは、StorageClassがプロビジョニングするディスクタイプをサポートしている必要があります。Azure Premiumディスク(`Premium_LRS`、 `Premium_ZRS`、および `PremiumV2_LRS`）は、SKUに `s`が含まれるプレミアム対応のVMサイズ（ `Standard_D16s_v5`など）にのみアタッチできます。VMサイズがプロビジョニングされたディスクをサポートしていない場合、ポッドはスケジュールされますが、ボリュームのアタッチは `FailedAttachVolume`エラーで失敗します。
+
+AIDEステートフルコンポーネントは高いIOPSとスループットを必要とするため、AIDEノードプールにはプレミアム対応のVMサイズを使用してください。または、現在のVMサイズでサポートされているディスクSKUを備えたStorageClassを使用してください。組み込みの `managed-csi`は `StandardSSD_LRS`をプロビジョニングします。 `managed-csi-premium`は `Premium_LRS`をプロビジョニングします。
+
+StorageClassがプロビジョニングするディスクの種類と、ノードのVMサイズを確認するには、次のコマンドを実行します：
+
+[source, bash]
+----
+kubectl get sc <name> -o jsonpath='{.provisioner}{"  "}{.parameters}{"\n"}'
+kubectl get nodes -o custom-columns=NAME:.metadata.name,VMSIZE:.metadata.labels.node\.kubernetes\.io/instance-type
+----
+以下の例では、Premium SSD v2 (`PremiumV2_LRS`）を使用し、IOPSとスループットを個別に設定する方法を示します。Premium SSD v2 には、プレミアム対応のVMサイズと `cachingMode: None`が必要です。 `diskIOPSReadWrite`および `diskMBpsReadWrite`を、link:aide-requirements.html#multi-node-sizes["ノードサイジング"]のサイズに応じた値に設定します。この例では、Smallデプロイメントの値を使用します：
+
+[source, yaml]
+----
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: aide-sc
+provisioner: disk.csi.azure.com
+allowVolumeExpansion: true
+volumeBindingMode: WaitForFirstConsumer
+reclaimPolicy: Retain
+parameters:
+  skuName: PremiumV2_LRS
+  cachingMode: None
+  diskIOPSReadWrite: "8000"
+  diskMBpsReadWrite: "1000"
+----
+マニフェストを `aide-sc.yaml`として保存し、 `kubectl apply -f aide-sc.yaml`を実行して適用します。次に、インストールコマンドを実行する際に `--storage-class aide-sc`を指定します。
+
+* インストーラを実行するユーザとして `az login`を実行します。AKS kubeconfigファイルは、現在のユーザのAzure CLIサインインを使用して認証を行います。お客様が所有するツールディレクトリを指定してください。
+* AKSクラスターがプライベートの場合、インストーラーホストは仮想ネットワーク、ピアリングされたネットワーク、またはVPN経由でAPIサーバーにアクセスできる必要があります。インストーラーホストから `kubectl cluster-info`を実行して、アクセスを確認します。
+
+
+
+
+[[related-information]]
+== 関連情報
+
+* link:aide-requirements.html["AIDEの要件"]
+* link:deploy-aide-multi-node.html["AI Data Engineをマルチノード展開として展開する"]
+* link:configure-proxy.html["AI Data Engineのプロキシについて"]
+* link:deploy-aide-multi-node-proxy.html["プロキシを使用したマルチノード展開としてAI Data Engineを展開する"]
+

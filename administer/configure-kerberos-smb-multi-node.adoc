@@ -1,0 +1,641 @@
+---
+sidebar: sidebar 
+permalink: administer/configure-kerberos-smb-multi-node.html 
+keywords: kerberos, smb, cifs, multi-node, nfs export, keytab, krb5.conf, ktutil, kdc, realm, fqdn, dns, authentication, active directory, scan service account, cifs-utils 
+summary: マルチノードのAI Data Engine環境でKerberos認証を設定し、AI Data Engineがスキャンサービスアカウントと共有NFSエクスポートに保存されたキータブを使用してSMB/CIFS共有をスキャンできるようにします。 
+---
+= マルチノードのAI Data EngineデプロイメントでSMB/CIFS共有のKerberosを設定する
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Kerberos認証を使用してマルチノードのAI Data Engine（AIDE）環境からSMB/CIFS共有をスキャンし、データソースにパスワードが保存されないようにします。すべてのノードが同じKerberos構成を使用し、AI Data EngineはKerberosチケットを自動的に更新します。
+
+シングルノード構成の場合は、link:configure-kerberos-smb-single-node.html["単一ノードのAI Data EngineデプロイメントでSMB/CIFS共有のKerberosを設定する"]を参照してください。
+
+
+
+[[before-you-begin]]
+== 開始する前に
+
+.権限とアクセス
+* _AI Data Engine管理者_ 権限を持っています。
+* すべてのノードと管理ホストへのrootアクセス権があります。管理ホストは、NFSエクスポートをマウントしてキータブを作成するホストです。ノードの1つを使用することもできます。
+* 管理ホストからKubernetesクラスタへのcluster-admin権限でのアクセス権が `kubectl`あります。kubeconfigファイルを使用する場合は、 `KUBECONFIG`環境変数をそのパスに設定します。
+
+
+.ネットワークと時刻の同期
+* 時刻同期やDNSを含む、link:../deploy/aide-requirements.html#networking-requirements["ネットワーク要件"]およびlink:../deploy/aide-requirements.html#kerberos-ad-requirements["KerberosおよびActive Directoryの要件"]を確認済みであること。
+* すべてのノードが、TCPポート2049でNFSサーバに、ポート88でKDCに、ポート445でファイルサーバに、ポート53でDNSサーバに到達できることを確認しました。
+* すべてのノードでNTPが有効になっており、各クロックがドメイン コントローラと同期されていることを確認しました。確認するには、 `timedatectl`を実行します。
+
+
+.Active Directory
+* Active Directoryに、スキャン対象のSMB/CIFS共有への読み取りアクセス権を持つスキャンサービスアカウントが存在します。アカウントはAES256暗号化に対応している必要があります。
+
+
+.収集する情報
+* 次の情報を入手していること。
++
+[cols="2,4,2"]
+|===
+| 項目 | 説明 | 例 
+
+
+| KDC IPアドレス | Kerberosキー配布センター（KDC）として機能するドメイン コントローラのIPアドレス | `10.0.1.50` 
+
+
+| KDC FQDN | 同じドメイン コントローラの完全修飾ドメイン名（FQDN） | `dc.corp.example.com` 
+
+
+| ドメイン | Active Directoryドメイン（小文字） | `corp.example.com` 
+
+
+| Realm | Kerberosレルム（大文字で表記されるドメイン） | `CORP.EXAMPLE.COM` 
+
+
+| スキャンユーザー | 共有への読み取りアクセス権を持つサービスアカウント | `svc-aide` 
+
+
+| パスワードをスキャン | スキャンユーザーのパスワード。keytabを作成する際にのみ入力します。 | 該当なし 
+
+
+| ファイルサーバーFQDN | 共有をホストしているファイルサーバのFQDN。IPアドレスは使用しないでください。 | `filer.corp.example.com` 
+
+
+| Share name | SMB/CIFS共有の名前 | `sharename` 
+|===
+
+
+
+
+[[kerberos-files-that-ai-data-engine-uses]]
+[[kerberos-file-locations]]
+== AI Data Engine が使用する Kerberos ファイル
+
+AI Data Engine構成を保持するNFSエクスポートに、以下のファイルを作成します。次の表では、 `<export>`はそのエクスポートのルートです。
+
+[cols="1,2"]
+|===
+| ファイル | エクスポート先の場所 
+
+
+| Kerberos構成 | `<export>/kerberos/krb5.conf` 
+
+
+| キータブ | `<export>/kerberos/kerberos_refresher/datasense.keytab` 
+
+
+| プリンシパルファイル | `<export>/kerberos/kerberos_refresher/kerberos_creds.env` 
+
+
+| チケットキャッシュディレクトリ | `<export>/kerberos/kerberos_ccache` 
+|===
+
+
+[[install-the-required-packages]]
+[[install-packages]]
+== 必要なパッケージをインストールしてください
+
+SMB/CIFS共有のKerberosスキャンは、 `cifs-utils`を持たないノードでは失敗します。SMB/CIFSマウントはAI Data Engine内で実行されますが、ノードのオペレーティングシステムはKerberosセッションをセットアップするために `cifs-utils`コンポーネントを呼び出します。管理ホストにのみパッケージをインストールするだけでは不十分です。
+
+[cols="2,1,1"]
+|===
+| パッケージ | 管理ホスト | すべてのノード 
+
+
+| `krb5-user`（UbuntuまたはDebian）または `krb5-workstation`（RHEL、CentOS、またはRocky Linux） | 必須 | 不要 
+
+
+| `cifs-utils` | 必須 | 必須 
+|===
+Kerberosクライアントツールには、キータブの作成とテストに使用する `ktutil`、 `kinit`、および `klist`コマンドが用意されています。
+
+.手順
+. 管理ホストにKerberosクライアントツールと `cifs-utils`をインストールします。
++
+.. UbuntuまたはDebianでは、以下のコマンドを実行してください。
++
+[source, cli]
+----
+apt-get update -qq
+apt-get install -y krb5-user cifs-utils
+----
+.. RHEL、CentOS、またはRocky Linuxでは、次のコマンドを実行します。
++
+[source, cli]
+----
+dnf -y install krb5-workstation cifs-utils
+----
+
+
+. 他のすべてのノードに `cifs-utils`をインストールします。
++
+.. UbuntuまたはDebianでは、以下のコマンドを実行してください。
++
+[source, cli]
+----
+apt-get update -qq
+apt-get install -y cifs-utils
+----
+.. RHEL、CentOS、またはRocky Linuxでは、次のコマンドを実行します。
++
+[source, cli]
+----
+dnf -y install cifs-utils
+----
+
+
+. 各ノードでインストールを確認してください。
++
+[source, cli]
+----
+which cifs.upcall
+----
+
+
+
+
+[[mount-the-nfs-export-on-the-admin-host]]
+[[mount-nfs-export]]
+== 管理ホストにNFSエクスポートをマウントします
+
+管理ホストから共有構成エクスポートにアクセスして、すべてのノードが読み取る場所にKerberosファイルを作成できるようにします。
+
+.手順
+. AI Data Engineが実行される名前空間を設定し、構成ボリューム要求がバインドされていることを確認します。デフォルトの名前空間は `aide`です。
++
+[source, cli]
+----
+export NAMESPACE="<namespace>"
+kubectl -n "${NAMESPACE}" get pvc aide-config-pvc
+----
++
+ステータスは `Bound`である必要があります。
+
+. 構成ボリュームのNFSサーバとエクスポートパスを取得します。AI Data Engineをデプロイしたときに、これらの値を指定しました。
++
+[source, cli]
+----
+kubectl get pv aide-config-pv -o jsonpath='NFS server: {.spec.nfs.server}{"\n"}Export path: {.spec.nfs.path}{"\n"}'
+----
+. エクスポートをマウントします。 `<nfs_server>`と `<export_path>`を前の手順の値に置き換えます。コマンドはマウントポイントとして `/mnt/aide-config`を使用します。空のディレクトリであればどれでも使用できます。
++
+[source, cli]
+----
+mkdir -p /mnt/aide-config
+mount -t nfs <nfs_server>:<export_path> /mnt/aide-config
+----
+. Kerberosディレクトリを作成します。
++
+[source, cli]
+----
+export AIDE_CONFIG_ROOT="/mnt/aide-config"
+mkdir -p "${AIDE_CONFIG_ROOT}/kerberos/kerberos_refresher"
+mkdir -p "${AIDE_CONFIG_ROOT}/kerberos/kerberos_ccache"
+----
+
+
+
+
+[[create-the-kerberos-files]]
+[[create-kerberos-files]]
+== Kerberosファイルを作成します
+
+スキャンサービスアカウントのKerberosチケットを取得するために必要な構成と認証情報をAI Data Engineに提供します。管理ホストで次の手順を実行します。
+
+.手順
+. 以下のコマンドで使用する変数を設定します。山括弧内の各値をお客様の値に置き換えてください。山括弧自体は含めないでください。レルムは大文字で、ドメインは小文字で入力してください。
++
+[source, cli]
+----
+export KDC_IP="<kdc_ip>"
+export KDC_FQDN="<kdc_fqdn>"
+export AD_DOMAIN="<domain>"
+export REALM="<REALM>"
+export SCAN_USER="<scan_user>"
+export FILE_SERVER_FQDN="<file_server_fqdn>"
+export SHARE_NAME="<share_name>"
+export KRB5_CONF_SOURCE="${AIDE_CONFIG_ROOT}/kerberos/krb5.conf"
+export KRB5_KEYTAB="${AIDE_CONFIG_ROOT}/kerberos/kerberos_refresher/datasense.keytab"
+export KRB5_CREDS="${AIDE_CONFIG_ROOT}/kerberos/kerberos_refresher/kerberos_creds.env"
+----
++
+.. 変数が設定されていることを確認してください。
++
+[source, cli]
+----
+echo "NAMESPACE=[${NAMESPACE}] AIDE_CONFIG_ROOT=[${AIDE_CONFIG_ROOT}] KDC_IP=[${KDC_IP}] REALM=[${REALM}] SCAN_USER=[${SCAN_USER}]"
+----
++
+
+NOTE: これらの変数は、現在のシェルセッション内でのみ存在します。新しいシェルを開いた場合は、それらを再度設定してください。
+
+
+
+. NFSエクスポート上にKerberos設定ファイルを作成します。AI Data Engineはエクスポートからこのファイルを読み込みます。ノード上の `/etc/krb5.conf`には作成しないでください。
++
+[source, cli]
+----
+tee "${KRB5_CONF_SOURCE}" >/dev/null <<EOF
+[libdefaults]
+    default_realm = ${REALM}
+    dns_lookup_realm = false
+    dns_lookup_kdc = false
+    rdns = false
+    ticket_lifetime = 24h
+    renew_lifetime = 7d
+    forwardable = true
+
+[realms]
+    ${REALM} = {
+        kdc = ${KDC_IP}:88
+        admin_server = ${KDC_IP}:749
+    }
+
+[domain_realm]
+    .${AD_DOMAIN} = ${REALM}
+    ${AD_DOMAIN} = ${REALM}
+EOF
+chmod 644 "${KRB5_CONF_SOURCE}"
+----
++
+このファイルはKDCのIPアドレスを使用するため、Kerberos認証はDNSに依存しません。
+
+. スキャンサービスアカウント用のキータブを作成します。
++
+.. 実行 `ktutil`。
+..  `ktutil`プロンプトで、次のコマンドを入力します。 `<scan_user>`と `<REALM>`をお客様の値に置き換えます。 `ktutil`プロンプトではシェル変数は使用されません。
++
+[source, cli]
+----
+addent -password -p <scan_user>@<REALM> -k 1 -e aes256-cts-hmac-sha1-96
+----
+..  `ktutil`でパスワードの入力を求められたら、スキャンユーザのパスワードを入力してください。
+..  `ktutil`プロンプトで、次のコマンドを入力します。
++
+[source, cli]
+----
+wkt /tmp/krb5.keytab
+quit
+----
+
+
+. keytabをテストします。 `KRB5_CONFIG` 変数は、Kerberosツールがエクスポート上のファイルを参照するようにします。
++
+[source, cli]
+----
+export KRB5_CONFIG="${KRB5_CONF_SOURCE}"
+klist -kt /tmp/krb5.keytab
+kinit -kt /tmp/krb5.keytab "${SCAN_USER}@${REALM}"
+klist
+kdestroy
+----
++
+2番目の `klist`コマンドは、スキャンユーザーの有効なチケットを表示する必要があります。チケットによって、キータブとKDCへの接続が正常に機能していることが確認されます。 `kinit`が失敗した場合は、<<troubleshoot-kerberos,Kerberos認証のトラブルシューティング>>を参照してください。
+
+. キータブをインストールし、一時コピーを削除します。
++
+[source, cli]
+----
+install -m 640 -g 4321 /tmp/krb5.keytab "${KRB5_KEYTAB}"
+rm -f /tmp/krb5.keytab
+----
+. チケットキャッシュディレクトリをチケットリフレッシャーが書き込み可能にします。
++
+[source, cli]
+----
+chown root:4321 "${AIDE_CONFIG_ROOT}/kerberos/kerberos_ccache"
+chmod 770 "${AIDE_CONFIG_ROOT}/kerberos/kerberos_ccache"
+----
++
+チケット更新ツールは、グループID 4321のrootユーザーとして実行されます。キータブとプリンシパルファイルを読み取ることができ、チケットキャッシュディレクトリに書き込むことができる必要があります。
+
+. プリンシパルファイルを作成します。 `KRB5_RENEW_INTERVAL_H`の値は、チケットの更新間隔（時間単位）です。
++
+[source, cli]
+----
+tee "${KRB5_CREDS}" >/dev/null <<EOF
+KRB5_USER=${SCAN_USER}
+KRB5_REALM=${REALM}
+KRB5_RENEW_INTERVAL_H=3
+EOF
+chmod 640 "${KRB5_CREDS}"
+chgrp 4321 "${KRB5_CREDS}"
+----
+. ファイルが所定の場所に存在することを確認してください。
++
+[source, cli]
+----
+ls -l "${KRB5_CONF_SOURCE}" "${KRB5_KEYTAB}" "${KRB5_CREDS}"
+----
+
+
+
+
+[[verify-name-resolution]]
+== 名前解決を確認する
+
+AI Data Engineは、各ノードのDNS設定を使用して、ファイルサーバとKDCを解決します。まず名前解決を確認し、ノード上で名前が解決されない場合にのみDNS設定を変更してください。
+
+.手順
+. 各ノードで、ファイルサーバとKDCがFQDNで解決されることを確認してください。値をファイルサーバのFQDNとKDCのFQDNに置き換えてください。
++
+[source, cli]
+----
+nslookup <file_server_fqdn>
+nslookup <kdc_fqdn>
+----
+. 結果を確認してください。
++
+.. 両方の名前がすべてのノードで正しいIPアドレスに解決される場合は、<<start-first-ticket-refresh,最初のチケット更新を開始します>>に進みます。
+.. 名前がどのノードでも解決されない場合は、<<fix-name-resolution,名前解決を修正する>> を完了してから、この手順に戻ってください。
+
+
+
+
+
+
+[[start-the-first-ticket-refresh]]
+[[start-first-ticket-refresh]]
+== 最初のチケット更新を開始します
+
+AI Data Engineは、スキャンサービスアカウントのKerberosチケットを3時間ごとに更新します。すぐに共有をスキャンできるように、最初の更新を開始してください。
+
+
+NOTE: ホストのcrontabに `kinit`エントリを追加しないでください。AI Data Engineはチケットを自動的に更新します。
+
+.手順
+. 管理ホストで更新ジョブを開始して完了するまで待機し、そのログを表示します。
++
+[source, cli]
+----
+JOB="kerberos-refresh-$(date +%s)"
+kubectl -n "${NAMESPACE}" create job "${JOB}" --from=cronjob/ds-krb5-ticket-refresher
+kubectl -n "${NAMESPACE}" wait --for=condition=complete "job/${JOB}" --timeout=120s
+kubectl -n "${NAMESPACE}" logs "job/${JOB}"
+----
+. 共有チケットキャッシュが存在し、最新のタイムスタンプが付いていることを確認してください。
++
+[source, cli]
+----
+ls -l "${AIDE_CONFIG_ROOT}/kerberos/kerberos_ccache/krb5cc_shared"
+----
+
+
+.結果
+ジョブログには、スキャンユーザー用にチケットが取得されたことが示されています。
+
+
+
+[[verify-the-kerberos-configuration]]
+[[verify-kerberos-configuration]]
+== Kerberosの設定を確認する
+
+共有を追加する前に、AI Data EngineがKerberosファイルを使用して名前解決できることを確認してください。マウントサービスは複数のノードで実行される可能性があるため、各ノードのポッドに対してチェックを繰り返してください。新しいシェルを開いた場合は、 `NAMESPACE`、 `FILE_SERVER_FQDN`、および `SHARE_NAME`変数を再度設定してください。
+
+.手順
+. マウントサービスポッドと、それらが実行されているノードの一覧を表示します。
++
+[source, cli]
+----
+kubectl -n "${NAMESPACE}" get pods -l app.kubernetes.io/name=ds-mount-server -o wide
+----
+. 各ポッドに対して、次のコマンドを実行します。 `<pod_name>`をポッドの名前に置き換えます。
++
+[source, cli]
+----
+POD=<pod_name>
+kubectl -n "${NAMESPACE}" exec "${POD}" -- nslookup "${FILE_SERVER_FQDN}"
+kubectl -n "${NAMESPACE}" exec "${POD}" -- klist
+kubectl -n "${NAMESPACE}" exec "${POD}" -- cat /etc/krb5.conf
+----
+. （オプション）Kerberosを使用して共有のマウントをテストします。
++
+[source, cli]
+----
+kubectl -n "${NAMESPACE}" exec "${POD}" -- sh -c "mount -t cifs -o sec=krb5,multiuser //${FILE_SERVER_FQDN}/${SHARE_NAME} /mnt && ls -l /mnt && umount /mnt"
+----
+
+
+.結果
+各ノードで、ファイルサーバは正しいIPアドレスに解決され、 `klist` がスキャンユーザのチケットを表示し、 `/etc/krb5.conf` がKerberos設定ファイルの内容を表示します。
+
+
+
+[[add-an-smbcifs-data-source-that-uses-kerberos]]
+== Kerberosを使用するSMB/CIFSデータソースを追加する
+
+共有をデータソースとして追加し、スキャンを開始して、AI Data Engineがデータの分析を開始できるようにします。
+
+.手順
+. AI Data Engine UIで*設定*を選択します。
+. 「スキャン済みシステム」タブで、「システムの追加」を選択します。
+. *ファイル共有グループ*を選択します。
+. グループ名を入力してください。
+. 共有パスを次の形式で入力してください `<file_server_fqdn>/<share_name>`。プレースホルダーを実際の値に置き換えてください。IPアドレスは使用しないでください。
+. 認証方法として*Kerberos*を選択してください。ユーザー名とパスワードのフィールドは空欄のままにしてください。
+. 選択内容を確認し、*確定*を選択してください。
+. 新しいシステムでは、*スキャンを有効にする*を選択してください。
+
+
+データソースの接続に関する詳細については、link:../data-sources/connect-data-source.html["データソースをAI Data Engineに接続する"]を参照してください。
+
+
+
+[[fix-name-resolution]]
+== 名前解決を修正する
+
+ファイルサーバーまたはKDCがノード上でFQDNで解決されない場合にのみ、この手順を実行してください。各ノードでActive Directory DNSサーバーを唯一のネームサーバーとして設定します。
+
+
+CAUTION: Active Directory DNSサーバを、各ノード上の唯一のネームサーバに設定してください。クラスタはリストされたネームサーバの中からランダムに1つを選択するため、Active Directoryの名前を解決できないネームサーバを使用すると、断続的な障害が発生します。
+
+.手順
+. Active DirectoryのDNSサーバーが外部名も解決できることを確認してください。
++
+.. 以下のコマンドを実行します。 `<external_fqdn>`を、AI Data Engineが到達する必要があるドメイン外の名前に置き換えます。たとえば、link:../deploy/aide-requirements.html#outbound-internet-access["アウトバウンドインターネットアクセス"]にリストされているエンドポイントを使用します。
++
+[source, cli]
+----
+nslookup <external_fqdn> "${KDC_IP}"
+----
+.. コマンドが失敗した場合は、Active Directory管理者にDNS転送を有効にするよう依頼し、その後この手順を繰り返してください。
+
+
+. 各ノードで `/etc/resolv.conf`をバックアップし、Active Directory DNSサーバを唯一のネームサーバとして設定します。ノードで新しいシェルを開く場合は、 `KDC_IP`変数を再度設定します。
++
+[source, cli]
+----
+export KDC_IP="<kdc_ip>"
+cp /etc/resolv.conf /etc/resolv.conf.bak
+ORIG_SEARCH=$(grep '^search' /etc/resolv.conf.bak | head -1 | cut -d' ' -f2-)
+printf 'search %s\nnameserver %s\n' "${ORIG_SEARCH}" "${KDC_IP}" > /etc/resolv.conf
+----
+. 各ノードにおいて、ネットワークマネージャが再起動後にDNS設定を上書きしないようにします。
++
+.. NetworkManagerを使用しているRHEL上で、以下のコマンドを実行します。
++
+[source, cli]
+----
+mkdir -p /etc/NetworkManager/conf.d
+printf '[main]\ndns=none\n' > /etc/NetworkManager/conf.d/90-dns-none.conf
+systemctl reload NetworkManager
+----
+.. systemd-resolvedを使用しているUbuntuでは、次のコマンドを実行します。 `<domain>`をお客様のドメインに置き換えます。
++
+[source, cli]
+----
+export AD_DOMAIN="<domain>"
+mkdir -p /etc/systemd/resolved.conf.d
+printf '[Resolve]\nDNS=%s\nDomains=%s\n' "${KDC_IP}" "${AD_DOMAIN}" > /etc/systemd/resolved.conf.d/ad-dns.conf
+systemctl restart systemd-resolved
+----
+
+
+. 管理ホストからCoreDNSを再起動し、AI Data Engineが新しいDNS設定を使用するようにします。この手順はクラスタに対して一度だけ実行します。CoreDNSは、クラスタ外の名前に対するクエリをノードの `/etc/resolv.conf`ファイル内のネームサーバーに転送するため、変更を反映するには再起動する必要があります。
++
+.. CoreDNSのデプロイメントを見つけます。
++
+[source, cli]
+----
+kubectl -n kube-system get deployments | grep -i coredns
+----
+.. デプロイメントを再起動します。 `<coredns_deployment>`を前のコマンドの名前に置き換えます。
++
+[source, cli]
+----
+kubectl -n kube-system rollout restart deployment <coredns_deployment>
+kubectl -n kube-system rollout status deployment <coredns_deployment> --timeout=120s
+----
+
+
+. 名前解決を再度確認してください。<<verify-name-resolution,名前解決を確認する>> を参照してください。
+
+
+
+
+[[update-the-kerberos-configuration-file]]
+[[update-kerberos-configuration]]
+== Kerberos設定ファイルを更新します
+
+セットアップ後にNFSエクスポート上の `krb5.conf`を置き換えた場合（たとえば新しいファイルを上書きコピーした場合など）、影響を受けるサービスを再起動するまで、AI Data Engineは引き続き以前のファイルを使用します。
+
+.手順
+. 管理ホストで、マウントサービスを再起動し、以前のチケット更新ジョブを削除します。
++
+[source, cli]
+----
+kubectl -n "${NAMESPACE}" rollout restart daemonset ds-mount-server
+kubectl -n "${NAMESPACE}" delete job -l app.kubernetes.io/name=ds-krb5-ticket-refresher --ignore-not-found
+----
+. 新しいチケットの更新を開始してください。<<start-first-ticket-refresh,最初のチケット更新を開始します>> を参照してください。
+
+
+
+
+[[troubleshoot-kerberos-authentication]]
+[[troubleshoot-kerberos]]
+== Kerberos認証のトラブルシューティング
+
+Kerberos認証失敗の原因を特定し、SMB/CIFS共有のスキャンを復元します。
+
+[cols="2,3,3"]
+|===
+| 現象 | 考えられる原因 | 解決策 
+
+
+| 共有を追加すると、*IP not allowed with Kerberos* というエラーが表示されます。 | 共有パスにはIPアドレスが使用されます。 | 共有パスをFQDNとして入力してください。 
+
+
+| キータブをテストしたときに`kinit`が失敗するか、チケットが発行されません。 | パスワードまたはレルムが間違っている、レルムが大文字ではない、スキャンアカウントがAES256暗号化をサポートしていない、管理ホストまたはノードがポート88でKDCに到達できない、またはノードのクロックとKDCのずれが許容されるスキューを超えています。 | パスワードとレルムを確認し、アカウントがAES256暗号化をサポートしていることを確認してください。KDCへのポート88を開放し、すべてのノードでNTPが有効になっていることを確認してください。次に、keytabを再度作成します。 
+
+
+| チケット更新ジョブが失敗するか、チケットキャッシュが作成されません。 | キータブ、プリンシパルファイル、または `krb5.conf`が欠落しているか空であるか、またはグループの所有権と権限が正しくありません。 | <<kerberos-file-locations,AI Data Engine が使用する Kerberos ファイル>>に記載されている場所にファイルが存在することを確認します。キータブとプリンシパルファイルのモードが640、グループが4321であることを確認します。チケットキャッシュディレクトリが `root:4321`によって所有され、モードが770であることを確認します。 
+
+
+| 名前解決が断続的に失敗するか、ノード上では解決されてもAI Data Engine内では解決されません。 | ノードに複数のネームサーバーがリストされており、そのうちの1つがActive Directory名を解決できないか、 `/etc/resolv.conf`の変更後にCoreDNSが再起動されていません。 | 各ノードでActive Directory DNSサーバー以外のすべてのネームサーバーを削除し、CoreDNSを再起動してください。<<fix-name-resolution,名前解決を修正する>> を参照してください。 
+
+
+| Active DirectoryのDNSサーバーを設定したあと、AI Data Engine内で外部名が解決されません。 | Active DirectoryのDNSサーバーは外部クエリを転送しません。 |  `nslookup <external_fqdn> "${KDC_IP}"` が結果を返すことを確認します。結果が返されない場合は、Active Directory管理者にDNS転送を有効にするよう依頼してください。 
+
+
+| Kerberosスキャンは1つのノードでは正常に動作しますが、他のノードでは失敗します。エラー *mount error(2)* が表示され、ノード上の `dmesg`には *failed to create a new SMB session with Kerberos* と表示されます。 | `cifs-utils` はすべてのノードにインストールされているわけではありません。 | すべてのノードに `cifs-utils`をインストールします。インストールを確認するには、 `which cifs.upcall`を実行します。 
+
+
+| エラー *mount error(126)* が表示されます。 | AI Data EngineはNFSエクスポートから `krb5.conf`を読み取ることができません。 |  `<export>/kerberos/krb5.conf` が存在し、 `+kubectl -n "${NAMESPACE}" exec <pod_name> -- cat /etc/krb5.conf+` にその内容が表示されることを確認します。 
+
+
+|  `krb5.conf`への変更が有効になりません。 | セットアップ後にファイルが置き換えられましたが、AI Data Engineは引き続き以前のファイルを使用しています。 | <<update-kerberos-configuration,Kerberos設定ファイルを更新します>>を参照してください。 
+
+
+|  `ktutil`、 `kinit`、または `klist`コマンドが見つかりません。 | 管理ホストにKerberosクライアントツールがインストールされていません。 | Kerberosクライアントツールをインストールします。<<install-packages,必要なパッケージをインストールしてください>>を参照してください。 
+
+
+| ノード上の `/etc/resolv.conf`ファイルは、再起動後に以前の設定に戻ります。 | ネットワークマネージャがファイルを上書きします。 | ネットワークマネージャーがDNS設定を上書きできないようにします。<<fix-name-resolution,名前解決を修正する>> を参照してください。 
+|===
+
+
+[[remove-the-kerberos-configuration]]
+[[remove-kerberos-configuration]]
+== Kerberosの設定を削除します
+
+SMB/CIFS共有をKerberosでスキャンしなくなった場合は、データソースとKerberosファイルを削除してください。
+
+.手順
+. AI Data Engine UIから、Kerberosを使用するSMB/CIFSデータソースを削除します。
+. 管理ホストで、NFSエクスポートが `/mnt/aide-config`にマウントされている状態で、Kerberosファイルを削除します。
++
+[source, cli]
+----
+rm -f /mnt/aide-config/kerberos/kerberos_refresher/datasense.keytab
+rm -f /mnt/aide-config/kerberos/kerberos_refresher/kerberos_creds.env
+rm -f /mnt/aide-config/kerberos/krb5.conf
+rm -f /mnt/aide-config/kerberos/kerberos_ccache/krb5cc_shared
+umount /mnt/aide-config
+----
+. DNS設定を変更した場合は、元の設定に戻してください。
++
+.. 各ノードで、 `/etc/resolv.conf`のバックアップをリストアします。
++
+[source, cli]
+----
+cp /etc/resolv.conf.bak /etc/resolv.conf
+----
+.. RHELノードで追加したNetworkManager設定を削除してください。
++
+[source, cli]
+----
+rm -f /etc/NetworkManager/conf.d/90-dns-none.conf
+systemctl reload NetworkManager
+----
+.. systemd-resolvedの設定を追加したUbuntuノードでは、その設定を削除してください。
++
+[source, cli]
+----
+rm -f /etc/systemd/resolved.conf.d/ad-dns.conf
+systemctl restart systemd-resolved
+----
+.. 管理ホストから、CoreDNSを再起動します。 `<coredns_deployment>`をCoreDNSデプロイメントの名前に置き換えます。
++
+[source, cli]
+----
+kubectl -n kube-system rollout restart deployment <coredns_deployment>
+----
+
+
+
+
+
+
+[[related-information]]
+== 関連情報
+
+* link:configure-kerberos-smb.html["AI Data EngineでのSMB/CIFS共有のKerberos認証"]
+* link:configure-kerberos-smb-single-node.html["単一ノードのAI Data EngineデプロイメントでSMB/CIFS共有のKerberosを設定する"]
+* link:../deploy/aide-requirements.html#kerberos-ad-requirements["KerberosおよびActive Directoryの要件"]
+* link:../data-sources/connect-data-source.html["データソースをAI Data Engineに接続する"]
+* link:../data-sources/manage-data-sources.html["データソースの管理"]
+

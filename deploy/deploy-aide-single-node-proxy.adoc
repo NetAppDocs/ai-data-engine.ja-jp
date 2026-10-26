@@ -1,0 +1,306 @@
+---
+sidebar: sidebar 
+permalink: deploy/deploy-aide-single-node-proxy.html 
+keywords: deploy, install, single-node, single node, proxy, outbound proxy, forward proxy, wizard, NetApp Console, installer download, proxy password file, proxy CA certificate 
+summary: ターゲットホストがアウトバウンドプロキシ経由でのみインターネットにアクセスできる場合は、NetApp Consoleから単一ノード展開としてAIDEを展開します。 
+---
+= プロキシを使用したシングルノード展開としてAI Data Engineを展開します
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ターゲットホストがアウトバウンドプロキシ経由でしかインターネットにアクセスできない場合に、NetApp ConsoleからAI Data Engine（AIDE）をシングルノード展開として導入します。この手順には、プロキシの手順に加え、シングルノード展開のすべてのステップが含まれています。ターゲットホストがインターネットに直接アクセスできる場合は、代わりにlink:deploy-aide-single-node.html["AI Data Engineをシングルノード展開として展開する"]を使用してください。
+
+サポートされているプロキシの種類と完全なパラメータリファレンスについては、link:configure-proxy.html["AI Data Engineのプロキシについて"]を参照してください。プロキシで許可するエンドポイントについては、link:aide-requirements.html#outbound-internet-access["アウトバウンドインターネットアクセス"]を参照してください。
+
+
+
+[[before-you-begin]]
+== 開始する前に
+
+.権限とアクセス
+* お客様はNetApp Consoleで_組織管理者_以上の権限を持っています。
+* インストールコマンドを実行するには、対象ホスト上でsudoまたはroot権限が必要です。
+
+
+.環境
+* お客様の環境は、link:single-node-prerequisites.html["AIDEシングルノード展開の前提条件"] および link:aide-requirements.html["AIDEの要件"] に記載されているすべての前提条件を満たしています。
+* ターゲットホストのオペレーティングシステムリポジトリは、link:single-node-prerequisites.html#operating-system-packages["オペレーティングシステムパッケージ"]に記載されているパッケージを提供します。お使いの環境で必要な場合は、パッケージマネージャーに適切なプロキシ設定がされていることを確認してください。
+
+
+.NetApp Console
+* NetApp Consoleエージェント https://docs.netapp.com/us-en/console-setup-admin/concept-agent-install-options.html#agent-console-deploy["展開されています"^]であり、AI Data Engineホストから到達可能であること。インストールコマンドを実行するには、ConsoleエージェントのIPが必要です。
+
+
+.プロキシ
+* link:aide-requirements.html#outbound-internet-access["アウトバウンドインターネットアクセス"] のエンドポイントを許可するようにプロキシを設定しました。
+* プロキシのホスト、ポート、スキーム(`http`または `https`）を把握している。プロキシで認証が必要な場合は、ユーザ名とパスワードも把握している。
+* プライベート署名証明書を使用するHTTPSプロキシを使用する場合、ターゲットホスト上にCA証明書をPEMファイル、または `.crt`および `.pem`ファイルのフラットディレクトリとして用意します。
+
+
+
+NOTE: インストーラは、AIDEの初回インストール時にのみ使用してください。AIDEのアップグレードには使用しないでください。インストール後は、AIDEオペレータがアップグレードを管理します。アップグレードの詳細については、NetAppサポートにお問い合わせください。
+
+
+
+[[what-the-installer-configures]]
+== インストーラーが設定するもの
+
+シングルノード展開では、AI Data Engineはインストール先の仮想マシンを所有します。インストーラーは、プロキシ用にk3sランタイムとAI Data Engineを構成します。これは、オペレーティングシステムのパッケージマネージャなど、ホストのプロキシ設定を変更するものではありません。インストーラーは以下の処理を実行します：
+
+* プロキシ経由でk3sのインストールスクリプトとバイナリをダウンロードします。これはk3sやkubeletにシステム全体のプロキシを提供するものではありません。
+* k3sコンテナランタイムがプロキシ経由でイメージをプルするように設定します。
+*  `--proxy-ca-cert` で指定したCA証明書をAI Data Engineのトラストストアに追加します。
+
+
+k3sコンテナのランタイムやトラストストアを設定する必要はありません。
+
+
+
+[[copy-the-install-command]]
+== インストールコマンドをコピーする
+
+. NetApp Console で、*AI data hub* > *AI Data Engine* に移動します。
++
+AI Data Engineのランディングページが表示されます。
+
+. *AI Data Engine のデプロイ*を選択します。
+. *シングルノード*デプロイメントオプションを選択し、*次へ*を選択します。
+. 構成サイズを選択してください：
++
+** *小型*：約2億ファイルまでの環境に推奨されます。
+** *中（デフォルト）*：約10億ファイルまでの環境に推奨されます。
+** *ラージ*：約30億ファイルまでの環境に推奨されます。
++
+これらのサイズは推奨される基準値であり、厳密な制限ではありません。お客様の環境がこれらの範囲外である場合は、link:aide-requirements.html#flexible-sizing-single-node["柔軟なサイズガイドライン"]を参照してください。
+
++
+ウィザードは、選択した構成サイズに基づいてインストールコマンドを生成します。サイズを設定するためにコマンドを編集する必要はありません。
+
+
+
+. ウィザードに表示されているインストールコマンドをエディタにコピーしてください。
++
+インストールコマンドは、 `d13jb5dapseb36.cloudfront.net`からインストーラをダウンロードし、1つのステップで開始します。そのダウンロードではプロキシは使用されません。
+
++
+** ターゲットホストが `d13jb5dapseb36.cloudfront.net`に直接到達できる場合は、次のセクションをスキップして<<create-password-file-single-node,プロキシパスワードファイルを作成する>>に進んでください。コピーしたインストールコマンドを実行します。インストーラでプロキシ設定の入力を求められます。代わりにコマンドラインで指定する方法については、<<command-line-flags-single-node,コマンドラインフラグを使用した非対話型インストール>>を参照してください。
+** ターゲットホストがプロキシ経由でのみインターネットに接続できる場合、コマンドはダウンロードの段階で停止します。まず次のセクションを完了してください。
+
+
+
+
+
+
+[[download-the-installer-through-the-proxy]]
+[[download-installer-single-node]]
+== プロキシ経由でインストーラーをダウンロードする
+
+ご自身でインストーラをダウンロードし、 `sudo ./install-lite.sh` 以降のインストールコマンドを実行してください。
+
+. インストーラをターゲットホストに配置します。環境で許可されている任意の方法を使用して、ファイルをターゲットホストに配置します。
++
+プロキシ経由でターゲットホストからインストーラーをダウンロードするには：
+
++
+[source, bash]
+----
+mkdir -p ~/aide && cd ~/aide
+curl -fsSL -x http://PROXY_HOST:PROXY_PORT \
+  https://d13jb5dapseb36.cloudfront.net/aide/latest/aide-installer.tar.gz -o aide-installer.tar.gz
+----
++
+プロキシ サーバにユーザ名が必要な場合は、 `--proxy-user USER`を `curl`コマンドに追加してください。パスワードを省略すると、 `curl`がパスワードの入力を求めるため、シェルの履歴に保存されません。
+
++
+** プロキシ サーバが HTTPS でリッスンしている場合は、 `-x` アドレスに `https://`を使用してください。
+** プロキシがプライベート署名証明書を使用している場合は、 `--proxy-cacert CA_FILE`を追加するか、まずCA証明書を対象ホストのトラストストアに追加してください。
+** HTTPSプロキシを使用し、 `curl`のバージョンが8.3より前の場合、ダウンロードが約1分間一時停止することがあります。Ubuntu 22.04には、そのようなバージョンが含まれています。完了するまでお待ちください。
++
+または、別のデバイスから `\https://d13jb5dapseb36.cloudfront.net/aide/latest/aide-installer.tar.gz`をダウンロードし、 `scp`や普段お使いのファイル転送方法を使用してターゲットホストにコピーします。
+
+
+
+. インストーラーを解凍し、インストーラーフォルダに移動します：
++
+[source, bash]
+----
+tar -xzf aide-installer.tar.gz
+cd installer
+----
++
+以下のコマンドはすべて、このインストーラーフォルダ内で実行してください。フォルダ内の `version.txt`ファイルには、インストーラーのビルドバージョンが表示されます。
+
+. NetApp Consoleからコピーしたインストールコマンドを準備します。このコマンドは `sudo bash -c '`で始まり、インストーラをダウンロードしてから、指定したパラメータで `./install-lite.sh`を実行します。すでにインストーラをダウンロードしているため：
++
+**  `./install-lite.sh` より前の部分をすべて削除して、コマンドが  `./install-lite.sh` から始まるようにします。
+** 一番最後にあるシングルクォーテーション (`'`）を削除します。
+** 先頭に `sudo`を追加して、コマンドが `sudo ./install-lite.sh`で始まるようにします。インストーラーはrootとして実行する必要があります。 `bash -c`ラッパーを削除すると、それを提供していた `sudo`も削除されます。
+** コマンドに `--no-proxy`が含まれている場合は、削除してください。
++
+残りのコマンドは次のようになります：
+
++
+[source, bash]
+----
+sudo ./install-lite.sh --account-id <account-id> --organization-id <organization-id> --agent-id <agent-id> --env <environment> --user-token <user-token> --cm-host <console-agent-ip> --catalog-endpoint <catalog-endpoint> --flavor <small|medium|large>
+----
++
+ `./install-lite.sh`に続くすべてのパラメータは、コピーしたコマンドに表示されているとおりに正確に保持してください。インストーラーはプロキシ設定の入力を求めます。<<interactive-setup-single-node,インタラクティブなガイド付きセットアップ>>を参照してください。
+
+
+
+
+
+
+
+[[create-a-proxy-password-file]]
+[[create-password-file-single-node]]
+== プロキシパスワードファイルを作成する
+
+プロキシが認証を必要とし、自動展開などでパスワードの入力を求められずにパスワードを入力したい場合は、インストーラーを実行する前にパスワードファイルを作成してください。そうでない場合は、このセクションをスキップしてください。インストーラーは、隠し入力欄でパスワードの入力を求めます。
+
+ファイルにはパスワードのみが含まれています。特殊文字をパーセントエンコードせずに、パスワードをそのまま入力してください。
+
+以下のコマンドをrootとして実行してください。シングルノードインストールコマンドは `sudo`で実行されるため、 `/root`配下のファイルを読み取ることができます。
+
+[source, bash]
+----
+umask 077
+read -rs -p 'Proxy password: ' P && printf '%s' "$P" > /root/.aide-proxy-password; unset P; echo
+chmod 600 /root/.aide-proxy-password
+----
+インストールが完了したら、ファイルを削除してください。
+
+
+
+[[supply-the-proxy-settings]]
+== プロキシ設定を入力してください
+
+インストーラーはプロキシ設定の入力を求めます。NetApp Consoleからコピーしたインストールコマンドを実行し、プロンプトに回答します。プロンプトなしで実行する必要がある自動展開については、<<command-line-flags-single-node,コマンドラインフラグを使用した非対話型インストール>>を参照してください。
+
+
+
+[[use-the-interactive-guided-setup]]
+[[interactive-setup-single-node]]
+=== インタラクティブなガイド付きセットアップを使用します
+
+ `--proxy-host`または `--no-proxy`を指定せずにターミナルでインストールコマンドを実行すると、インストーラーは次の質問をします。値をパラメータとして渡した場合、インストーラーはその値を再度要求しません。
+
+[cols="2,3"]
+|===
+| プロンプト | 何を入力すればよいか 
+
+
+| `Configure outbound proxy? (y/N)` | と入力します `y`。 
+
+
+| プロキシホストまたはIPアドレス | プロキシホスト名またはIPv4アドレスを入力します（オプションでポート(`host:port`も指定できます）。 
+
+
+| プロキシスキーム(`https`または `http`） | プロキシがリッスンするプロトコルを入力してください。デフォルトは `https`です。 
+
+
+| プロキシポート | プロキシポートを入力してください。デフォルトは、HTTPSの場合は `443`、HTTPの場合は `80`です。 
+
+
+| プロキシの種類 | デフォルト設定を受け入れるには、Enterキーを押してください。 
+
+
+| プロキシ自身の証明書の認証局証明書（HTTPSのみ、オプション） | CAファイルまたはディレクトリへのパスを入力してください。プロキシ証明書に公開認証局が署名している場合は、Enterキーを押してください。 
+
+
+| プロキシにはユーザー名とパスワードが必要ですか？（y/N） | はいの場合は、ユーザー名を入力し、次にパスワードを2回入力してください。インストーラーはパスワードをエコーバックしません。 
+|===
+端末がない場合、インストーラーはプロンプトを表示しません。プロキシを使用するには `--proxy-host`を渡し、プロキシにパスワードが必要な場合は `--proxy-password-file`を渡します。
+
+
+
+[[use-command-line-flags-for-setup]]
+[[command-line-flags-single-node]]
+=== セットアップにはコマンドラインフラグを使用してください
+
+プロンプトを表示せずに実行する必要がある自動化されたデプロイメントや、その他の非対話型デプロイメントには、コマンドラインフラグを使用してください。フラグは任意です。インストーラーは、入力されていないプロキシ情報があれば入力を求めます。
+
+プロキシパラメータは、インストールコマンドの末尾、既存の最後のパラメータの後に追記してください。
+
+* NetApp Consoleからコピーしたインストールコマンドを実行する場合は、閉じ引用符の前の引用符内にパラメータを追加してください。
+* インストーラーをダウンロードしてコマンドを短縮した場合は、短縮したコマンドの末尾にパラメータを追加してください。
+
+
+コマンドに `--no-proxy`が含まれている場合は、削除してください。インストールコマンドのその他のパラメータはすべてそのまま使用してください。各パラメータの説明とデフォルト値については、link:configure-proxy.html#proxy-parameters["プロキシ設定パラメータ"]を参照してください。以下の例は、プロキシパラメータのみを示しています。
+
+.ユーザー名とパスワード付きのHTTPプロキシ
+[source, bash]
+----
+--proxy-host proxy.example.com \
+--proxy-port 3128 \
+--proxy-scheme http \
+--proxy-user svc-aide \
+--proxy-password-file /root/.aide-proxy-password
+----
+.プライベート署名付き証明書を使用し、認証を行わないHTTPSプロキシ
+[source, bash]
+----
+--proxy-host proxy.example.com \
+--proxy-port 8443 \
+--proxy-scheme https \
+--proxy-ca-cert /root/proxy-ca.pem
+----
+* プロキシで認証が不要な場合は、 `--proxy-user` と  `--proxy-password-file` を省略してください。
+*  `--proxy-user`を `--proxy-password-file`なしで指定した場合、ターミナルからインストーラを実行すると、インストーラはパスワードの入力を求めます。
+
+
+
+CAUTION: HTTPプロキシでは、プロキシのユーザー名とパスワードはクリアテキストで送信されます。プロキシが認証を必要とする場合は、HTTPSプロキシを使用してください。
+
+
+
+[[run-the-installation]]
+== インストールを実行します
+
+. 対象ホスト上でインストールコマンドを実行してください。インストーラーをダウンロードした場合は、インストーラーフォルダからコマンドを実行してください。
++
+インストーラは、何かをダウンロードする前に、ターゲットホストから、プロキシが応答するか、プロキシが認証情報を受け入れるか、プロキシ証明書が選択したスキームに対して有効であるかを確認します。チェックが失敗した場合、インストーラは停止し、原因を明示します。
+
++
+
+NOTE: インストールには約45分かかります。タイムアウトや再試行が発生する場合がありますが、これは正常な動作です。
+
+. プロキシパラメータをすべて渡していない場合は、プロキシのプロンプトに回答してください。<<interactive-setup-single-node,インタラクティブなガイド付きセットアップ>> を参照してください。
+. インストールを続行するには、インストーラの確認プロンプトに回答します。
++
+インストーラは、AI Data Engine NGINX Ingressを実行しているノードのIPアドレスを検出し、確認を求めます。表示されているアドレスをそのまま使用する場合はEnterキーを押すか、別のアドレスを入力してください。VMの外部からアクセス可能なアドレスを使用してください。Consoleエージェントのアドレスは入力しないでください。
+
+. 成功画面が表示され、AIDEのインストールが完了したことが確認されるまで、進行状況画面を監視します。
+
+
+.結果
+AI Data Engine がデプロイされ、NetApp Console に接続されました。これでlink:../data-sources/connect-data-source.html["データソースを接続する"]スキャンを開始できます。
+
+
+
+[[check-the-proxy-after-installation]]
+[[check-proxy-single-node]]
+== インストール後にプロキシを確認してください
+
+AI Data Engineオペレータは、使用するプロキシをログに記録します。ログにはパスワードは一切含まれません。インストーラは `kubectl`の独自のコピーを `/opt/netapp/aide/.aide-installer-tools`にダウンロードし、お客様の `PATH`には追加しません。k3s kubeconfigはrootのみが読み取り可能です。プロキシを確認するには、対象ホストで次のコマンドを実行します：
+
+[source, bash]
+----
+sudo /opt/netapp/aide/.aide-installer-tools/kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml -n aide logs deploy/aide-operator -c chart-fetcher | grep -m1 'proxy enabled'
+----
+この行には、プロキシのエンドポイント、認証が有効になっているかどうか、およびCA証明書がマウントされているかどうかが表示されます。
+
+
+
+[[related-information]]
+== 関連情報
+
+* link:configure-proxy.html["AI Data Engineのプロキシについて"]
+* link:single-node-prerequisites.html["AIDEシングルノード展開の前提条件"]
+* link:aide-requirements.html["AIDEの要件"]
+* link:deploy-aide-single-node.html["AI Data Engineをシングルノード展開として展開する"]
+
