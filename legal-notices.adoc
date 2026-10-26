@@ -52,4 +52,4 @@ link:https://www.netapp.com/company/legal/privacy-policy/["https://www.netapp.co
 
 通知ファイルは、NetAppソフトウェアで使用されるサードパーティの著作権とライセンスに関する情報を提供します。
 
-link:https://library.netapp.com/ecm/ecm_download_file/ECMLP3389886["AI Data Engine の通知"^]
+link:https://library.netapp.com/ecm/ecm_download_file/ECMLP3391666["AI Data Engine の通知"^]
