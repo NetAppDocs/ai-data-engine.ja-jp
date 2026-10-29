@@ -19,7 +19,7 @@ indexpage:
     - title: ストレージ最適化ワークフローを探索する
       url: "/get-started/storage-optimization-workflows.html"
     - title: 新機能
-      url: "/release-notes/whats-new.html"
+      url: "/whats-new.html"
     - title: 既知の制限事項
       url: "/release-notes/known-limitations.html"
   - title: 導入

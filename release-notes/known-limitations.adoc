@@ -67,7 +67,7 @@ MCPタグの操作には制限があります:: AIクライアントは、タグ
 [[related-information]]
 == 関連情報
 
-* link:whats-new.html["新機能"]
+* link:../whats-new.html["新機能"]
 * link:../deploy/deployment-overview.html["導入概要"]
 * link:../investigate/take-actions.html["データに対してアクションを実行する"]
 * link:../mcp/learn-about-mcp.html["ガバナンスされたAIアクセスについて学ぶ"]
