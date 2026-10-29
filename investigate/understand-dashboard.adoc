@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: investigate/understand-dashboard.html 
-keywords: dashboard, overview, reclaimable storage, cold data, stale data, storage health, capacity risk, data owners, investigate, access exposure, open permissions, structured data, duplicates, file types 
+keywords: dashboard, overview, reclaimable storage, cold data, stale data, storage health, capacity risk, data owners, investigate, permissions, open permissions, structured data, duplicates, file types 
 summary: 環境全体のストレージの健全性を評価し、再利用可能なストレージが集中している場所を特定し、オープンな権限を持つディレクトリや構造化データを確認して、どのシステムまたはデータ所有者を最初に調査するかを決定します。 
 ---
 = AI Data Engine ダッシュボードでストレージの健全性を評価する
@@ -13,7 +13,9 @@ summary: 環境全体のストレージの健全性を評価し、再利用可�
 [role="lead"]
 調査対象を決定する前に、ストレージの状態を把握する必要があります。お客様の組織が定めるコールドデータおよび陳腐データの分類基準を満たすストレージ容量はどれくらいですか？また、これらのカテゴリに該当するデータが最も多く保存されているシステムや所有者は誰ですか？例えば、容量アラートに対応したストレージ管理者は、スキャンされたストレージの大部分がコールドデータであることを確認し、最も影響の大きいシステムを詳しく調べて、直ちに調査を開始できます。
 
-NetApp Consoleから、*AIデータハブ* > *AI Data Engine*を選択します。デフォルトでダッシュボードが開きます。ダッシュボードは、分析結果を3つのタブに整理しています：*ストレージ最適化*、*アクセスリスク*、および*構造化データ*。
+NetApp Consoleから、*AIデータハブ* > *AI Data Engine*を選択します。デフォルトでダッシュボードが開きます。ダッシュボードでは、インサイトが次の3つのタブに整理されています：*ストレージ最適化*、*権限*、*構造化データ*。
+
+image::aide_mo_ga_overview_page.png[AI Data Engineダッシュボードの概要]
 
 
 
@@ -58,10 +60,10 @@ NetApp Consoleから、*AIデータハブ* > *AI Data Engine*を選択します�
 
 
 
-[[review-access-exposure]]
-== アクセス露出のレビュー
+[[review-permissions]]
+== 権限を確認する
 
-権限レビューの優先順位付けを行うべきディレクトリを特定します。「アクセス権限の公開状況」タブには、「アクセス許可が開いているディレクトリ」グラフが表示され、ディレクトリのパスとそのファイル数が一覧表示されます。これらのディレクトリの詳細については、link:investigate-directories.html["ディレクトリを調査する"]を参照してください。AI Data Engineが権限をスキャンするかどうかを制御するには、link:../administer/configure-settings.html["データ分類のしきい値とアクセススキャンを設定します"]を参照してください。
+権限レビューの優先順位付けを行うべきディレクトリを特定します。「アクセス許可」タブには、「アクセス許可が開いているディレクトリ」グラフが表示され、ディレクトリのパスとそのファイル数が一覧表示されます。これらのディレクトリの詳細については、link:investigate-directories.html["ディレクトリを調査する"]を参照してください。AI Data Engineが権限をスキャンするかどうかを制御するには、link:../administer/configure-settings.html["データ分類のしきい値とアクセススキャンを設定します"]を参照してください。
 
 
 
@@ -77,9 +79,9 @@ NetApp Consoleから、*AIデータハブ* > *AI Data Engine*を選択します�
 
 調査する価値のあるリソースまたは所有者を特定したら、*ストレージ最適化*タブの表を使用して、詳細情報に直接移動します。
 
-「再利用可能なストレージによる上位データリソース」表には、スキャンされたストレージリソースが、重複しているデータ、または組織のコールドデータおよび古くなったデータのしきい値を満たしているデータの割合に基づいてランク付けされて表示されます。いずれかの行を選択すると、そのリソースに絞り込まれた調査ビューが開きます。そこから、link:investigate-unstructured.html["非構造化"]タブを使用してコールドファイルまたは古いファイルを識別するか、link:investigate-directories.html["ディレクトリ"]タブを使用して権限の漏洩状況を監査します。
+「再利用可能なストレージによる上位データリソース」表には、スキャンされたストレージリソースが、重複しているデータ、または組織のコールドデータおよび古くなったデータのしきい値を満たしているデータの割合に基づいてランク付けされて表示されます。link:investigate-unstructured.html["非構造化"]タブを使用してコールドファイルや古いファイルを特定するか、link:investigate-directories.html["ディレクトリ"]タブを使用して権限の漏洩状況を監査します。
 
-「再利用可能なストレージ別の上位コンシューマー」テーブルには、どのデータ所有者が再利用可能な可能性のあるデータを保持しているかが表示されます。任意の行を選択すると、その所有者のファイルにフィルタリングされたlink:investigate-unstructured.html["調査"]ビューが開きます。そこから、結果を確認したり、アクションを実行したり、ポリシーとして保存したりできます。
+「再利用可能なストレージによる上位消費者」表は、どのデータ所有者が潜在的に再利用可能なデータを保有しているかを示しています。「調査」を選択して、その所有者のファイルにフィルタリングされたlink:investigate-unstructured.html["調査"]ビューを開きます。そこから、結果を確認したり、アクションを実行したり、ポリシーとして保存したりできます。
 
 ダッシュボードを確認しても、データがアーカイブされたり削除されたり、ディレクトリのアクセス許可が変更されたりすることはありません。
 

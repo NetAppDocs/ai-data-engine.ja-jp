@@ -107,6 +107,6 @@ summary: メタデータフィルタを使用して、NFSおよびSMBボリュ�
 * link:take-actions.html["データに対してアクションを実行する"]
 * link:../policies/create-policy.html["ポリシーを作成します。"]
 * link:../administer/configure-settings.html["データ分類のしきい値とアクセススキャンを設定します"]
-* link:../get-started/storage-optimization-workflows.html["ストレージ最適化ワークフローを探索する"]
+* link:storage-optimization-workflows.html["ストレージ最適化ワークフローを探索する"]
 * link:understand-dashboard.html["ダッシュボードからストレージの使用状況を評価する"]
 

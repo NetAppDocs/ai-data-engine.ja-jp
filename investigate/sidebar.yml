@@ -14,3 +14,5 @@ entries:
   url: "/investigate/investigate-directories.html"
 - title: データに基づいて行動を起こす
   url: "/investigate/take-actions.html"
+- title: ストレージ最適化ワークフローを探索する
+  url: "/investigate/storage-optimization-workflows.html"

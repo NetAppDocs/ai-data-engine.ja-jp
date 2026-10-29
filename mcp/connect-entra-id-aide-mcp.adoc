@@ -127,6 +127,5 @@ link:manage-data-collections.html["データコレクションを管理する"]�
 * link:configure-entra-id-mcp.html["管理されたAIアクセス用にMicrosoft Entra IDを構成する"]
 * link:manage-data-collections.html["データコレクションを管理する"]
 * link:connect-ai-clients-mcp.html["AIクライアントをAI Data Engine MCPサーバーに接続します"]
-* link:maintain-mcp-setup.html["MCP設定の維持"]
 * link:../release-notes/known-limitations.html["既知の制限事項"]
 

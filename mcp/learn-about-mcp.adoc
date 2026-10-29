@@ -18,7 +18,7 @@ summary: ガバナンスされたAIアクセスにより、AIクライアント�
 [[what-governed-ai-access-does]]
 == 管理されたAIアクセスの機能
 
-Model Context Protocol（MCP）は、AIクライアントが外部のデータソースやツールに接続できるようにするオープン スタンダードです。AI Data Engineは、AIクライアントがお客様のストレージシステムに直接アクセスするのではなく、AI Data Engineメタデータカタログにクエリを実行できるように、Governed Access Gatewayと呼ばれるMCPサーバーを提供します。
+Model Context Protocol（MCP）は、AIクライアントが外部データソースやツールに接続できるようにするオープン スタンダードです。AI Data Engineは、AIクライアントがお客様のストレージシステムに直接アクセスするのではなく、AI Data Engineメタデータカタログにクエリを実行できるように、Governed Access Gatewayと呼ばれるMCPサーバーを提供します。
 
 MCPを通じて、接続されたAIクライアントは以下のことが可能になります：
 
@@ -125,12 +125,9 @@ NetAppは他のMCPクライアントについてはテストしていません�
 == 関連情報
 
 * link:manage-data-collections.html["データコレクションを管理する"]
-* link:maintain-mcp-setup.html["MCP設定の維持"]
 * link:quick-start-mcp.html["AI Data Engineを使用したガバナンスされたAIアクセスのクイックスタート"]
 * link:prepare-mcp-host.html["MCPホストを準備する"]
 * link:configure-entra-id-mcp.html["管理されたAIアクセス用にMicrosoft Entra IDを構成する"]
-* link:connect-entra-id-aide-mcp.html["AI Data EngineをMicrosoft Entra IDに接続する"]
 * link:connect-ai-clients-mcp.html["AIクライアントをAI Data Engine MCPサーバーに接続します"]
 * link:mcp-tools-reference.html["AI Data Engineが管理するAIアクセス用MCPツール"]
-* link:../release-notes/known-limitations.html["既知の制限事項"]
 

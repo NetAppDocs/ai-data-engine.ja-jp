@@ -13,6 +13,8 @@ summary: AI Data Engineがコールドデータまたは古いデータとして
 [role="lead"]
 コールドデータや古いデータのしきい値は、AI Data Engine（AIDE）を使用して最適化できるストレージを見つけるのに役立ちます。アクセス許可のスキャンとActive Directoryとの連携により、アクセスリスクを特定し、理解することができます。組織のデータ分類、保持、およびアクセスに関するポリシーに合わせて設定してください。
 
+image::aide_mo_ga_configuration_page.png[AI Data Engine 一般設定]
+
 
 
 [[before-you-begin]]
@@ -102,8 +104,7 @@ NOTE: デフォルトのしきい値は、出発点として提供される製�
 * link:../investigate/understand-dashboard.html["AI Data Engine ダッシュボードについて学ぶ"]
 * link:../investigate/investigate-directories.html["ディレクトリを調査する"]
 * link:../investigate/investigate-unstructured.html["非構造化データを調査する"]
-* link:../get-started/storage-optimization-workflows.html["ストレージ最適化ワークフローを探索する"]
-* link:../deploy/aide-requirements.html["AIDEの要件"]
+* link:../investigate/storage-optimization-workflows.html["ストレージ最適化ワークフローを探索する"]
 * link:manage-users-roles.html["ユーザーとロールを管理する"]
 * link:configure-ad-nfs.html["NFS 用の Active Directory ID マッピングを構成する"]
 

@@ -357,7 +357,5 @@ TIP: ファイル名の接頭辞、ファイルの種類、所有者で検索フ
 * link:prepare-mcp-host.html["MCPホストを準備する"]
 * link:manage-data-collections.html["データコレクションを管理する"]
 * link:maintain-mcp-setup.html["MCP設定の維持"]
-* link:configure-entra-id-mcp.html["管理されたAIアクセス用にMicrosoft Entra IDを構成する"]
-* link:connect-entra-id-aide-mcp.html["AI Data EngineをMicrosoft Entra IDに接続する"]
 * link:../release-notes/known-limitations.html["既知の制限事項"]
 

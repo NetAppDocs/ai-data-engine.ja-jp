@@ -471,6 +471,4 @@ AI Data EngineのアクティブなバージョンとNetAppサポートの連絡
 * link:deployment-overview.html["AIDE導入概要"]
 * link:single-node-prerequisites.html["AIDEシングルノード展開の前提条件"]
 * link:multi-node-prerequisites.html["AIDEマルチノード展開の前提条件"]
-* link:deploy-aide-single-node.html["AI Data Engineをシングルノード展開として展開する"]
-* link:deploy-aide-multi-node.html["AI Data Engineをマルチノード展開として展開する"]
 

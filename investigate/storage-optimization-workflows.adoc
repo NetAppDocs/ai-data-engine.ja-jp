@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar 
-permalink: get-started/storage-optimization-workflows.html 
+permalink: investigate/storage-optimization-workflows.html 
 keywords: storage optimization, cold data, stale data, retention, workflow, dashboard, investigate, policy 
 summary: エンドツーエンドフローを使用して、ダッシュボードの調査結果を調査、対策、継続的なポリシーモニタリングへと進めます。 
 ---
@@ -22,9 +22,9 @@ summary: エンドツーエンドフローを使用して、ダッシュボー�
 ダッシュボードを見ると、ストレージリソースで大量のデータがコールドとしてフラグ付けされていることがわかります。コールドファイルは、設定されたコールドデータのしきい値（デフォルトは1年）内にアクセスされていないファイルです。このしきい値は、link:../administer/configure-settings.html["データ分類設定"]で変更できます。
 
 .手順
-. link:../investigate/understand-dashboard.html["ダッシュボード"]から、コールドデータの集中度が最も高いリソースを特定し、*調査*を選択します。
-. link:../investigate/investigate-unstructured.html["調査"]で、設定済みのコールドデータしきい値（デフォルト：1年以上）に合わせて「最終アクセス日時」フィルターを設定し、リソースを確認します。
-. 結果を確認して、一致するファイルlink:../investigate/take-actions.html["タグを付けるか、アーカイブするか、削除するか"]を決定してください。
+. link:understand-dashboard.html["ダッシュボード"]から、コールドデータの集中度が最も高いリソースを特定し、*調査*を選択します。
+. link:investigate-unstructured.html["調査"]で、設定済みのコールドデータしきい値（デフォルト：1年以上）に合わせて「最終アクセス日時」フィルターを設定し、リソースを確認します。
+. 結果を確認して、一致するファイルlink:take-actions.html["タグを付けるか、アーカイブするか、削除するか"]を決定してください。
 . これらのリソースを継続的に監視する価値がある場合は、link:../policies/create-policy.html["フィルタセットをポリシーとして保存する"]新しいファイルがコールドになったときに通知を受け取れるようにします。
 
 
@@ -40,9 +40,9 @@ AI Data Engineは、組織が設定した期限（デフォルト：3年）を�
 NOTE: このしきい値は、link:../administer/configure-settings.html["データ分類設定"]で変更できます。
 
 .手順
-. link:../investigate/understand-dashboard.html["ダッシュボード"]から、大量の古いデータを含むリソースを特定します。
-. link:../investigate/investigate-unstructured.html["調査"]で、古いデータのしきい値（デフォルトは「3年以上」）に設定された「最終更新日」フィルターを適用します。
-. 結果を確認して、一致するファイルlink:../investigate/take-actions.html["タグを付けるか、アーカイブするか、削除するか"]を決定してください。
+. link:understand-dashboard.html["ダッシュボード"]から、大量の古いデータを含むリソースを特定します。
+. link:investigate-unstructured.html["調査"]で、古いデータのしきい値（デフォルトは「3年以上」）に設定された「最終更新日」フィルターを適用します。
+. 結果を確認して、一致するファイルlink:take-actions.html["タグを付けるか、アーカイブするか、削除するか"]を決定してください。
 . link:../policies/create-policy.html["フィルタセットをポリシーとして保存する"]これらのリソースを後続のスキャン全体にわたって追跡するため。
 
 
@@ -58,7 +58,7 @@ NOTE: このしきい値は、link:../administer/configure-settings.html["デー
 NOTE: このしきい値は、「設定」＞「一般設定」で設定できます。
 
 .手順
-. link:../investigate/investigate-unstructured.html["調査"]で、データ保持のしきい値（デフォルトは「7年以上」）に設定された「最終作成日」フィルターを適用します。
+. link:investigate-unstructured.html["調査"]で、データ保持のしきい値（デフォルトは「7年以上」）に設定された「最終作成日」フィルターを適用します。
 . 行動を起こす前に、関係者と結果を確認してください。保存期間が設定されたファイルは、自動的に削除されるのではなく、監視されることが多いです。
 . link:../policies/create-policy.html["ポリシーを作成します。"]監視のみ、またはメール通知のアクションを設定することで、新しいファイルが保持期間のしきい値に達したときにアラートを受け取ることができます。
 
@@ -72,11 +72,11 @@ NOTE: このしきい値は、「設定」＞「一般設定」で設定でき�
 同じファイルの複数の同一コピーがボリュームや共有フォルダに分散して存在する状態は、バックアップジョブ、データ移行、共有プロジェクトフォルダなどが存在する環境でよく見られる問題です。
 
 .手順
-. link:../investigate/investigate-unstructured.html["調査"] で、*非構造化*を選択し、最近のデータ移行時のファイルなど、コピーが存在すると思われるファイルの詳細を開きます。
+. link:investigate-unstructured.html["調査"] で、*非構造化*を選択し、最近のデータ移行時のファイルなど、コピーが存在すると思われるファイルの詳細を開きます。
 . *重複ファイル*の横にある*詳細を表示*を選択すると、ファイルのすべてのコピーとその場所が表示されます。
 . 重複しているコピーを特定するため、一致するファイルとその場所を確認してください。
 . 重複ファイルを選択し、*重複ファイルの削除*を選択します。
-. 「操作」で「削除」を選択します。「最終更新日時」オプションでコピーを保持し、元の場所にパンくずリストを残して、「送信」を選択します。次に、ダイアログで削除を確定します。詳細については、link:../investigate/take-actions.html["重複ファイルの調査と削除"]を参照してください。
+. *操作*で*削除*を選択します。「最終更新日時」オプションでコピーを保持し、元の場所にパンくずリストを残して、「送信」を選択します。次に、ダイアログで削除を確定します。詳細については、link:take-actions.html["重複ファイルの調査と削除"]を参照してください。
 . link:../policies/create-policy.html["ポリシーを作成します。"]時間の経過に伴う重複データの蓄積を追跡し、その数が増加した際に通知を受け取ることができます。
 
 
@@ -89,9 +89,9 @@ NOTE: このしきい値は、「設定」＞「一般設定」で設定でき�
 組織が定める「古くなったデータ」および「利用価値の低いデータ」の基準を満たすデータは、多くの所有者に分散されています。これらのカテゴリに属するファイルを最も多く保有しているデータ所有者を特定することで、クリーンアップの優先順位付けに役立ちます。
 
 .手順
-. link:../investigate/understand-dashboard.html["ダッシュボード"] から、_再利用可能なストレージ別の上位コンシューマー_テーブルを探します。
-. オーナー行を選択すると、link:../investigate/investigate-unstructured.html["調査"]がその所有者のファイルでフィルタリングされた状態で開きます。
-. 結果を確認し、link:../investigate/take-actions.html["タグを付けるか、アーカイブするか、削除するか"]ファイルを決定します。
+. link:understand-dashboard.html["ダッシュボード"] から、_再利用可能なストレージ別の上位コンシューマー_テーブルを探します。
+. オーナー行を選択すると、link:investigate-unstructured.html["調査"]がその所有者のファイルでフィルタリングされた状態で開きます。
+. 結果を確認し、link:take-actions.html["タグを付けるか、アーカイブするか、削除するか"]ファイルを決定します。
 . link:../policies/create-policy.html["フィルタセットをポリシーとして保存する"]所有者の回収可能な可能性のあるデータが時間の経過とともにどのように変化するかを監視します。
 
 
@@ -100,9 +100,9 @@ NOTE: このしきい値は、「設定」＞「一般設定」で設定でき�
 [[related-information]]
 == 関連情報
 
-* link:../investigate/understand-dashboard.html["ダッシュボードからストレージの使用状況を評価する"]
-* link:../investigate/investigate-data.html["データを調査する"]
-* link:../investigate/investigate-unstructured.html["非構造化データを調査する"]
-* link:../investigate/take-actions.html["データに対してアクションを実行する"]
+* link:understand-dashboard.html["ダッシュボードからストレージの使用状況を評価する"]
+* link:investigate-data.html["データを調査する"]
+* link:investigate-unstructured.html["非構造化データを調査する"]
+* link:take-actions.html["データに対してアクションを実行する"]
 * link:../policies/create-policy.html["ポリシーを作成します。"]
 

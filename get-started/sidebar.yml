@@ -8,5 +8,3 @@ entries:
   url: "/get-started/architecture.html"
 - title: クイック スタート
   url: "/get-started/quick-start.html"
-- title: ストレージ最適化ワークフローを探索する
-  url: "/get-started/storage-optimization-workflows.html"

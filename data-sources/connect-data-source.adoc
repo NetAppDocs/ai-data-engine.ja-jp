@@ -11,14 +11,14 @@ summary: データソースをAI Data Engineに接続し、スキャンするデ
 
 
 [role="lead"]
-AI Data Engine（AIDE）に分析させるデータソースを接続し、スキャンするデータリソースを選択します。AI Data Engineは接続されたデータソースをスキャンしてメタデータを収集します。接続手順はソースの種類によって異なります。
+AI Data Engine（AIDE）に分析させるデータソースを接続し、スキャンするデータリソースを選択します。AI Data Engineは接続されたデータソースをスキャンしてメタデータを収集し、接続手順はソースの種類によって異なります。これらのタスクは、NetApp Consoleで完了します。
 
 
 
 [[before-you-begin]]
 == 開始する前に
 
-* データソースに接続して構成するには、_AI Data Engine管理者_権限が必要です。
+* データソースを接続して設定するには、NetApp Consoleで_AI Data Engine管理者_ロールを持っている必要があります。
 * NetApp Consoleの検出機能を通じて接続されたシステムの場合、AI Data Engineに追加する前に、Consoleエージェントを使用してNetApp Consoleでストレージシステムを検出してください。これは、オンプレミスのONTAPクラスタ、Cloud Volumes ONTAP、Amazon FSx for NetApp ONTAP、Google Cloud NetApp Volumes、Azure NetApp Filesなど、サポートされているすべてのストレージタイプに適用されます。オンプレミスのONTAPクラスタについては、NetApp Consoleのドキュメントのlink:https://docs.netapp.com/us-en/storage-management-ontap-onprem/task-discovering-ontap.html["オンプレミス ONTAP クラスターの検出"]を参照してください。直接検出では、AI Data Engineなどのデータサービスは有効になりません。
 * AI Data Engine がデータソースに接続するために必要なネットワーク接続が開いていることを確認してください。link:../deploy/aide-requirements.html["AI Data Engine の要件"]を参照してください。
 * Kerberos認証を使用してSMB/CIFS共有をスキャンするには、まず link:../administer/configure-kerberos-smb.html["AI Data EngineでのSMB/CIFS共有のKerberos認証"] で展開タイプに応じた手順を完了してください。

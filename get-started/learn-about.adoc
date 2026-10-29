@@ -80,5 +80,5 @@ AI Data Engineは、接続したサポート対象のデータソースをスキ
 * link:architecture.html["AI Data Engineアーキテクチャ"]
 * link:quick-start.html["クイック スタート"]
 * link:../mcp/learn-about-mcp.html["ガバナンスされたAIアクセスについて学ぶ"]
-* link:storage-optimization-workflows.html["ストレージ最適化ワークフローを探索する"]
+* link:../investigate/storage-optimization-workflows.html["ストレージ最適化ワークフローを探索する"]
 

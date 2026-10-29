@@ -94,7 +94,8 @@ NetApp Consoleのロールは、AI Data Engineで管理対象AIアクセスを�
 役割は AI Data Engine 自体ではなく、NetApp Console で割り当てます。
 
 .手順
-. NetApp Console から、*メンバー*に移動します。
+. NetApp Consoleから、*管理 > IDとアクセス*を選択します。
+. *メンバー* に移動します。
 . 次のいずれかを実行します。
 +
 ** 新しいユーザーを追加するには、*ユーザーを追加*を選択し、ユーザーのメールアドレスを入力してください。
@@ -102,8 +103,8 @@ NetApp Consoleのロールは、AI Data Engineで管理対象AIアクセスを�
 
 
 . 組織、フォルダー、またはプロジェクトを選択し、次に「データサービス」カテゴリを選択します。
-. *AI Data Engine管理者*または*AI Data Engine閲覧者*ロールを割り当てます。
-. 変更を保存します。
+. *AI data engine administrator*または*AI data engine viewer*の役割を割り当てます。
+. 新しいロールを追加します。
 
 
 ユーザーはメールで招待を受け取り、招待を承認するとAI Data Engineにアクセスできるようになります。

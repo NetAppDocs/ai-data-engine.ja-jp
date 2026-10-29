@@ -16,8 +16,6 @@ indexpage:
       url: "/get-started/architecture.html"
     - title: クイック スタート
       url: "/get-started/quick-start.html"
-    - title: ストレージ最適化ワークフローを探索する
-      url: "/get-started/storage-optimization-workflows.html"
     - title: 新機能
       url: "/whats-new.html"
     - title: 既知の制限事項
@@ -46,6 +44,8 @@ indexpage:
       url: "/investigate/investigate-data.html"
     - title: データに基づいて行動を起こす
       url: "/investigate/take-actions.html"
+    - title: ストレージ最適化ワークフローを探索する
+      url: "/investigate/storage-optimization-workflows.html"
   - title: ポリシーとアクション
     links:
     - title: ポリシーを作成します。
